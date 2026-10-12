@@ -1,0 +1,27 @@
+BGW-M3-R1 discriminating certificate mutations
+
+Source fingerprints bind this evidence to the exact certificate and mutation harness.
+M3Chi.lean sha256: 9151cab836711b8e45a3d339578b35da3539b5cd88fea16c27a7d47df0da6fab
+mutate_certificate.py sha256: 0b51152da961f95dc4f8ffe86ec82a5b802ca046cd598f0f9185b789bbf52124
+
+The control must elaborate, and each mutation must have its named correspondence obligation as the FIRST failing declaration.
+
+--- unmodified control ---
+lean exit code              : 0
+first failing declaration   : (none)
+failure declarations        : (none)
+verdict                     : OK
+
+--- product witness mutation ---
+expected first declaration  : theorem products_correct
+lean exit code              : 1
+first failing declaration   : theorem products_correct
+failure declarations        : ['theorem products_correct', 'theorem rows11_eq_rawRows11']
+verdict                     : OK
+
+--- residual witness mutation ---
+expected first declaration  : theorem rows_ok11
+lean exit code              : 1
+first failing declaration   : theorem rows_ok11
+failure declarations        : ['theorem rows_ok11', 'theorem rows_ok12']
+verdict                     : OK

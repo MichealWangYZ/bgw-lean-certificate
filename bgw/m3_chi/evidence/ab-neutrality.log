@@ -1,0 +1,25 @@
+BGW-M3-CHI pristine/instrumented A/B neutrality
+
+Source: /tmp/bgw/BerkeleyGW-4.0 (pinned), real flavor, built from clean in two
+separate copies; inputs are the M2-pinned WFN/WFNq.
+
+Patches applied to the instrumented copy only:
+8157a3c9ddc9bad5e84f392492467c066116b628c13d163d06e4be51a0aa7dce  bgw/m3_chi/mtxel_m3_dump.patch
+22c40b2f0a6c7e353b40848c79e141d91296aa50dc9adf3fc8a9c290667d0540  bgw/m2_screening/epsinv_m2_dump.patch
+
+$ sha256sum <pristine>/epsmat <instrumented>/epsmat
+4512f63a4a9c28e8f52a66fbd90cc094793a26063bd9a563c3ff74cbfebde4f5    pristine/epsmat
+4512f63a4a9c28e8f52a66fbd90cc094793a26063bd9a563c3ff74cbfebde4f5    instr/epsmat
+
+Identical, and identical to the epsmat of the BGW-M2 A/B pair:
+  4512f63a4a9c28e8f52a66fbd90cc094793a26063bd9a563c3ff74cbfebde4f5
+
+The instrumented run's chi q-block is byte-identical to the committed M2
+snapshot up to the run-id string, so this transition data belongs to exactly
+the chi that BGW-M2 certified.
+
+Committed slices:
+36ba3844d52c448c4ae6712372c46f627cc28f3c44dd97af7dad647a946b7fed  bgw/m3_chi/data/m3_dump_q2.txt
+48b5f3f19b944d285820834af6e40e3fa063d958e24c996a04816da624776175  bgw/m3_chi/data/m3_chi_q2.txt
+
+Instrumentation neutrality is empirical FOR THIS INPUT AND THESE SETTINGS.

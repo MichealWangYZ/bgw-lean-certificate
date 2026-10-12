@@ -1,0 +1,162 @@
+[
+  {
+    "case": "original_saved_witness",
+    "exit_code": 0,
+    "expected_pass": true,
+    "passed_expectation": true,
+    "coverage": {
+      "mode": "full-fixture",
+      "full_fixture_validated": true
+    },
+    "records": 48,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "max_abs_mismatch_exact": 6.557715697780925,
+    "max_mismatch_over_local_value": 13735.130950092715,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_sch",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: line 1: branch 2 requires sch == 0 exactly, got 1.0"
+  },
+  {
+    "case": "corrupt_omega2",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: field omega2: residual 3.260e+06 exceeds limit 1e-14 (observed max on archived records: 1.774e-16)"
+  },
+  {
+    "case": "corrupt_ssx_pre",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: field ssx_pre: residual 1.955e+09 exceeds limit 1e-14 (observed max on archived records: 2.743e-16)"
+  },
+  {
+    "case": "corrupt_efermi",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: line 1: occ == 0.5 claims Fermi-level half occupation, but abs(e_n1kq - efermi) = 1.000002e+06 is not below sig%tol = 1.360569e-05 eV"
+  },
+  {
+    "case": "corrupt_den_nearpole",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: line 1: exported den_nearpole is zero"
+  },
+  {
+    "case": "one_record_only",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: full-fixture validation expects exactly 48 records, got 1; pass --subset for explicitly labelled subset analysis"
+  },
+  {
+    "case": "same_record_duplicated_48_times",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: duplicate record ids [1]; a repeated record is not extra coverage"
+  },
+  {
+    "case": "negative_event_count",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: probe tally: negative count in 'branch2 76461 -1'; event counts must be nonnegative"
+  },
+  {
+    "case": "positive_count_corruption",
+    "exit_code": 1,
+    "expected_pass": false,
+    "passed_expectation": true,
+    "stderr": "FAIL: row branch2: probe column sum 80164 != control 80163; the two runs must cover the same evaluations, so a differing sum means a tampered or mismatched tally"
+  },
+  {
+    "case": "explicit_subset",
+    "exit_code": 0,
+    "expected_pass": true,
+    "passed_expectation": true,
+    "coverage": {
+      "mode": "subset",
+      "full_fixture_validated": false,
+      "note": "subset analysis can establish existence only; this is NOT validation of the saved export"
+    },
+    "records": 1,
+    "max_fp_residual": 8.309315002862471e-20,
+    "max_abs_mismatch_exact": 0.013753553458331352,
+    "max_mismatch_over_local_value": 53.76942782179838,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "supervisor_fresh_pair",
+    "exit_code": 0,
+    "expected_pass": true,
+    "passed_expectation": true,
+    "coverage": {
+      "mode": "full-fixture",
+      "full_fixture_validated": true
+    },
+    "records": 48,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "max_abs_mismatch_exact": 6.557715697780925,
+    "max_mismatch_over_local_value": 13735.130950092715,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  }
+]

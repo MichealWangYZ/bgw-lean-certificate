@@ -1,0 +1,587 @@
+{
+ "files": {
+  "eps": "~/bgw-src/runs/eps",
+  "sig": "~/bgw-src/runs/sig-pristine"
+ },
+ "F1_headers_equal_vs_WFN": {
+  "nspin": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "ng": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "ntran": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "nat": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "ecutrho": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "ecutwfc": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "FFTgrid": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "celvol": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "alat": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "avec": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "adot": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "recvol": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "blat": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "bvec": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "bdot": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "mtrx": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "tnp": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "apos": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "atyp": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "gvec": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "kgrid": {
+   "WFNq": true,
+   "WFN_inner": true
+  },
+  "kshift": {
+   "WFNq": false,
+   "WFN_inner": false
+  },
+  "nbands": {
+   "WFNq": false,
+   "WFN_inner": true
+  }
+ },
+ "F2_ksets": {
+  "eps_kset_size": 32,
+  "epsq_kset_size": 256,
+  "sigma_kset_size": 8,
+  "sigma_k_minus_q_size": 8,
+  "sigma_k_minus_q_in_inner_closure": true,
+  "eps_and_sigma_common_points": 0,
+  "min_distance_eps_to_sigma_crystal": 0.25,
+  "eps_shift": [
+   0.5,
+   0.5,
+   0.5
+  ],
+  "sigma_shift": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "eps_ibz": [
+   [
+    0.25,
+    0.25,
+    0.25
+   ],
+   [
+    0.25,
+    0.25,
+    0.75
+   ]
+  ],
+  "sigma_ibz": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.5
+   ],
+   [
+    0.0,
+    0.5,
+    0.5
+   ]
+  ],
+  "eps_ks": [
+   [
+    0.25,
+    0.25,
+    0.25
+   ],
+   [
+    0.0,
+    0.0,
+    0.75
+   ],
+   [
+    0.75,
+    0.75,
+    0.75
+   ],
+   [
+    0.0,
+    0.0,
+    0.25
+   ],
+   [
+    0.25,
+    0.0,
+    0.0
+   ],
+   [
+    0.75,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.25,
+    0.0
+   ],
+   [
+    0.0,
+    0.75,
+    0.0
+   ],
+   [
+    0.25,
+    0.25,
+    0.75
+   ],
+   [
+    0.5,
+    0.5,
+    0.25
+   ],
+   [
+    0.75,
+    0.75,
+    0.25
+   ],
+   [
+    0.5,
+    0.5,
+    0.75
+   ],
+   [
+    0.25,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.0,
+    0.75
+   ],
+   [
+    0.5,
+    0.0,
+    0.25
+   ],
+   [
+    0.75,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.25,
+    0.0
+   ],
+   [
+    0.25,
+    0.5,
+    0.0
+   ],
+   [
+    0.5,
+    0.75,
+    0.0
+   ],
+   [
+    0.75,
+    0.5,
+    0.0
+   ],
+   [
+    0.75,
+    0.5,
+    0.5
+   ],
+   [
+    0.25,
+    0.75,
+    0.75
+   ],
+   [
+    0.75,
+    0.25,
+    0.25
+   ],
+   [
+    0.25,
+    0.5,
+    0.5
+   ],
+   [
+    0.0,
+    0.5,
+    0.75
+   ],
+   [
+    0.0,
+    0.25,
+    0.5
+   ],
+   [
+    0.0,
+    0.75,
+    0.5
+   ],
+   [
+    0.0,
+    0.5,
+    0.25
+   ],
+   [
+    0.5,
+    0.75,
+    0.5
+   ],
+   [
+    0.25,
+    0.75,
+    0.25
+   ],
+   [
+    0.5,
+    0.25,
+    0.5
+   ],
+   [
+    0.75,
+    0.25,
+    0.75
+   ]
+  ],
+  "sigma_ks": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.5,
+    0.5
+   ],
+   [
+    0.5,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.5,
+    0.0
+   ],
+   [
+    0.0,
+    0.5,
+    0.5
+   ],
+   [
+    0.5,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.5,
+    0.0
+   ]
+  ]
+ },
+ "F2_eps_grid_closed_under_q": {
+  "[0.0, 0.0, 0.5]": true,
+  "[0.0, 0.5, 0.5]": true
+ },
+ "F2_q0_partners": {
+  "q0": [
+   0.0,
+   0.0,
+   0.001
+  ],
+  "k_plus_q0_in_WFNq": true,
+  "k_plus_q0_in_WFN_grid": false
+ },
+ "F4_bands": {
+  "WFN_nbands": 19,
+  "WFN_inner_nbands": 19,
+  "WFNq_nbands": 4,
+  "epsilon_number_bands": 18,
+  "sigma_number_bands": 18,
+  "nocc_WFN": [
+   4
+  ],
+  "nocc_WFN_inner": [
+   4
+  ]
+ },
+ "F3_hamiltonian": {
+  "fit_on_WFN_inner": {
+   "alpha": 0.9999999999999992,
+   "max_residual_Ry": 3.552713678800501e-15,
+   "largest_V": {
+    "(0, 1, 0)": -0.1582682115528345,
+    "(1, 0, 0)": -0.15826821155283433,
+    "(1, 1, 1)": 0.15826821155283416,
+    "(0, 0, 1)": -0.15826821155283394,
+    "(1, -1, 0)": 0.05517862124290658,
+    "(1, 1, 2)": -0.05517862124290651,
+    "(1, 2, 1)": -0.05517862124290648,
+    "(0, 1, -1)": 0.05517862124290643
+   }
+  },
+  "fit_on_WFN": {
+   "alpha": 0.9999999999999973,
+   "max_residual_Ry": 4.218847493575595e-15
+  },
+  "max_abs_V_inner_minus_V_WFN": 5.193946401443883e-14,
+  "inner_H_predicts_WFN": {
+   "max_dE_Ry": 1.7252421713465083e-11,
+   "max_dE_meV": 2.3473114523130168e-07,
+   "min_subspace_overlap": 0.9999999999999984,
+   "unfitted_offdiag_entries": 62
+  },
+  "inner_H_predicts_WFNq": {
+   "max_dE_Ry": 5.047851026063199e-12,
+   "max_dE_meV": 6.867950899786091e-08,
+   "min_subspace_overlap": 0.9999999999999982,
+   "unfitted_offdiag_entries": 392
+  },
+  "inner_H_predicts_WFN_inner": {
+   "max_dE_Ry": 5.329070518200751e-15,
+   "max_dE_meV": 7.25056949413272e-11,
+   "min_subspace_overlap": 0.9999999999999976,
+   "unfitted_offdiag_entries": 0
+  }
+ },
+ "F5_density": {
+  "sigma_system_8pt": {
+   "rho0": 7.999999999999971,
+   "max_abs_minus_RHO": 0.3181552118257927,
+   "worst_g": [
+    -2,
+    -1,
+    -1
+   ],
+   "worst_values": [
+    0.2897952519211839,
+    0.6079504637469766
+   ],
+   "max_imag": 1.3766601786133932e-16,
+   "rho(b3)": 1.8517770873924329,
+   "rho(b1)": 1.8517770873924324,
+   "rho(-2,-1,-1)": 0.2897952519211839
+  },
+  "eps_system_32pt": {
+   "rho0": 8.000000000000163,
+   "max_abs_minus_RHO": 0.34271665898705567,
+   "worst_g": [
+    -2,
+    -1,
+    -1
+   ],
+   "worst_values": [
+    0.2652338047599209,
+    0.6079504637469766
+   ],
+   "max_imag": 1.8963180373058668e-16,
+   "rho(b3)": 1.741439178402433,
+   "rho(b1)": 1.7414391784024332,
+   "rho(-2,-1,-1)": 0.2652338047599209
+  },
+  "ibz_replay_no_star": {
+   "rho0": 7.999999999999989,
+   "max_abs_minus_RHO": 1.0658141036401503e-14,
+   "worst_g": [
+    0,
+    0,
+    0
+   ],
+   "worst_values": [
+    7.999999999999989,
+    8.0
+   ],
+   "max_imag": 0.0,
+   "rho(b3)": 1.704457829838281,
+   "rho(b1)": 1.900883506577147,
+   "rho(-2,-1,-1)": 0.6079504637469767
+  },
+  "star_average_RHO_vs_sigma_system": 2.930988785010413e-14,
+  "RHO_first_shell": {
+   "rho(b3)": 1.704457829838281,
+   "rho(-b3)": 1.704457829838281,
+   "rho(b1)": 1.900883506577149,
+   "rho(-2,-1,-1)": 0.6079504637469766
+  }
+ },
+ "hnp": {
+  "grid": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.5,
+    0.5
+   ],
+   [
+    0.5,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.5,
+    0.0
+   ],
+   [
+    0.0,
+    0.5,
+    0.5
+   ],
+   [
+    0.5,
+    0.0,
+    0.5
+   ],
+   [
+    0.5,
+    0.5,
+    0.0
+   ]
+  ],
+  "sphere_sizes": [
+   169,
+   168,
+   168,
+   168,
+   168,
+   174,
+   174,
+   174
+  ],
+  "sigma_kpoints": [
+   {
+    "k": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "grid_index": 0,
+    "sphere_has_nonzero_vector": true,
+    "ordered_negated_sphere_stored_at_spec_Wfn_at": [],
+    "ordered_negated_sphere_stored_at_lex_sorted": [],
+    "negated_sphere_stored_as_a_set_at": [
+     0
+    ],
+    "hnp_holds": true
+   },
+   {
+    "k": [
+     0.0,
+     0.0,
+     0.5
+    ],
+    "grid_index": 1,
+    "sphere_has_nonzero_vector": true,
+    "ordered_negated_sphere_stored_at_spec_Wfn_at": [],
+    "ordered_negated_sphere_stored_at_lex_sorted": [],
+    "negated_sphere_stored_as_a_set_at": [],
+    "hnp_holds": true
+   },
+   {
+    "k": [
+     0.0,
+     0.5,
+     0.5
+    ],
+    "grid_index": 5,
+    "sphere_has_nonzero_vector": true,
+    "ordered_negated_sphere_stored_at_spec_Wfn_at": [],
+    "ordered_negated_sphere_stored_at_lex_sorted": [],
+    "negated_sphere_stored_as_a_set_at": [],
+    "hnp_holds": true
+   }
+  ],
+  "hnp_holds_X": true,
+  "hnp_holds_L": true,
+  "hnp_holds_any_order_X": true,
+  "hnp_holds_any_order_L": true,
+  "note": "hnp_holds_X / hnp_holds_L = true supports the premise hnp of hyps_unsat_of_unpaired (GW/Bridge/Common.lean) for X and L on this grid: no grid point stores the negated ordered sphere list of X or of L, for the two sphere orderings listed. A data check, not a Lean proof. The lex_sorted comparison holds by construction (a negated increasing list is decreasing). hnp_holds_any_order_X / hnp_holds_any_order_L = true says more: no grid point stores the negated sphere of X or of L even as a set, and equal ordered lists have equal sets, so for X and L the result does not depend on how the spheres are ordered. At Gamma the negated sphere equals its own sphere as a set, so the set test cannot decide hnp there and only the ordered tests apply"
+ },
+ "verdict": {
+  "cell_and_G_list_identical": true,
+  "same_hamiltonian_to_meV": 2.3473114523130168e-07,
+  "kgrids_disjoint": true,
+  "shared_states": 0,
+  "band_counts_agree": true,
+  "compat_holds": false
+ }
+}

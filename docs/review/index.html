@@ -1,0 +1,1471 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>BerkeleyGW endpoint — reviewer's guide</title><style>
+:root{--bg:#fbfbfa;--fg:#1d2330;--mute:#5a6472;--card:#fff;--line:#e3e5e8;--code:#f4f5f7}
+*{box-sizing:border-box}body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+header{padding:22px 32px;border-bottom:1px solid var(--line);background:#fff}
+h1{font-size:22px;margin:0 0 6px}h2{font-size:18px;margin:28px 0 10px}h3{font-size:15px;margin:18px 0 6px}
+.sub{color:var(--mute);font-size:13px}
+.wrap{display:flex;min-height:calc(100vh - 90px)}
+nav{width:290px;flex:none;border-right:1px solid var(--line);background:#fff;padding:14px;position:sticky;top:0;height:100vh;overflow:auto}
+main{flex:1;padding:18px 32px 80px;max-width:1150px}
+nav a{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a:hover,nav a.on{background:#eef1f5}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pill{display:inline-block;padding:1px 9px;border-radius:10px;color:#fff;font-size:12px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:14px 0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.flow .n{border:2px solid;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;background:#fff}
+.flow .arr{color:var(--mute)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow:auto;font:12.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;margin:6px 0}
+.loc{font:12px ui-monospace,monospace;color:var(--mute)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:10px}
+.tabs button{border:0;background:none;padding:6px 12px;cursor:pointer;font-size:13px;border-bottom:2px solid transparent;color:var(--mute)}
+.tabs button.on{border-color:#2b5cab;color:var(--fg);font-weight:600}
+.pane{display:none}.pane.on{display:block}
+.chk label{display:block;padding:3px 0;font-size:14px}
+.kw{color:#7a3e9d;font-weight:600}.cm{color:#6a737d}.th{color:#1b5e20}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+#bar{height:8px;background:#e7e9ec;border-radius:4px;overflow:hidden;margin:6px 0}#bar i{display:block;height:100%;background:#1b7f3b;width:0}
+input#q{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;margin:4px 0 10px}
+.ax{font:12px ui-monospace,monospace;color:#1b5e20}
+.small{font-size:13px;color:var(--mute)}
+</style></head><body>
+<header><h1>BerkeleyGW endpoint: a reviewer's guide to the proof chain</h1><div class='sub'>Si-EPM, BerkeleyGW 4.0 GPP self-energy · branch <code>public/presentation</code> @ <code>7814c49</code> · generated 2026-10-13 00:13 UTC by <code>bgw/endpoint/make_review.py</code> · 34553 audited theorems in artifacts/axioms.log</div></header>
+<div class='wrap'><nav><input id='q' placeholder='Filter nodes…'><div id='bar'><i></i></div><div class='small' id='pc'></div><a href='#start'>How to read this</a>
+<a href='#inputs' data-node='inputs'><span class='dot' style='background:#b83232'></span><span style='flex:1'>0 · Input files</span><span class='done th'></span></a>
+<a href='#unfold' data-node='unfold'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>1 · Symmetry unfolding</span><span class='done th'></span></a>
+<a href='#eps' data-node='eps'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>2 · Dielectric matrix ε</span><span class='done th'></span></a>
+<a href='#epsinv' data-node='epsinv'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>3 · Inverse ε⁻¹</span><span class='done th'></span></a>
+<a href='#coul' data-node='coul'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>4 · Coulomb averages</span><span class='done th'></span></a>
+<a href='#gpp' data-node='gpp'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>5 · Plasmon-pole modes</span><span class='done th'></span></a>
+<a href='#sigma' data-node='sigma'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>6 · Self-energy Σ</span><span class='done th'></span></a>
+<a href='#o1' data-node='o1'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>7 · Eqp1 and O1 (linearised)</span><span class='done th'></span></a>
+<a href='#roots' data-node='roots'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>8 · Full quasiparticle equation</span><span class='done th'></span></a>
+<a href='#prod' data-node='prod'><span class='dot' style='background:#b7791f'></span><span style='flex:1'>9 · Production vs spec A</span><span class='done th'></span></a>
+<a href='#mb' data-node='mb'><span class='dot' style='background:#1b7f3b'></span><span style='flex:1'>10 · GW vs exact (finite models)</span><span class='done th'></span></a>
+<a href='#si' data-node='si'><span class='dot' style='background:#5a6472'></span><span style='flex:1'>11 · GW approximation for Si (estimates)</span><span class='done th'></span></a>
+<a href='#findings'>Findings</a><a href='#table'>O1 across treatments</a><a href='#trusted'>What is still trusted</a><p class='small'><button id='reset'>reset checklist</button></p></nav><main>
+<section id='start'><h2>How to read this</h2><div class='card'>
+<p><b>The claim.</b> For the Si-EPM test case, the observable O1 = Eqp1(X) − Eqp1(L) of the Lean specification of BerkeleyGW's equations (<i>spec A</i>), evaluated on the run's exported data, lies in [15.4057523, 15.4057537] meV (so Eqp1(X) &gt; Eqp1(L)); with the full QP equation, O1 ∈ [68.9856742, 68.9856744] meV for the unique roots in two certified brackets (that these are the principal roots is Python). Both are Lean theorems checked by the kernel from the irreducible wavefunctions, with no Coulomb-box hypothesis left. They are statements about the specified 18-band calculation, not the physical band ordering: with all bands of the finite basis the linearised O1 is ≈ −3.8 meV (Python). Trusted, not proved: the decoding of the run files, that spec A transcribes BerkeleyGW's Fortran (what this page is for), and the production run.</p>
+<p><b>What you need to read.</b> Not the proofs — the kernel checks those, and the axiom audit confirms nothing was assumed. You need to read the <i>definitions</i> and the <i>statements</i>: if a definition says the wrong thing, the theorem proves the wrong thing. Each node below puts the Lean definition next to the BerkeleyGW source it claims to transcribe, with a checklist. Your progress is saved in this browser.</p>
+<p><span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span> <span class='pill' style='background:#b7791f'>Certified in Python interval arithmetic (not Lean)</span> <span class='pill' style='background:#b83232'>Trusted: not proved</span> <span class='pill' style='background:#5a6472'>Estimate / measurement (no bound)</span></p>
+<h3>Implementation layer — spec A, from the files to O1</h3><div class='flow'>
+<span class='n' style='border-color:#b83232' data-go='inputs'>0 · Input files</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='unfold'>1 · Symmetry unfolding</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='eps'>2 · Dielectric matrix ε</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='epsinv'>3 · Inverse ε⁻¹</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='coul'>4 · Coulomb averages</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='gpp'>5 · Plasmon-pole modes</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='sigma'>6 · Self-energy Σ</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='o1'>7 · Eqp1 and O1 (linearised)</span>
+<span class='arr'>→</span>
+<span class='n' style='border-color:#1b7f3b' data-go='roots'>8 · Full quasiparticle equation</span>
+</div>
+<h3>Link to the program&#x27;s printed output</h3><div class='flow'>
+<span class='n' style='border-color:#b7791f' data-go='prod'>9 · Production vs spec A</span>
+</div>
+<h3>Physics layer — GW versus the exact many-body answer</h3><div class='flow'>
+<span class='n' style='border-color:#1b7f3b' data-go='mb'>10 · GW vs exact (finite models)</span>
+<span class='arr'>·</span>
+<span class='n' style='border-color:#5a6472' data-go='si'>11 · GW approximation for Si (estimates)</span>
+</div>
+</div></section>
+<section class='node' id='inputs'><div class='card'><h2 style='margin-top:0'>0 · Input files <span class='pill' style='background:#b83232'>Trusted: not proved</span></h2>
+<p>The numbers in BerkeleyGW's binary files WFN, WFNq, WFN_inner and RHO are read by <code>bgwio.py</code> and written into Lean as exact dyadic rationals (every float64 is a dyadic, and the exporter asserts the conversion is exact). Lean does not parse the files.</p><p class='small'><b>Why it matters.</b> If the reader mis-parses a record, every theorem downstream is about the wrong numbers.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='inputs-0'> read_wfn follows BerkeleyGW 4.0&#x27;s wfn record layout (Common/wfn_rho_vxc_io_inc.f90)</label>
+<label><input type='checkbox' id='inputs-1'> the pinned files are the ones produced by run_production.py (its output digests are written to run.json in the run directory and are not committed; no committed digest links the Lean literals to the run files)</label>
+<label><input type='checkbox' id='inputs-2'> kernel_export.py asserts exact float→dyadic conversion for every exported literal</label>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/bgwio.py:139</div><pre>def read_wfn(path):
+    rec = Records(path)
+    h = _header(rec, &quot;WFN&quot;)
+    h[&quot;gvec&quot;] = _gvectors(rec, h[&quot;ng&quot;])
+    h[&quot;kg&quot;], h[&quot;coef&quot;] = [], []
+    for ik in range(h[&quot;nk&quot;]):
+        ngk = int(h[&quot;ngk&quot;][ik])
+        h[&quot;kg&quot;].append(_gvectors(rec, ngk))
+        h[&quot;coef&quot;].append(np.array([_data(rec, ngk, h[&quot;nspin&quot;])[0]
+                                   for _ in range(h[&quot;nbands&quot;])]))
+    if not rec.done():
+        raise ValueError(&quot;trailing records in WFN&quot;)
+    return h
+
+</pre>
+<div class="loc">bgw/endpoint/bgwio.py:154</div><pre>def read_rho(path, kind=&quot;RHO&quot;):
+    &quot;&quot;&quot;RHO (or, with kind=&quot;VXC&quot;, the VXC file: same layout).&quot;&quot;&quot;
+    rec = Records(path)
+    h = _header(rec, kind)
+    h[&quot;gvec&quot;] = _gvectors(rec, h[&quot;ng&quot;])
+    h[&quot;rho&quot;] = _data(rec, h[&quot;ng&quot;], h[&quot;nspin&quot;])[0]
+    if not rec.done():
+        raise ValueError(f&quot;trailing records in {kind}&quot;)
+    return h
+
+</pre>
+</div>
+</div></section>
+<section class='node' id='unfold'><div class='card'><h2 style='margin-top:0'>1 · Symmetry unfolding <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>From the irreducible k-points and the crystal's 48 operations (integer matrices, fractional translations t = t2/2), Lean rebuilds every wavefunction on the full grids, the G-spheres, BerkeleyGW's sphere order and the ε index map, and checks them equal to what the later stages consume. It also checks the 32-point k-set is the group closure and the weights.</p><p class='small'><b>Why it matters.</b> Unfolding (rotations, the non-symmorphic phase of diamond, the last-match op choice) was the largest piece of trusted Python before; a sign error here changes χ and Σ.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='unfold-0'> flipG&#x27;s sign (−1)^((MG)·t2) is exp(−2πi (MG)·t) (proved: flipG_phase) and that is BerkeleyGW&#x27;s rotation convention for a state at Mk</label>
+<label><input type='checkbox' id='unfold-1'> dropping the global phase e^{2πi(Mk)·t} is legitimate: every use is M(G)·M(G&#x27;)* or |M|², where a per-state phase cancels</label>
+<label><input type='checkbox' id='unfold-2'> irrbz takes the LAST matching (q, op) pair (lastMatch), not the first</label>
+<label><input type='checkbox' id='unfold-3'> bgwSphere&#x27;s 1e-12 tie grouping and GK tie-break reproduce sortrx</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:217  (flipG)</div><pre>/<span class="cm">-- The per-G sign flip `(M G)·t2` odd, i.e. `exp(-2πi (M G)·t) = -1`. -/</span>
+<span class="kw">def</span> flipG (op : Op) (G : V3) : Bool := decide (dot (mulMV op.M G) op.t2 % 2 = 1)</pre>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:220  (rot)</div><pre>/<span class="cm">-- The states of irreducible k-point `ik` rotated by operation `iop` to `M k + g`</span>
+(`cert.real_coeffs`): G-vectors `M G - g`, coefficients `s(G) c(G)`, energies unchanged. -/
+<span class="kw">def</span> rot (w : Wfn) (ik iop : <span class="kw">ℕ</span>) (g : V3) : USt :=
+  <span class="kw">let</span> op := w.ops.getD iop default
+  <span class="kw">let</span> G := w.kg.getD ik []
+  <span class="kw">let</span> s := G.map (flipG op)
+  ⟨G.map (<span class="kw">fun</span> G =&gt; mulMV op.M G - g), (w.coef.getD ik []).map (<span class="kw">fun</span> r =&gt; List.zipWith Dy.flip s r),
+    w.en.getD ik []⟩</pre>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:203  (find)</div><pre>/<span class="cm">-- `(ik, iop, g)`: the first k-point and operation (in file order) with `kp = M k + g`</span>
+(within `10^-9`), as `spec.Wfn.find`. -/
+<span class="kw">def</span> find (w : Wfn) (kp : V3) : Option (<span class="kw">ℕ</span> × <span class="kw">ℕ</span> × V3) :=
+  firstSome (<span class="kw">fun</span> ik k =&gt; firstSome (<span class="kw">fun</span> iop (op : Op) =&gt;
+      (near3 (near9 SK) (kp - mulMV op.M (kn SK k))).map (<span class="kw">fun</span> g =&gt; (ik, iop, g))) w.ops 0)
+    w.kpt 0</pre>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:245  (kfull)</div><pre>/<span class="cm">-- The full k-grid Epsilon sums over: the distinct images of the irreducible k-points</span>
+under all operations, first occurrence kept (`spec.EpsilonRun.kfull`). -/
+<span class="kw">def</span> kfull (w : Wfn) : List V3 := dedup (w.kpt.flatMap (images w))</pre>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:346  (lastMatch)</div><pre>/<span class="cm">-- `(iq, iop, g0)`: the LAST irreducible q and operation (in `(iq, iop)` order) with</span>
+`M q_iq = q + g0` within `10^-6` (`irrbz.f90`, `spec.Screening.mapping`). -/
+<span class="kw">def</span> lastMatch (irr : List IrrQ) (ops : List Op) (q : V3) : Option (<span class="kw">ℕ</span> × <span class="kw">ℕ</span> × V3) :=
+  lastSome (<span class="kw">fun</span> iq (b : IrrQ) =&gt; lastSome (<span class="kw">fun</span> iop (op : Op) =&gt;
+      (near3 (near6 SK) (mulMV op.M b.q - q)).map (<span class="kw">fun</span> g =&gt; (iq, iop, g))) ops 0) irr 0</pre>
+<div class="loc">GW/Endpoint/Kernel/Unfold.lean:302  (bgwSphere)</div><pre>/<span class="cm">-- Sigma&#x27;s eps sphere at `q` in BerkeleyGW&#x27;s order (`spec.bgw_order`, `sortrx`): ascending</span>
+`|q+G|²`, values within `TOL_Zero` of their predecessor tied, ties by `GK`. -/
+<span class="kw">def</span> bgwSphere (SB : <span class="kw">ℕ</span>) (B : List (List Dy)) (gvec : List V3) (q : V3) (ecut : Dy) : List V3 :=
+  <span class="kw">let</span> l := byNorm SB B gvec q ecut
+  <span class="kw">let</span> g := gids (2 * SK + SB) (l.headD (0, 0)).1 0 l
+  ((g.map (<span class="kw">fun</span> x =&gt; ((x.1, gk (ext gvec) x.2), x.2))).foldr insK []).map Prod.snd</pre>
+<div class="loc">GW/Endpoint/Kernel/UnfoldPhase.lean:32  (flipG_phase)</div><pre>/<span class="cm">-- The sign `flipG op G` is the phase `exp(-2πi (M G)·t)`, `t = t2 / 2`. -/</span>
+<span class="kw">theorem</span> flipG_phase (op : Op) (G : V3) :
+    ((<span class="kw">if</span> flipG op G <span class="kw">then</span> -1 <span class="kw">else</span> 1 : <span class="kw">ℤ</span>) : ℂ) =
+      Complex.exp (-(2 * Real.pi * I) * (((dot (mulMV op.M G) op.t2 : <span class="kw">ℤ</span>) : ℂ) / 2)) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Common/irrbz.f90:150-170</div><pre>  150  !     find qq to which rq is equivalent
+  151  !
+  152            iflag = 0
+  153            iq_loop: do iq=1,nq
+  154              do it=1,syms%ntran
+  155                qk(:) = matmul(dble(syms%mtrx(:,:,it)),qq(:,iq))
+  156                call k_range(qk,kg,TOL_Small)
+  157              
+  158                if (all(abs(rq(1:3,nrq)-qk(1:3)) .lt. TOL_Small)) then
+  159                  iflag = 1
+  160                  indrq(nrq) = iq
+  161                  itnrq(nrq) = it
+  162                  kg0(1:3,nrq) = kg(1:3)
+  163  ! there may be more than one matching sym op, but better be only one q-vector!
+  164  !              exit iq_loop
+  165                endif
+  166              enddo
+  167            enddo iq_loop
+  168    !
+  169    !     end of loop over q
+  170    </pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/spec.py:91</div><pre>    def rotate(self, ik, iop, kg0):
+        &quot;&quot;&quot;Coefficients of O psi_{k_ik}, re-expressed at k&#x27; = M k + kg0.
+
+        (O psi)(x) = psi(g^{-1} x) with g: x -&gt; W x + t. For psi = sum_G c(G)
+        exp(2 pi i (k+G).x): new component at k&#x27;+G&#x27;&#x27; with G&#x27;&#x27; = M G - kg0 is
+        c(G) exp(-2 pi i (M(k+G)).t).&quot;&quot;&quot;
+        M = self.cr.mtrx[iop]
+        W, t = self.ops[iop]
+        k = self.w[&quot;kpt&quot;][ik]
+        G = self.w[&quot;kg&quot;][ik]
+        MkG = (M @ (k[None, :] + G).T).T
+        phase = np.exp(-2j * np.pi * (MkG @ t))
+        Gnew = (M @ G.T).T - kg0
+        coef = self.w[&quot;coef&quot;][ik] * phase[None, :]
+        kp = M @ k + kg0
+        return kp, Gnew, coef
+</pre>
+</div>
+</div></section>
+<section class='node' id='eps'><div class='card'><h2 style='margin-top:0'>2 · Dielectric matrix ε <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>ε_GG'(q) = δ_GG' − v(q+G)·χ(G,G'), with χ = 4/(N_k Ω) Σ_{k,v,c} M_vc(G) M_vc(G')/(E_v(k+q) − E_c(k)) and v = 8π/|q+G|² (real π). The kernel proves the TRUE ε, computed from the unfolded coefficients, lies in the interval box the inverse step uses, at all 3 q-points.</p><p class='small'><b>Why it matters.</b> This is the RPA screening every later number depends on.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='eps-0'> the factor 4/(N_k Ω): 2 for spin × 2 from the ±ω terms at ω = 0, N_k = 32</label>
+<label><input type='checkbox' id='eps-1'> the energy denominator E_v − E_c (negative), with valence at k+q from WFNq when q = q0</label>
+<label><input type='checkbox' id='eps-2'> row scaling v(q+G_i)·χ (unsymmetrised), as epsinv.f90 does</label>
+<label><input type='checkbox' id='eps-3'> the 8π/|q+G|² uses BerkeleyGW&#x27;s metric bdot (Rydberg units)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/EpsSpec.lean:38  (M)</div><pre>/<span class="cm">-- The pair density `M_vc(k, G) = Σ_{Gv_i - Gc_j = G} c_v(Gv_i) c_c(Gc_j)` of</span>
+valence band `v` (at `k + q`) and conduction band `c` (at `k`). -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> M (kp : KPair) (v c : <span class="kw">ℕ</span>) (G : V3) : <span class="kw">ℝ</span> :=
+  ∑ i ∈ range kp.Gv.length, ∑ j ∈ range kp.Gc.length,
+    <span class="kw">if</span> kp.Gv.getD i 0 - kp.Gc.getD j 0 = G <span class="kw">then</span>
+      dy inp.SC ((kp.cv.getD v []).getD i 0) * dy inp.SC ((kp.cc.getD c []).getD j 0)
+    <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/Kernel/EpsSpec.lean:46  (chi)</div><pre>/<span class="cm">-- The independent-particle polarizability</span>
+`chi(G, G&#x27;) = 4/(N_k Ω) Σ_k Σ_v Σ_c M_vc(G) M_vc(G&#x27;) / (E_v - E_c)`. -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> chi (G G&#x27; : V3) : <span class="kw">ℝ</span> :=
+  4 / (inp.ks.length * dy inp.SOm inp.Om) *
+    ∑ t ∈ range inp.ks.length,
+      ∑ v ∈ range (inp.ks.getD t default).cv.length,
+        ∑ c ∈ range (inp.ks.getD t default).cc.length,
+          M inp (inp.ks.getD t default) v c G * M inp (inp.ks.getD t default) v c G&#x27; /
+            (dy inp.SEn ((inp.ks.getD t default).Ev.getD v 0) -
+              dy inp.SEn ((inp.ks.getD t default).Ec.getD c 0))</pre>
+<div class="loc">GW/Endpoint/Kernel/EpsSpec.lean:63  (vC)</div><pre>/<span class="cm">-- The bare Coulomb interaction `v(q + G) = 8π / |q + G|²` (Rydberg units). -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> vC (G : V3) : <span class="kw">ℝ</span> := 8 * Real.pi / qG2 inp G</pre>
+<div class="loc">GW/Endpoint/Kernel/EpsSpec.lean:66  (epsR)</div><pre>/<span class="cm">-- The static RPA dielectric matrix `eps_ij = δ_ij - v(q + G_i) chi(G_i, G_j)` on the</span>
+sphere `Gs` (row/column `i` is `Gs[i]`). -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> epsR (i j : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  (<span class="kw">if</span> i = j <span class="kw">then</span> 1 <span class="kw">else</span> 0) - vC inp (inp.Gs.getD i 0) * chi inp (inp.Gs.getD i 0) (inp.Gs.getD j 0)</pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/Kernel/Data/E1Check.lean:47</div><pre>/<span class="cm">-- **Kernel-checked eps⁻¹ enclosure of the true eps, q-point 1** (n = 76): the static</span>
+RPA dielectric matrix computed from the wavefunction coefficients is invertible and
+its inverse lies entrywise in cert.py&#x27;s enclosure `Q1.cert.outLo/outHi`. -/
+<span class="kw">theorem</span> epsinv_true_q1 : IsUnit epsTrue ∧ ∀ i j, epsTrue⁻¹ i j ∈
+    Set.Icc (Q1.cert.mat Q1.cert.SO Q1.cert.outLo i j) (Q1.cert.mat Q1.cert.SO Q1.cert.outHi i j) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Epsilon/mtxel.f90:8-20</div><pre>    8  !     conduction bands and for all G-vectors.
+    9  !
+   10  !                &lt;c,k,ispin|exp{-i(q+G).r}|v,k+q,ispin&gt; = [M_{vc}(k,q,G)]^*
+   11  !
+   12  !     On exit,
+   13  !       pol%eden(band,spin) = 1/(e_val-e_cond) = energy denominators
+   14  !       pol%gme(band,g-vector,spin) = plane wave matrix elements
+   15  !       pol%isrtx   orders the |G(i)|^2   i=1,pol%nmtx
+   16  !       vwfn%isort  orders |qk+g|^2    (in vwfn type)
+   17  !
+   18  !       energies are apparently assumed in Rydbergs.
+   19  !
+   20  !===========================================================================</pre>
+<div class="loc">BerkeleyGW-4.0/Epsilon/mtxelmultiply.f90:58-100</div><pre>   58      integer, intent(in) :: nrow_max,ncol_max
+   59  
+   60      SCALAR :: negfact
+   61      
+   62      PUSH_SUB(mtxelMultiply)
+   63      
+   64      negfact = -1D0*fact
+   65      
+   66      call timing%start(timing%chi_sum_prep)
+   67      call chi_sum_prep(scal,nrk,nst,gmetempr,gmetempc,chilocal, &amp;
+   68                        polgme,pol,indt,pht,ipe,ispin)
+   69      call timing%stop(timing%chi_sum_prep)
+   70      
+   71      call timing%start(timing%chi_sum_gemm)
+   72      
+   73      if (ntot.ne.0) then
+   74        if (.not. pol%accel_chisum_fulloffload) then
+   75         if ( chi_summation_algo /= CPU_ALGO ) then
+   76           select case(chi_summation_algo)
+   77             case (OPENACC_ALGO)
+   78  #ifdef OPENACC
+   79               !$acc update device(gmetempr, gmetempc, chilocal) async(1)
+   80  #else
+   81               call die_algos(&quot;OpenACC&quot;)
+   82  #endif
+   83             case (OMP_TARGET_ALGO)
+   84  #ifdef OMP_TARGET
+   85               !$omp target update to(gmetempr, gmetempc, chilocal)
+   86  #else
+   87               call die_algos(&quot;OpenMP Target&quot;)
+   88  #endif
+   89             case default
+   90               call die(&quot;Invald algorithm for chi_summation.&quot;, only_root_writes = .true.)
+   91           end select
+   92         end if
+   93        end if
+   94        call accel_xgemm(&#x27;n&#x27;, &#x27;t&#x27;, &amp;
+   95                       nrow_max, ncol_max, ntot, &amp;
+   96                       negfact, &amp;
+   97                       gmetempr, nrow_max, &amp;
+   98                       gmetempc, ncol_max, &amp;
+   99                       ZERO, &amp;
+  100                       chilocal, nrow_max, &amp;</pre>
+<div class="loc">BerkeleyGW-4.0/Epsilon/epsinv.f90:226-253</div><pre>  226  !      write(6,*) &#x27;Done VCoul&#x27;
+  227  
+  228    if (pol%freq_dep==0) then
+  229      do i=1,pol%nmtx
+  230        
+  231        irow=MOD(INT(((i-1)/scal%nbl)+TOL_SMALL),scal%nprow)
+  232        if(irow.ne.scal%myprow) cycle
+  233        
+  234        vc = vcoul(i)
+  235  
+  236  !-------------------------
+  237  ! Construct non-interacting epsilon
+  238  ! Static case
+  239  
+  240        do j=1,pol%nmtx
+  241          icol=MOD(INT(((j-1)/scal%nbl)+TOL_SMALL),scal%npcol)
+  242          if(icol .eq. scal%mypcol) then
+  243            icurr=icurr+1
+  244            irowm=INT((icurr-1)/scal%npc+TOL_SMALL)+1
+  245            icolm=MOD((icurr-1),scal%npc)+1
+  246  
+  247            eps(irowm,icolm) = ZERO
+  248            if (i.eq.j) eps(irowm,icolm) = ONE
+  249            chitmp = pol%chi(irowm,icolm,1)
+  250            eps(irowm,icolm) = eps(irowm,icolm) - vc*chitmp
+  251          endif
+  252        end do
+  253      end do</pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/cert.py:107</div><pre>def epsinv_iv(rundir, nbands, ecut, q, q0):
+    er = spec.EpsilonRun(rundir, nbands, ecut)
+    Gs, _ = spec.sphere_of(er.cr, er.gvec, q, ecut)
+    n, nv = len(Gs), 4
+    chi = I.exact(np.zeros((n, n)))
+    for k in er.kfull:
+        Gc, cc, Ec = real_coeffs(er.wf, tuple(k))
+        src = er.wfq if q0 else er.wf
+        Gv, cv, Ev = real_coeffs(src, tuple(np.round(k + q, 12)))
+        M = mtxel_iv(Gv, cv[:nv], Gc, cc[nv:nbands], Gs)             # (v, c, G)
+        for v in range(nv):
+            for c in range(nbands - nv):
+                eden = I.exact(1.0) / (I.exact(Ev[v]) - I.exact(Ec[nv + c]))
+                x = M[v, c]
+                chi = chi + (x.reshape(n, 1) * x.reshape(1, n)) * eden
+    fact = I.exact(4.0) / (I.exact(float(len(er.kfull))) * I.exact(er.cr.celvol))
+    chi = chi * fact
+    vq = I.exact(8.0) * iv.PI / norm2(er.cr.bdot, Gs.astype(float), q)
+    eps = I.exact(np.eye(n)) - chi * vq.reshape(n, 1)
+    # exact power-of-two balancing eps&#x27; = S^-1 eps S, s_i ~ sqrt(v_i): the q0
+    # head row carries 8 pi/|q0|^2 ~ 3e7 and would dominate any norm bound
+    s = 2.0 ** np.rint(0.5 * np.log2(vq.mid()))
+    scale = s[None, :] / s[:, None]                   # exact (powers of two)
+    epsb = eps * I.exact(scale)                      # outward: exact unless subnormal
+    invb, beta, delta = iv.inverse_cw(epsb)
+    back = s[:, None] / s[None, :]
+    inv = invb * I.exact(back)
+    return Gs, inv, beta, delta
+
+</pre>
+</div>
+</div></section>
+<section class='node' id='epsinv'><div class='card'><h2 style='margin-top:0'>3 · Inverse ε⁻¹ <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>Every real matrix inside the ε box is invertible and its inverse lies entrywise in the claimed enclosure (componentwise Neumann bound with exact power-of-two balancing, re-checked by the kernel in exact integers).</p><p class='small'><b>Why it matters.</b> Spec A uses the exact inverse; production&#x27;s LAPACK inverse differs by rounding, which is part of the production-vs-spec comparison (node 9), not of this theorem.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='epsinv-0'> the theorem&#x27;s hypothesis is exactly node 2&#x27;s conclusion (composed in epsinv_true_q1)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/CertInverse.lean:269  (inverse_cw_sound)</div><pre>/<span class="cm">-- **`inverse_cw` in the shape of its computed quantities.** With `F`, `β`,</span>
+`P`, `ρ` as in `neumann_cw`; `T 0 ≥ P` and `T (k+1) ≥ F T k` entrywise for
+`k &lt; m` (the `term = _matmul_up(F, term)` loop); `S ≥ ∑_{k≤m} T k`; `bpow ≥
+β^(m+1)`; `0 &lt; d ≤ 1 - β` (`d = down(1 - β)`); `tail ≥ bpow ρ / d`;
+`B ≥ S + tail` entrywise: `A0` is invertible and `R - B ≤ A0⁻¹ ≤ R + B`
+entrywise. -/
+<span class="kw">theorem</span> inverse_cw_sound (A0 R F P : Matrix ι ι <span class="kw">ℝ</span>) (β ρ : <span class="kw">ℝ</span>) (hF : Dom (1 - R * A0) F)
+    (hβ : RowLe F β) (hβ1 : β &lt; 1) (hP : ∀ i j, (F * absM R) i j ≤ P i j)
+    (hρ : RowLe P ρ) (m : <span class="kw">ℕ</span>) (T : <span class="kw">ℕ</span> → Matrix ι ι <span class="kw">ℝ</span>) (hT0 : ∀ i j, P i j ≤ T 0 i j)
+    (hT : ∀ k &lt; m, ∀ i j, (F * T k) i j ≤ T (k + 1) i j) (S : Matrix ι ι <span class="kw">ℝ</span>)
+    (hS : ∀ i j, ∑ k ∈ range (m + 1), T k i j ≤ S i j) (bpow : <span class="kw">ℝ</span>)
+    (hb : β ^ (m + 1) ≤ bpow) (d : <span class="kw">ℝ</span>) (hd0 : 0 &lt; d) (hd : d ≤ 1 - β) (tail : <span class="kw">ℝ</span>)
+    (ht : bpow * ρ / d ≤ tail) (B : Matrix ι ι <span class="kw">ℝ</span>) (hB : ∀ i j, S i j + tail ≤ B i j) :
+    IsUnit A0 ∧ ∀ i j, A0⁻¹ i j ∈ Icc (R i j - B i j) (R i j + B i j) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/Kernel/Data/Q1Check.lean:20</div><pre>/<span class="cm">-- **Kernel-checked eps⁻¹ enclosure, q-point 1** (n = 76): every real matrix in</span>
+cert.py&#x27;s interval matrix `eps` is invertible and its inverse lies entrywise in
+cert.py&#x27;s claimed enclosure `inv` (all data exact dyadics of cert.py&#x27;s floats). -/
+<span class="kw">theorem</span> epsinv_enclosure_q1 (A0 : Matrix (Fin cert.n) (Fin cert.n) <span class="kw">ℝ</span>)
+    (hA : ∀ i j, A0 i j ∈ Set.Icc (cert.mat cert.SE cert.epsLo i j)
+      (cert.mat cert.SE cert.epsHi i j)) :
+    IsUnit A0 ∧ ∀ i j, A0⁻¹ i j ∈ Set.Icc (cert.mat cert.SO cert.outLo i j)
+      (cert.mat cert.SO cert.outHi i j) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+</div></section>
+<section class='node' id='coul'><div class='card'><h2 style='margin-top:0'>4 · Coulomb averages <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>v̄(Q) = (8π/|P|) ∫_P |Q+u|⁻² du over the mini-BZ cell P, and the analogous |Q+u|⁻¹ average for the q→0 wings. Proved in Lean for all 1363 + 7 entries (cone decomposition, kernel-checked cubature with proved remainders). P is the 26-half-space cell; it equals the Wigner–Seitz cell a.e. since it contains it and |P| = 1/8 (proved).</p><p class='small'><b>Why it matters.</b> Spec A uses the exact averages; production estimates them by Monte Carlo. That difference is almost all of the 5.21 µeV production-vs-spec gap.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='coul-0'> keyQ: the table key is 2(q+G) in crystal coordinates, and Q = key/2</label>
+<label><input type='checkbox' id='coul-1'> the quantity BerkeleyGW&#x27;s Monte Carlo estimates is this average (spec A vs production)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Coulomb/Geometry.lean:104  (cellP)</div><pre>/<span class="cm">-- The Wigner–Seitz cell of the q-lattice (26 half-spaces, metric `B`). -/</span>
+<span class="kw">def</span> cellP : Set E3 := {u | ∀ n ∈ cellNs, 2 * QB.bil u (n.r 2) ≤ QB.q (n.r 2)}</pre>
+<div class="loc">GW/Endpoint/Coulomb/Average.lean:17  (cavg)</div><pre>/<span class="cm">-- The mini-BZ average of `8π |Q + p|_B^{-k}` over the Wigner–Seitz cell `P`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> cavg (k : <span class="kw">ℕ</span>) (Q : E3) : <span class="kw">ℝ</span> :=
+  8 * Real.pi / (volume cellP).toReal * ∫ u in cellP, QB.fk k (Q + u)</pre>
+<div class="loc">GW/Endpoint/Coulomb/Average.lean:24  (vbTrue)</div><pre>/<span class="cm">-- `vbar(Q) = (1/|P|) ∫_P 8π / |Q+p|²_B dp` at `Q = key/2`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> vbTrue (key : <span class="kw">ℤ</span> × <span class="kw">ℤ</span> × <span class="kw">ℤ</span>) : <span class="kw">ℝ</span> := cavg 2 (keyQ key)</pre>
+<div class="loc">GW/Endpoint/Coulomb/Average.lean:27  (oqTrue)</div><pre>/<span class="cm">-- `oneoverq(q) = (1/|P|) ∫_P 8π / |q+p|_B dp` at `q = key/2`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> oqTrue (key : <span class="kw">ℤ</span> × <span class="kw">ℤ</span> × <span class="kw">ℤ</span>) : <span class="kw">ℝ</span> := cavg 1 (keyQ key)</pre>
+<div class="loc">GW/Endpoint/Coulomb/Geometry.lean:424  (volume_cell)</div><pre>/<span class="cm">-- **`|P| = 1/8`** (the crystal volume of the mini-BZ cell for the 2×2×2 grid). -/</span>
+<span class="kw">theorem</span> volume_cell : volume cellP = ENNReal.ofReal (1 / 8) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/Kernel/Data/CoulTab.lean:11838</div><pre>/<span class="cm">-- **`VbHyp` discharged**: every Coulomb box of stage 3 contains the true mini-BZ average</span>
+`vbar(Q) = (1/|P|) ∫_P 8π/|Q+p|²_B dp` (`Q = key/2`, `P` the Wigner–Seitz cell of the q-grid). -/
+<span class="kw">theorem</span> vb_hyp : VbHyp S3.vbT S3.eg.SV vbTrue := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Common/minibzaverage.f90:47-85</div><pre>   47   
+   48    integer :: ii, nn2
+   49  
+   50    PUSH_SUB(minibzaverage_3d_oneoverq2)
+   51  
+   52    integral = 0D0
+   53    length_qk = DOT_PRODUCT(qk,MATMUL(bdot,qk))
+   54  
+   55    if( length_qk &lt; TOL_Zero ) then
+   56      nn2 = nn
+   57      do ii = 1, nn2
+   58        gkq(:) = qk(:) + qran(:,ii)
+   59        length = DOT_PRODUCT(gkq,MATMUL(bdot,gkq))
+   60        ! Skip the small value of q that will be integrated analytically later on
+   61        if ( length &gt; q0sph2 ) integral = integral + 1D0/length
+   62      enddo
+   63    else
+   64      ! FHJ: for spherical integration regions, one can make the error per MC
+   65      ! integration ~const. by choosing the number of points such that N ~ 1/ekinx.
+   66      ! This is because, in 3D, error = sigma/N^{3/2}, and sigma ~ 1/ekinx^{3/2}
+   67      ! If we fix the number of points such that N(ekinx=4*q0sph2) = nmc_coarse,
+   68      nn2 = idnint(nmc_coarse * 4d0 * q0sph2 / length_qk)
+   69      nn2 = max(1, min(nn2, nn))
+   70      do ii = 1, nn2
+   71        gkq(:) = qk(:) + qran(:,ii)
+   72        length = DOT_PRODUCT(gkq,MATMUL(bdot,gkq))
+   73        integral = integral + 1D0/length
+   74      enddo
+   75    endif
+   76  
+   77    integral = integral * 8D0 * PI_D / dble(nn2)
+   78  
+   79    if( length_qk &lt; TOL_Zero ) then
+   80      integral = integral + 32.0D0 * PI_D**2 * SQRT(q0sph2) / ( 8.0D0 * PI_D**3 / (celvol * dble(nfk)) )
+   81    endif
+   82  
+   83    if (length_qk .lt. TOL_Zero .and. averagew) then
+   84      wcoul0 = integral * epshead
+   85    endif</pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/coulomb.py:72</div><pre>    def production(self, qk):
+        &quot;&quot;&quot;The production estimate (unscaled by fact), for qk = q+G in crystal coords.&quot;&quot;&quot;
+        qk = np.asarray(qk, float)
+        qr = self.qran()
+        lqk = qk @ self.bdot @ qk
+        if lqk &lt; 1e-12:                          # TOL_Zero
+            g = qr + qk
+            ln = np.einsum(&quot;ni,ij,nj-&gt;n&quot;, g, self.bdot, g)
+            s = np.sum(1.0 / ln[ln &gt; self.q0sph2])
+            return s * 8 * np.pi / NMC + 32 * np.pi ** 2 * np.sqrt(self.q0sph2) / self.volume
+        nn2 = int(np.rint(NMC_COARSE * 4.0 * self.q0sph2 / lqk))
+        nn2 = max(1, min(nn2, NMC))
+        g = qr[:nn2] + qk
+        ln = np.einsum(&quot;ni,ij,nj-&gt;n&quot;, g, self.bdot, g)
+        return np.sum(1.0 / ln) * 8 * np.pi / nn2
+</pre>
+</div>
+</div></section>
+<section class='node' id='gpp'><div class='card'><h2 style='margin-top:0'>5 · Plasmon-pole modes <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>From ε⁻¹ and the charge density: I = δ − ε⁻¹ (with BerkeleyGW's q→0 wing rule), Ω²_GG' from RHO (wpeff, including the q = 0, G = 0 row), w̃² = Ω²/I, the drop thresholds (TOL_SMALL) and the invalid-mode convention w̃ = 1e12.</p><p class='small'><b>Why it matters.</b> These are the branch-sensitive quantities; a threshold or wing mistake changes Σ.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='gpp-0'> wings applied in the irreducible frame at the sortrx-first G = 0 element</label>
+<label><input type='checkbox' id='gpp-1'> TS = TOL_SMALL, TZ = TOL_Zero, WINV = 1e12 are BerkeleyGW&#x27;s constants (binary64 values)</label>
+<label><input type='checkbox' id='gpp-2'> wpsq = RYD²·16π·n_elec/Ω as in read_rho_vxc.f90</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:158  (epsS)</div><pre>/<span class="cm">-- The eps⁻¹ entry `(i, j)` Sigma uses at `qd`, with the wing rule. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> epsS (qd : QD) (i j : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">let</span> e := (<span class="kw">if</span> qd.neg.getD i false = qd.neg.getD j false <span class="kw">then</span> 1 <span class="kw">else</span> -1) *
+    E qd.iq (qd.idx.getD i 0) (qd.idx.getD j 0)
+  <span class="kw">if</span> qd.qh = 0 <span class="kw">then</span>
+    (<span class="kw">if</span> (i = qd.z ∧ j ≠ qd.z) ∨ (j = qd.z ∧ i ≠ qd.z) <span class="kw">then</span> 0 <span class="kw">else</span> e)
+  <span class="kw">else</span> <span class="kw">if</span> i = qd.z ∧ j ≠ qd.z <span class="kw">then</span> e * (oq qd.qh * qlen gl qd / (8 * Real.pi))
+  <span class="kw">else</span> <span class="kw">if</span> j = qd.z ∧ i ≠ qd.z <span class="kw">then</span> e * (oq qd.qh / (vb (key qd (gs qd 0)) * qlen gl qd))
+  <span class="kw">else</span> e</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:168  (IeS)</div><pre>/<span class="cm">-- `I_eps = δ - eps⁻¹`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> IeS (qd : QD) (i j : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> := (<span class="kw">if</span> i = j <span class="kw">then</span> 1 <span class="kw">else</span> 0) - epsS gl E vb oq qd i j</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:171  (Om2S)</div><pre>/<span class="cm">-- `Omega²(G_i, G_j)` (wpeff). -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> Om2S (qd : QD) (i j : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  match rhoF gl (gs qd i - gs qd j) with
+  | none =&gt; 0
+  | some r =&gt;
+    <span class="kw">if</span> qd.qh = 0 ∧ gs qd i = 0 <span class="kw">then</span> (<span class="kw">if</span> gs qd j = 0 <span class="kw">then</span> factW gl * r <span class="kw">else</span> 0)
+    <span class="kw">else</span> factW gl * vb (key qd (gs qd i)) / (8 * Real.pi) *
+      dotB gl (vec qd (gs qd j)) (vec qd (gs qd i)) * r</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:183  (wt2)</div><pre>/<span class="cm">-- `wtilde²` (`0` for a dropped entry). -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> wt2 (I O : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> := <span class="kw">if</span> TS ≤ |I| ∧ TS ≤ |O| <span class="kw">then</span> O / I <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:191  (wtM)</div><pre>/<span class="cm">-- `wtilde`: `√wt2` for a valid mode, `1/TOL_Zero` for an invalid one (`wt2 &lt; 0`,</span>
+`invalid_gpp_mode` default), `0` for a dropped entry. -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> wtM (I O : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">if</span> keepM I O <span class="kw">then</span> (<span class="kw">if</span> 0 &lt; wt2 I O <span class="kw">then</span> √(wt2 I O) <span class="kw">else</span> WINV) <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:186  (keepM)</div><pre>/<span class="cm">-- A GPP mode is kept: both drop tests and `|wtilde²| ≥ TOL_Small`. -/</span>
+<span class="kw">def</span> keepM (I O : <span class="kw">ℝ</span>) : <span class="kw">Prop</span> := (TS ≤ |I| ∧ TS ≤ |O|) ∧ TS ≤ |wt2 I O|</pre>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Sigma/mtxel_cor.f90:690-797</div><pre>  690  ! Calculate Plasma Frequencies
+  691  !
+  692  ! SIB: Here we get the plasmon-pole effective plasma frequecies
+  693  ! Omega(G,G`)^2 (equation (31) of Hybersten &amp; Louie, PRB 34, 1986, p 5396)
+  694  ! which come in the vector wp(G) for current G`.
+  695  
+  696  ! SIB: We calculate wp(G) for a given G` (trade-off for memory)
+  697  ! Note that wp(G) G=1,ncouls requires O(N) operations
+  698  ! Even if we redo it for each band n, not so bad
+  699  
+  700  ! JRD: I changed this to use qk instead of qkk because we use vcoul at q=0
+  701  ! (instead of small q) throughout
+  702  
+  703  
+  704  ! given how many times this routine is called, timing it appears to take a non-negligible amount of time
+  705  
+  706        call timing%start(timing%m_cor_pp_prep)
+  707  
+  708        call wpeff(crys,gvec,wpg,sig,neps,isrtrq,igp,ncouls,wpmtx,nspin,qk,vcoul,coulfact)
+  709  
+  710  !!------ For given G` (igp), loop over all G vectors (ig) in lower triangle ---
+  711  
+  712        !XX call timing%start(timing%m_cor_pp_prep)
+  713  
+  714        do ig=1,ncouls
+  715  
+  716  ! Put epsilon(G,G`) into epsggp
+  717  
+  718          epsggp = ph(ig)*MYCONJG(ph(igp))*epstemp(ind(ig))
+  719  
+  720  ! I_epsggp = Kronecker(G,G`) - eps(G,G`)
+  721  
+  722          if (ig.eq.igp) then
+  723            I_epsggp = ONE - epsggp
+  724          else
+  725            I_epsggp = ZERO - epsggp
+  726          endif
+  727  
+  728  ! If I_epsggp is too small, then we skip this (G,G`) entry
+  729  ! This only happens when eps is 1 on diagonal or 0 off diagonal
+  730  ! but, this means no screening correct and is already treated properly in bare
+  731  ! exchange term
+  732  
+  733          if (abs(I_epsggp).lt.TOL_Small) cycle
+  734  
+  735          I_eps_array(ig,my_igp) = I_epsggp
+  736  
+  737  ! Omega2 = Omega(G,G`)^2 = effective plasma freq^2
+  738  
+  739          Omega2 = wpmtx(ig)
+  740  
+  741  ! If Omega2 is too small, then we skip this (G,G`) entry
+  742  ! JRD: I am not sure why we have to cycle here... :/ Probably not needed
+  743  ! FHJ: If Omega2-&gt;0, both the SX and the CH terms vanish. But the CH term
+  744  ! goes to zero as Omega2/wtilde ~ Omega2/sqrt(Omega2). Skipping this term is
+  745  ! probably better than risking a 0/sqrt(0) division.
+  746  
+  747  
+  748          if (abs(Omega2).lt.TOL_Small) cycle
+  749  
+  750  #ifdef CPLX
+  751  
+  752  ! &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; COMPLEX GPP &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+  753  
+  754  ! (gsm) equations (17), (20), (21) from [PRB 40, 3162 (1989)]
+  755  
+  756          wtilde2_temp = Omega2 / I_epsggp
+  757  
+  758          lambda = abs(wtilde2_temp)
+  759          if (lambda .lt. TOL_Small) cycle
+  760          phi = atan2(IMAG(wtilde2_temp), dble(wtilde2_temp))
+  761          if (abs(cos(phi)) .lt. TOL_Small) cycle
+  762          wtilde2 = lambda / cos(phi)
+  763  ! this is not needed because we recalculate Omega2 below
+  764  !        Omega2 = Omega2 * CMPLX(1.0d0, -tan(phi))
+  765  
+  766  #else
+  767  
+  768  ! &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; REAL GPP &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+  769  
+  770  ! (gsm) equation (30) from [PRB 34, 5390 (1986)]
+  771  
+  772          wtilde2 = Omega2 / I_epsggp
+  773  
+  774          if (abs(wtilde2) .lt. TOL_Small) cycle
+  775  
+  776  #endif
+  777  
+  778          !FHJ: What do we do if we find an invalid mode with wtilde2&lt;0?
+  779          if (dble(wtilde2)&lt;0) then
+  780            select case (sig%invalid_gpp_mode)
+  781              case (0) ! Skip invalid GPP mode and ignore its contribution to the self energy.
+  782                wtilde = (0d0,0d0)
+  783              case (1) ! &quot;Find&quot; a purely imaginary mode frequency (GSM &amp; JRD).
+  784                wtilde = sqrt(COMPLEXIFY(wtilde2))
+  785              case (2) ! Set the GPP mode frequency to a fixed value of 2 Ry.
+  786                wtilde = CMPLX(2d0*ryd, 0d0)
+  787              case (3) ! Treat that mode within the static COHSEX approximation.
+  788                wtilde = CMPLX(1d0/TOL_ZERO, 0d0)
+  789              case default
+  790                wtilde = CMPLX(1d0/TOL_ZERO, 0d0)
+  791            endselect
+  792          else
+  793            wtilde = CMPLX(sqrt(dble(wtilde2)), 0d0)
+  794          endif
+  795          wtilde_array(ig,my_igp) = wtilde
+  796  
+  797        enddo ! G Loop for GPP Setup</pre>
+<div class="loc">BerkeleyGW-4.0/Common/fixwings.f90:61-110</div><pre>   61    subroutine fixwings(vcoul,wcoul0,epstemp,icutv,iscreen, &amp;
+   62      icol,nmtx,irow_G0,q0len,oneoverq,fact,q0flag,averagew,bdot)
+   63      integer, intent(in) :: icol,nmtx,irow_G0,iscreen,icutv
+   64      real(DP), intent(in) :: vcoul,oneoverq,q0len,fact
+   65      SCALAR, intent(inout) :: epstemp(nmtx)
+   66      SCALAR, intent(in) ::  wcoul0
+   67      logical, intent(in) :: q0flag,averagew
+   68      real(DP), intent(in) :: bdot(3,3)
+   69    
+   70      integer :: i
+   71      real(DP) :: zc
+   72      
+   73  !if irow_G0 &lt; avgcut \=icol
+   74  !epstemp()*oneverq*q0len
+   75  !if icol &lt; avgcut i\=icol
+   76  !epstemp(i)*oneoverq/(vcoul(icol)*qicol00)
+   77  
+   78  !----------------------
+   79  ! No Truncation
+   80  
+   81      PUSH_SUB(fixwings)
+   82      
+   83      if (icutv==TRUNC_NONE) then
+   84        if (icol.ne.irow_G0) then ! wing` (Gp/=0)
+   85          if (iscreen==SCREEN_SEMICOND) then
+   86            epstemp(irow_G0) = epstemp(irow_G0)*oneoverq*q0len/(8D0*PI_D)
+   87          endif
+   88          ! JRD Zero out q0 wings
+   89          if (q0flag .and. iscreen==SCREEN_SEMICOND) epstemp(irow_G0) = 0D0
+   90        else
+   91          do i=1,nmtx
+   92            if (i .ne. irow_G0) then ! wing (G/=0)
+   93              if (iscreen==SCREEN_SEMICOND) then
+   94                epstemp(i) = epstemp(i)*fact*oneoverq/(vcoul*q0len)
+   95              endif
+   96              if (iscreen==SCREEN_GRAPHENE) then
+   97                epstemp(i) = epstemp(i)*fact*8D0*PI_D/(vcoul*q0len**2)
+   98              endif
+   99              ! JRD Zero out q0 wings
+  100              if (q0flag .and. iscreen==SCREEN_SEMICOND) epstemp(i) = 0D0
+  101            else ! Head
+  102              if (q0flag .and. averagew) then
+  103                 epstemp(i) = wcoul0/vcoul
+  104              endif
+  105            endif
+  106          enddo
+  107        endif
+  108      endif
+  109    
+  110  !----------------------</pre>
+<div class="loc">BerkeleyGW-4.0/Common/read_rho_vxc.f90:185-196</div><pre>  185  #ifdef CPLX
+  186      if(any(abs(aimag(wpg%rho(1,:))) &gt; TOL_Zero)) then
+  187        call die(&quot;Charge density in RHO has imaginary part for G=0&quot;, only_root_writes = .true.)
+  188      endif
+  189  #endif
+  190      
+  191      do ispin=1,kp%nspin
+  192        wpg%nelec(ispin)=dble(wpg%rho(1,ispin))
+  193        wpg%wpsq(ispin)=ryd*ryd*16.0d0*PI_D*wpg%nelec(ispin)/crys%celvol
+  194      enddo
+  195      
+  196      ! This is unacceptable because it means the number of electrons is negative,</pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/cert.py:212</div><pre>    def modes(self, q, Gs, eps):
+        &quot;&quot;&quot;I_eps, wtilde (eV) and v (with fact), mtxel_cor.f90:690-735, wpeff.f90.&quot;&quot;&quot;
+        cr = self.run.cr
+        n = len(Gs)
+        Ie = I.exact(np.eye(n)) - eps
+        v = I(np.array([self.coul.vbar(q + g).lo for g in Gs]),
+              np.array([self.coul.vbar(q + g).hi for g in Gs])) * self.fact
+        vb = I(np.array([self.coul.vbar(q + g).lo for g in Gs]),
+               np.array([self.coul.vbar(q + g).hi for g in Gs]))
+        qG = q[None, :] + Gs
+        q_nonzero = np.any(q != 0)
+        fact = self.wpsq / I.exact(self.nelec)
+        # Omega2(G,G&#x27;) = fact * vbar(G)/(8 pi) * (q+G&#x27;).B.(q+G) * rho(G-G&#x27;)
+        dotm = None
+        for i in range(3):
+            for j in range(3):
+                term = I.exact(qG[None, :, i]) * I.exact(np.full((1, 1), cr.bdot[i, j])) * I.exact(qG[:, None, j])
+                dotm = term if dotm is None else dotm + term        # dotm[g, g&#x27;] = (q+G&#x27;).B.(q+G)
+        r = np.zeros((n, n))
+        has = np.zeros((n, n), bool)
+        for i in range(n):
+            for jp in range(n):
+                gg = tuple(Gs[i] - Gs[jp])
+                if gg in self.rho_idx:
+                    r[i, jp] = self.rho[&quot;rho&quot;][self.rho_idx[gg]]
+                    has[i, jp] = True
+        pre = fact * vb / (I.exact(8.0) * iv.PI)                      # per row G
+        Om2 = pre.reshape(n, 1) * dotm * I.exact(r)
+        g0row = ~Gs.any(axis=1)
+        if not q_nonzero:
+            # G = 0 row at q = 0 (wpeff.f90: igadd == 1 and q = 0):
+            # Omega2(0, G&#x27;) = fact * rho(0) if G&#x27; = 0, else 0
+            zi = int(np.flatnonzero(g0row)[0])
+            row = I.exact(np.zeros(n))
+            row[zi] = fact * I.exact(r[zi, zi])
+            Om2[zi] = row
+        Om2 = iv.select(has, ~has, Om2, 0.0)
+        # thresholds: keep iff |I| &gt;= TOL_SMALL and |Om2| &gt;= TOL_SMALL
+        Ia, Oa = Ie.abs(), Om2.abs()
+        keepI_t, keepI_f = Ia.certainly_ge(TOL_SMALL), Ia.certainly_lt(TOL_SMALL)
+        keepO_t, keepO_f = Oa.certainly_ge(TOL_SMALL), Oa.certainly_lt(TOL_SMALL)
+        count(&quot;undecided_TOL_SMALL_I&quot;, np.sum(~keepI_t &amp; ~keepI_f))
+        count(&quot;undecided_TOL_SMALL_Om2&quot;, np.sum(keepI_t &amp; ~keepO_t &amp; ~keepO_f))
+        keep = keepI_t &amp; keepO_t
+        und = (~keepI_t &amp; ~keepI_f) | (keepI_t &amp; ~keepO_t &amp; ~keepO_f)
+        if np.any(und):
+            for i, j in np.argwhere(und)[:5]:
+                print(&quot;UNDECIDED&quot;, q, Gs[i], Gs[j], &quot;I&quot;, Ie.lo[i, j], Ie.hi[i, j],
+                      &quot;Om2&quot;, Om2.lo[i, j], Om2.hi[i, j], file=sys.stderr)
+            raise NotImplementedError(&quot;undecided GPP drop threshold&quot;)
+        Ie_used = iv.select(keepI_t, keepI_f, Ie, 0.0)
+        safeI = iv.select(keep, ~keep, Ie, 1.0)
+        wt2 = iv.select(keep, ~keep, Om2 / safeI, 0.0)
+        pos, neg = wt2.certainly_gt(0.0), wt2.certainly_lt(0.0)
+        count(&quot;undecided_wt2_sign&quot;, np.sum(keep &amp; ~pos &amp; ~neg))
+        if np.any(keep &amp; ~pos &amp; ~neg):
+            raise NotImplementedError(&quot;undecided GPP mode validity&quot;)
+        small_t, small_f = wt2.abs().certainly_lt(TOL_SMALL), wt2.abs().certainly_ge(TOL_SMALL)
+        if np.any(keep &amp; ~small_t &amp; ~small_f):
+            raise NotImplementedError(&quot;undecided |wtilde2| threshold&quot;)
+        keep &amp;= small_f
+        count(&quot;invalid_modes&quot;, np.sum(keep &amp; neg))
+        wt = iv.select(keep &amp; pos, ~(keep &amp; pos), iv.select(pos, ~pos, wt2, 1.0).abs().sqrt(), 0.0)
+        wt = iv.select(keep &amp; neg, ~(keep &amp; neg), 1.0 / TOL_ZERO, wt)
+        return dict(Ie=Ie_used, wt=wt, keep=keep, v=v)
+</pre>
+</div>
+</div></section>
+<section class='node' id='sigma'><div class='card'><h2 style='margin-top:0'>6 · Self-energy Σ <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>Bare exchange X, the GPP kernels (generic / near-pole / zero branch, sexcut clamp) summed over q, bands and (G, G'), the exact static COHSEX remainder, with 1/(N_q Ω). The division-free branch tests are proved equivalent to the source's wherever the source's formula is defined, x ≠ ±w̃ (certSsx_eq_srcSsx).</p><p class='small'><b>Why it matters.</b> The formula whose output production prints.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='sigma-0'> the three branches and their thresholds match mtxel_cor.f90:1817-1843 line by line</label>
+<label><input type='checkbox' id='sigma-1'> sexcut clamp: ssx = 0 iff |ssx| &gt; sexcut·|I| and wx &lt; 0 (applied after the branch)</label>
+<label><input type='checkbox' id='sigma-2'> at wx = w̃ (source 0/0) the certificates hold for both IEEE and continuous conventions</label>
+<label><input type='checkbox' id='sigma-3'> static remainder = ½(exact static CH − Σ partial static CH): exact static CH at mtxel_cor.f90:600-649, the per-band partial static CH accumulated by acc_static_ch (3924-3965, called at 1703)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:199  (schM)</div><pre>/<span class="cm">-- The CH kernel of one mode: generic branch `wtilde I / (x - wtilde)`, <span class="kw">else</span> `0`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> schM (I O x : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">if</span> keepM I O <span class="kw">then</span>
+    (<span class="kw">let</span> w := wtM I O
+     <span class="kw">if</span> (x - w) ^ 2 &gt; GAM2 ∧ w ^ 2 &lt; (x - w) ^ 2 * LIM1 <span class="kw">then</span> w * IeU I / (x - w) <span class="kw">else</span> 0)
+  <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:206  (ssxM)</div><pre>/<span class="cm">-- The SX kernel of one mode (`Cert.certSsx`: generic / near-pole / zero, `sexcut`). -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> ssxM (I O x : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">if</span> keepM I O <span class="kw">then</span> GW.Endpoint.Cert.certSsx GAM2 LIM1 TZ SEXC (IeU I) (wtM I O) x <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/CertSexcut.lean:97  (srcSsx)</div><pre>/<span class="cm">-- The source&#x27;s value for one mode, real flavour, read over the reals:</span>
+branch on `wdiffr = (x-w)^2`, `delwr = (w/(x-w))^2`, <span class="kw">then</span> the `sexcut` clamp.
+Meaningful only for `x ≠ w` and `x + w ≠ 0` (see the module docstring). -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> srcSsx (γ2 lim1 tolZ s I w x : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">let</span> v := <span class="kw">if</span> (x - w) ^ 2 &gt; γ2 ∧ delw w x ^ 2 &lt; lim1 <span class="kw">then</span> ssxGen I w x
+    <span class="kw">else</span> <span class="kw">if</span> delw w x ^ 2 &gt; tolZ <span class="kw">then</span> ssxNearSource I w x <span class="kw">else</span> 0
+  <span class="kw">if</span> |v| &gt; s * |I| ∧ x &lt; 0 <span class="kw">then</span> 0 <span class="kw">else</span> v</pre>
+<div class="loc">GW/Endpoint/CertSexcut.lean:105  (certSsx)</div><pre>/<span class="cm">-- The decided-branch model of cert.py&#x27;s value for one kept mode (`SigmaIV.kernel`,</span>
+occupied): the division-free branch and clamp tests, the generic value `wt2 * Ie / den` and the
+near-pole value `-(Ie * wt) / den_n`. -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> certSsx (γ2 lim1 tolZ s I w x : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">if</span> (x - w) ^ 2 &gt; γ2 ∧ w ^ 2 &lt; (x - w) ^ 2 * lim1 <span class="kw">then</span>
+    (<span class="kw">if</span> |x ^ 2 - w ^ 2| &lt; w ^ 2 * (1 / s) ∧ x &lt; 0 <span class="kw">then</span> 0 <span class="kw">else</span> w ^ 2 * I / (x ^ 2 - w ^ 2))
+  <span class="kw">else</span> <span class="kw">if</span> w ^ 2 &gt; (x - w) ^ 2 * tolZ ∧ x - w ≠ 0 <span class="kw">then</span>
+    (<span class="kw">if</span> |2 * (x + w)| &lt; w * (1 / s) ∧ x &lt; 0 <span class="kw">then</span> 0 <span class="kw">else</span> -(I * w) / (2 * (x + w)))
+  <span class="kw">else</span> 0</pre>
+<div class="loc">GW/Endpoint/CertSexcut.lean:124  (certSsx_eq_srcSsx)</div><pre>/<span class="cm">-- **The certified value is the source&#x27;s value** for every branch outcome,</span>
+whenever the source&#x27;s real-number formula is defined (`x ≠ w`, `x + w ≠ 0`),
+for `w &gt; 0`, `sexcut &gt; 0` and any thresholds. -/
+<span class="kw">theorem</span> certSsx_eq_srcSsx (γ2 lim1 tolZ : <span class="kw">ℝ</span>) (hw : 0 &lt; w) (hs : 0 &lt; s) (hxw&#x27; : x ≠ w)
+    (hxw : x + w ≠ 0) : certSsx γ2 lim1 tolZ s I w x = srcSsx γ2 lim1 tolZ s I w x := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:251  (Xq)</div><pre>/<span class="cm">-- The bare exchange of band `a` at q-point `t` (Ry). -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> Xq (t a : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">let</span> qd := gl.qs.getD t default
+  <span class="kw">let</span> kq := st.kq.getD t default;
+  -(∑ n1 ∈ range gl.nocc, ∑ g ∈ range qd.Gb.length,
+    (pd gl st.Gk (st.ck.getD a []) kq.Gq (kq.cq.getD n1 []) (qd.Gb.getD g 0)) ^ 2 *
+      (vb (key qd (qd.Gb.getD g 0)) / (Nq gl * vol gl)))</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:259  (CSq)</div><pre>/<span class="cm">-- The exact static CH term of band `a` at q-point `t`:</span>
+`(1/4) Σ_j v_j Σ_i [|I| ≥ TOL_Small, G_i - G_j ∈ Gch] &lt;a|e^{i(G_i-G_j).r}|a&gt; (eps - δ)`. -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> CSq (t a : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  <span class="kw">let</span> qd := gl.qs.getD t default
+  (1 / 4) * ∑ j ∈ range qd.Gs.length, vS gl vb qd j * ∑ i ∈ range qd.Gs.length,
+    (<span class="kw">if</span> TS ≤ |IeS gl E vb oq qd i j| ∧ gs qd i - gs qd j ∈ gl.Gch <span class="kw">then</span>
+      pd gl st.Gk (st.ck.getD a []) st.Gk (st.ck.getD a []) (gs qd i - gs qd j) *
+        (epsS gl E vb oq qd i j - <span class="kw">if</span> i = j <span class="kw">then</span> 1 <span class="kw">else</span> 0)
+     <span class="kw">else</span> 0)</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:272  (SigA)</div><pre>/<span class="cm">-- Band `a`&#x27;s `Σ(E_o + iw dE) - Vxc` summed over q (Ry): `X + SX_iw + CH_iw + COR`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> SigA (a iw : <span class="kw">ℕ</span>) : <span class="kw">ℝ</span> :=
+  ∑ t ∈ range gl.qs.length, (Xq gl vb st t a + CSq gl E vb oq st t a +
+    ∑ n1 ∈ range (nbq st t), (ACq gl E vb oq st t a n1 + Pq gl E vb oq st t a n1 iw))</pre>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Sigma/mtxel_cor.f90:1766-1850</div><pre> 1766  
+ 1767        indigp = inv_igp_index(my_igp)
+ 1768        igp = indinv(indigp)
+ 1769  
+ 1770        if (igp .gt. ncouls .or. igp .le. 0) cycle
+ 1771  
+ 1772        ssx_array = ZERO
+ 1773        sch_array = ZERO
+ 1774  
+ 1775  ! delw measures how close to zero the difference
+ 1776  ! wx - wtilde = E - E_n1(k-q) - wtilde is relative to wtilde:
+ 1777  ! delw = (E - E_n1(k-q) - wtilde) / (2 * wtilde)
+ 1778  ! delw2 is the squared absolute value of delw
+ 1779  
+ 1780  ! If delw is small, both SX and CH blow up, but their sum (for
+ 1781  ! an occupied state n1) is finite.  In such a case, their sum
+ 1782  ! is Omega^2 / (4 * wtilde2) / (1 + delw). Then the sum is
+ 1783  ! assigned to ssx and sch is set to zero.
+ 1784  
+ 1785  ! If ssx is too large (which can happen due to the pole at
+ 1786  ! wx + wtilde = 0 of the SX term), then we should drop this term.
+ 1787  ! See the discussion at the bottom of p. 5411-5412 of Hybertsen &amp; Louie.
+ 1788  
+ 1789  ! If G.neq.G`, then since we sum over only lower triangle,
+ 1790  ! we include the contribution we would have had from (G`,G).
+ 1791  
+ 1792        if (flag_occ) then
+ 1793  
+ 1794          do iw=nstart,nend
+ 1795  
+ 1796            scht=0D0
+ 1797            ssxt=0D0
+ 1798            wxt = wx_array(iw)
+ 1799  
+ 1800            do ig = 1, ncouls
+ 1801  
+ 1802  ! Here we recompute Omega2 = wtilde2 * I_eps_array. This contains
+ 1803  ! the factor of (1 - i tan phi) from Eqs. 21 &amp; 22 of arXiv paper.
+ 1804  
+ 1805  !FIXME: Here we use temporary variables wtilde, wtilde2, Omega2 while
+ 1806  ! in the following sections we use wtilde_array and I_eps_array directly.
+ 1807  ! JRD, please write a comment here explaining whether this is critical
+ 1808  ! for performance or it doesn`t matter.
+ 1809  
+ 1810              wtilde = wtilde_array(ig,my_igp)
+ 1811              wtilde2 = wtilde**2
+ 1812              Omega2 = wtilde2 * I_eps_array(ig,my_igp)
+ 1813  
+ 1814  ! Cycle bad for vectorization. Not needed wtilde is zero
+ 1815  !                  if (abs(Omega2) .lt. TOL_Zero) cycle
+ 1816  
+ 1817              wdiff = wxt - wtilde
+ 1818  
+ 1819              cden = wdiff
+ 1820              rden = cden * CONJG(cden)
+ 1821              rden = 1D0 / rden
+ 1822              delw = wtilde * CONJG(cden) * rden
+ 1823              delwr = delw*CONJG(delw)
+ 1824              wdiffr = wdiff*CONJG(wdiff)
+ 1825  
+ 1826  ! This Practice is bad for vectorization and understanding of the output.
+ 1827  ! JRD: Complex division is hard to vectorize. So, we help the compiler.
+ 1828              if (wdiffr.gt.limittwo .and. delwr.lt.limitone) then
+ 1829                sch = delw * I_eps_array(ig,my_igp)
+ 1830                cden = wxt**2 - wtilde2
+ 1831                rden = cden*CONJG(cden)
+ 1832                rden = 1D0 / rden
+ 1833                ssx = Omega2 * CONJG(cden) * rden
+ 1834              else if ( delwr .gt. TOL_Zero) then
+ 1835                sch = 0.0d0
+ 1836                cden = (4.0d0 * wtilde2 * (delw + 0.5D0 ))
+ 1837                rden = cden*MYCONJG(cden)
+ 1838                rden = 1D0 / rden
+ 1839                ssx = -Omega2 * MYCONJG(cden) * rden * delw
+ 1840              else
+ 1841                sch = 0.0d0
+ 1842                ssx = 0.0d0
+ 1843              endif
+ 1844  
+ 1845  ! JRD: Breaks vectorization. But, I will have to fix later because
+ 1846  ! leaving it out breaks GSM example.
+ 1847              ssxcutoff = sig%sexcut*abs(I_eps_array(ig,my_igp))
+ 1848              if (abs(ssx) .gt. ssxcutoff .and. wxt .lt. 0.0d0) ssx=0.0d0
+ 1849  
+ 1850              ssxt = ssxt + aqsntemp(ig,n1)*ssx</pre>
+<div class="loc">BerkeleyGW-4.0/Sigma/mtxel_cor.f90:600-649</div><pre>  600  !------------------------------------------------------------------------------
+  601  
+  602  ! (gsm) &lt;&lt;&lt;&lt;&lt;&lt; static COHSEX approximation - exact static CH &gt;&gt;&gt;&gt;&gt;&gt;
+  603  
+  604  ! &lt; n k | \Sigma_{CH} (r, r`; 0) | m k &gt; =
+  605  ! \frac{1}{2} \sum_{q G G`}
+  606  ! &lt; n k | e^{i (G - G`) \cdot r} | m k &gt;
+  607  ! [\eps_{G G`}^{-1} (q; 0) - \delta_{G G`}] v (q + G`)
+  608  
+  609      if (sig%freq_dep.eq.0.or.sig%exact_ch.eq.1) then
+  610  
+  611  ! Only Computed on One Processor Per Pool
+  612  
+  613        ! JRD: Since, we are distributed over igp now, all procs need to do this
+  614  
+  615        achxtemp_gp = ZERO
+  616  
+  617        do ig=1,ncouls
+  618  
+  619          epsggp = ph(ig)*MYCONJG(ph(igp))*SCALARIFY(epstemp(ind(ig)))
+  620  
+  621          if (ig.eq.igp) then
+  622            I_epsggp = epsggp - 1.0d0
+  623          else
+  624            I_epsggp = epsggp
+  625          endif
+  626          if (abs(I_epsggp).lt.TOL_Small) cycle
+  627          if (ig.ne.igp) then
+  628            gpp(:)=gvec%components(:,isrtrq(ig))-gvec%components(:,isrtrq(igp))
+  629            call findvector(iout,gpp,gvec)
+  630            if (iout.eq.0) cycle
+  631            igpp=isrtrqi(iout)
+  632            if (igpp.lt.1.or.igpp.gt.ncoulch) cycle
+  633            gpp(:)=gvec%components(:,isrtrq(igp))-gvec%components(:,isrtrq(ig))
+  634            call findvector(iout,gpp,gvec)
+  635            if (iout.eq.0) cycle
+  636            igpp2=isrtrqi(iout)
+  637            if (igpp2.lt.1.or.igpp2.gt.ncoulch) cycle
+  638          else
+  639            gpp(:)=0
+  640            call findvector(iout,gpp,gvec)
+  641            if (iout.eq.0) cycle
+  642            igpp=isrtrqi(iout)
+  643            if (igpp.lt.1.or.igpp.gt.ncoulch) cycle
+  644          endif
+  645          schx = aqsch(igpp) * I_epsggp
+  646          achxtemp_gp = achxtemp_gp + schx
+  647        enddo ! over G (ig)
+  648  
+  649        achxtemp = achxtemp + achxtemp_gp * vcoul(igp) * 0.5d0</pre>
+<div class="loc">BerkeleyGW-4.0/Sigma/mtxel_cor.f90:3924-3965</div><pre> 3924  subroutine acc_static_ch(ngpown, ncouls, inv_igp_index, indinv, vcoul, &amp;
+ 3925    aqsn_n1, aqsm_n1, achs, eps_scalar, eps_cplx)
+ 3926    integer, intent(in) :: ngpown, ncouls, inv_igp_index(:), indinv(:)
+ 3927    real(DP), intent(in) :: vcoul(:)
+ 3928    SCALAR, intent(in) :: aqsn_n1(:), aqsm_n1(:)
+ 3929    SCALAR, intent(inout) :: achs
+ 3930    SCALAR, intent(in), optional :: eps_scalar(:,:)
+ 3931    complex(DPC), intent(in), optional :: eps_cplx(:,:)
+ 3932  
+ 3933    SCALAR :: schs
+ 3934    integer :: my_igp, igp, indigp, ig
+ 3935  
+ 3936    PUSH_SUB(acc_static_ch)
+ 3937  
+ 3938    if (present(eps_scalar).eqv.present(eps_cplx)) &amp;
+ 3939      call die(&#x27;Internal error calling acc_static_ch&#x27;, only_root_writes=.true.)
+ 3940  
+ 3941    call timing%start(timing%m_cor_remain)
+ 3942  !$OMP PARALLEL do private (my_igp,indigp,igp,ig,schs) reduction(+:achs)
+ 3943    do my_igp = 1, ngpown
+ 3944      indigp = inv_igp_index(my_igp)
+ 3945      igp = indinv(indigp)
+ 3946      if (igp&gt;ncouls .or. igp&lt;=0) cycle
+ 3947  
+ 3948      schs = ZERO
+ 3949      if (present(eps_scalar)) then
+ 3950        do ig = 1, ncouls
+ 3951          schs = schs - aqsn_n1(ig)*eps_scalar(ig,my_igp)
+ 3952        enddo
+ 3953      else
+ 3954        do ig = 1, ncouls
+ 3955          schs = schs - aqsn_n1(ig)*SCALARIFY(eps_cplx(ig,my_igp))
+ 3956        enddo
+ 3957      endif
+ 3958      achs = achs + MYCONJG(aqsm_n1(igp))*schs*vcoul(igp)*0.5D0
+ 3959    enddo
+ 3960  !$OMP END PARALLEL DO
+ 3961    call timing%stop(timing%m_cor_remain)
+ 3962  
+ 3963    POP_SUB(acc_static_ch)
+ 3964  
+ 3965  end subroutine acc_static_ch</pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/cert.py:278</div><pre>    def kernel(self, wx, m, occupied):
+        &quot;&quot;&quot;(ssx, sch) intervals for energy wx (eV interval), mtxel_cor.f90:1766-1850.
+        Near-pole (occupied): ssx = -I w/(2 (wx + w)), the exact value of the
+        source&#x27;s -Omega2 delw / (4 w^2 (delw + 1/2)) wherever that is defined.&quot;&quot;&quot;
+        wt, Ie, keep = m[&quot;wt&quot;], m[&quot;Ie&quot;], m[&quot;keep&quot;]
+        wdiff = wx - wt
+        wdiffr = wdiff.sqr()
+        gen_a_t, gen_a_f = wdiffr.certainly_gt(GAMMA ** 2), wdiffr.certainly_le(GAMMA ** 2)
+        # delwr = wt^2 / wdiff^2 &lt; limitone  &lt;=&gt;  wt^2 &lt; limitone * wdiff^2
+        lim = 1.0 / (TOL_SMALL * 4.0)
+        rhs = wdiffr * I.exact(lim)
+        wt2 = wt.sqr()
+        gen_b_t, gen_b_f = wt2.certainly_lt(rhs), wt2.certainly_ge(rhs)
+        gen_t = keep &amp; gen_a_t &amp; gen_b_t
+        gen_f = ~keep | gen_a_f | gen_b_f
+        count(&quot;undecided_generic&quot;, np.sum(~gen_t &amp; ~gen_f))
+        # generic values, only where generic is possible (wdiff bounded away from 0)
+        safe_wdiff = iv.select(~gen_f, gen_f, wdiff, 1.0)
+        if np.any((~gen_f) &amp; safe_wdiff.contains_zero()):
+            raise ZeroDivisionError(&quot;generic branch possible with wdiff ~ 0&quot;)
+        sch_g = wt * Ie / safe_wdiff
+        if not occupied:
+            sch = iv.select(gen_t, gen_f, sch_g, 0.0)
+            return None, sch
+        # sexcut (mtxel_cor.f90:1847-1848): ssx = 0 when |ssx| &gt; sexcut |I| and
+        # wx &lt; 0, applied to whichever branch value was taken. It is decided
+        # here WITHOUT dividing, by the exactly equivalent (for |I| &gt; 0)
+        #   generic:   |wx^2 - w^2| &lt; w^2 / sexcut
+        #   near-pole: |2 (wx + w)| &lt; w / sexcut       (|ssx_n| = |I| w / |2(wx+w)|)
+        # so that the hole-branch poles of SX (wx = -w), which production
+        # clamps to 0, need no division.
+        neg_t, neg_f = wx.certainly_lt(0.0), wx.certainly_ge(0.0)
+        den = wx.sqr() - wt2
+        lim_g = wt2 * I.exact(1.0 / SEXCUT)
+        cg_t, cg_f = den.abs().certainly_lt(lim_g), den.abs().certainly_ge(lim_g)
+        clampg_t, clampg_f = cg_t &amp; neg_t, cg_f | neg_f
+        need_g = ~gen_f &amp; ~clampg_t
+        safe_den = iv.select(need_g, ~need_g, den, 1.0)
+        if np.any(need_g &amp; safe_den.contains_zero()):
+            raise ZeroDivisionError(&quot;generic ssx denominator ~ 0 outside the sexcut clamp&quot;)
+        ssx_g = iv.select(clampg_t, clampg_f, 0.0, wt2 * Ie / safe_den)
+        # near-pole: delwr &gt; TOL_Zero decides between the combined term and 0;
+        # in the near region wdiff is tiny, so delwr = wt^2/wdiff^2 is huge
+        # at wdiff = 0 exactly the source divides by zero: under IEEE its delw is
+        # 0 * Inf = NaN, both branch tests fail and ssx = 0; the closed form&#x27;s
+        # continuous value is -I/4. The spec does not choose: wherever wdiff may
+        # be 0 the condition is left undecided, so the enclosure is the hull of
+        # both (convention-free) and continuity is not claimed there.
+        wd0 = wdiff.contains_zero()
+        near_cond_t = keep &amp; (wt2.certainly_gt(wdiffr * I.exact(TOL_ZERO))) &amp; ~wd0
+        near_cond_f = ~keep | wt2.certainly_le(wdiffr * I.exact(TOL_ZERO))
+        count(&quot;wdiff_zero_possible&quot;, np.sum(keep &amp; ~gen_t &amp; wd0))
+        count(&quot;undecided_near_zero&quot;, np.sum(~gen_t &amp; ~near_cond_t &amp; ~near_cond_f))
+        den_n = I.exact(2.0) * (wx + wt)
+        lim_n = wt * I.exact(1.0 / SEXCUT)
+        cn_t, cn_f = den_n.abs().certainly_lt(lim_n), den_n.abs().certainly_ge(lim_n)
+        clampn_t, clampn_f = cn_t &amp; neg_t, cn_f | neg_f
+        need_n = keep &amp; ~gen_t &amp; ~near_cond_f &amp; ~clampn_t
+        safe_dn = iv.select(need_n, ~need_n, den_n, 1.0)
+        if np.any(need_n &amp; safe_dn.contains_zero()):
+            raise ZeroDivisionError(&quot;near-pole denominator ~ 0&quot;)
+        ssx_n = iv.select(clampn_t, clampn_f, 0.0, -(Ie * wt) / safe_dn)
+        # wx = -w exactly: the source&#x27;s SX denominator is 0 (IEEE: NaN, Sigma
+        # undefined); the clamp above assigns 0, the limit from either side.
+        # Counted so that a certificate can state it never evaluates there.
+        count(&quot;source_undefined_possible&quot;,
+              np.sum((~gen_f &amp; den.contains_zero()) | (keep &amp; ~gen_t &amp; ~near_cond_f &amp; den_n.contains_zero())))
+        ssx_nb = iv.select(near_cond_t, near_cond_f, ssx_n, 0.0)
+        ssx = iv.select(gen_t, gen_f, ssx_g, ssx_nb)
+        sch = iv.select(gen_t, gen_f, sch_g, 0.0)
+    # ... (7 more lines in bgw/endpoint/cert.py)</pre>
+</div>
+</div></section>
+<section class='node' id='o1'><div class='card'><h2 style='margin-top:0'>7 · Eqp1 and O1 (linearised) <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>Eqp1 = Eqp0 + dΣ/(1 − dΣ)·(Eqp0 − Eo), Eqp0 = Eo + Σ(Eo) (Vxc = 0), forward difference with dE = 1 eV; O1 = Eqp1(X, bands 5–6 average) − Eqp1(L, band 5). <b>Theorem: O1 ∈ [15.4057523, 15.4057537] meV, hence O1 &gt; 0</b>, from the irreducible WFN data, the exact mini-BZ Coulomb averages and the true ε⁻¹, with no hypothesis left (Headline.o1_enclosure_irr_unconditional). O1 &gt; 0 compares X and L only; that the minimum over ALL sampled k-points (Γ included) is at L is Python (cert_o1.json). This is a statement about the specified 18-band calculation (a code claim), not the physical band ordering: with all bands of the finite basis the linearised O1 is ≈ −3.8 meV (Python interval diagnostic, docs/BRIDGE.md BRIDGE-COR).</p><p class='small'><b>Why it matters.</b> The headline claim for spec A.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button><button data-p='f90' class=''>BerkeleyGW source</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='o1-0'> the printed unprimed Eqp1 = enew + achcor·zrenorm (sigma_main.f90:2132, write_result_hp.f90:66; enew/zrenorm from shiftenergy.f90 WITHOUT achcor) equals the Lean eqp1, which puts the E-independent static remainder inside Σ: Eo + (Σ0 + C)/(1 − d), with iwlda0 = Eo, iwlda2 = Eo + dE</label>
+<label><input type='checkbox' id='o1-1'> RYD = 13.60569253 (nrtype.f90:155)</label>
+<label><input type='checkbox' id='o1-2'> the multiplet average and which bands/k-points define O1 (sigma.inp)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:277  (avg)</div><pre>/<span class="cm">-- The multiplet average. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> avg (f : <span class="kw">ℕ</span> → <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> := (∑ a ∈ range st.ck.length, f a) / st.ck.length</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:280  (eqp1)</div><pre>/<span class="cm">-- `Eqp1 = Eqp0 + dΣ/dE / (1 - dΣ/dE) (Eqp0 - Eo)` with the forward difference</span>
+`dΣ/dE = (Σ(Eo + dE) - Σ(Eo)) / dE`, `dE = 1 eV`, `Eqp0 = Eo + Σ(Eo)` (Vxc = 0). -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> eqp1 : <span class="kw">ℝ</span> :=
+  <span class="kw">let</span> s0 := avg st (<span class="kw">fun</span> a =&gt; SigA gl E vb oq st a 0) * RYD
+  <span class="kw">let</span> s1 := avg st (<span class="kw">fun</span> a =&gt; SigA gl E vb oq st a 1) * RYD
+  <span class="kw">let</span> eo := avg st (<span class="kw">fun</span> a =&gt; RYD * dy gl.SEn (st.Ek.getD a 0))
+  <span class="kw">let</span> d := (s1 - s0) / 1
+  <span class="kw">let</span> eqp0 := eo + s0
+  eqp0 + d / (1 - d) * (eqp0 - eo)</pre>
+<div class="loc">GW/Endpoint/Kernel/SigmaSpec.lean:292  (O1)</div><pre>/<span class="cm">-- **The observable** `O1 = Eqp1(X) - Eqp1(L)` of spec A. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> O1 (gl : Gl) (stX stL : St) (E : <span class="kw">ℕ</span> → <span class="kw">ℕ</span> → <span class="kw">ℕ</span> → <span class="kw">ℝ</span>) (vb oq : V3 → <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  eqp1 gl E vb oq stX - eqp1 gl E vb oq stL</pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/Kernel/Headline.lean:39</div><pre>/<span class="cm">-- **O1 of spec A from the irreducible data, unconditional.** -/</span>
+<span class="kw">theorem</span> o1_enclosure_irr_unconditional :
+    O1 glI stXI stLI EIrr vbTrue oqTrue ∈
+      Icc ((8880811588953599 : <span class="kw">ℝ</span>) / 2 ^ 59) ((8880812351936001 : <span class="kw">ℝ</span>) / 2 ^ 59) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/Kernel/Headline.lean:45</div><pre>/<span class="cm">-- `Eqp1(X) &gt; Eqp1(L)` for spec A, from the irreducible data, unconditional. The <span class="kw">theorem</span></span>
+compares X and L only. -/
+<span class="kw">theorem</span> o1_pos_irr_unconditional : 0 &lt; O1 glI stXI stLI EIrr vbTrue oqTrue := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/Kernel/Data/CoulTab.lean:11847</div><pre>/<span class="cm">-- **O1 of spec A, unconditional**: with the true mini-BZ Coulomb averages (no hypothesis left). -/</span>
+<span class="kw">theorem</span> o1_enclosure_unconditional :
+    O1 S3.gl S3.stX S3.stL S3.Etrue vbTrue oqTrue ∈
+      Set.Icc ((8880811588953599 : <span class="kw">ℝ</span>) / 2 ^ 59) ((8880812351936001 : <span class="kw">ℝ</span>) / 2 ^ 59) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/Kernel/Data/US.lean:19</div><pre>/<span class="cm">-- **O1 enclosure (spec A) from the irreducible WFN / WFNq / WFN_inner data.** The unfolded</span>
+spheres, coefficient rows, energies and eps index maps of Sigma and of the three eps blocks
+are computed in Lean from the irreducible coefficients and headers by the symmetry
+unfolding (`Unf.glOf`, `Unf.stOf`, `Unf.epsIn`); the density list (RHO) and the run
+parameters are literals of the export. For every value of the mini-BZ Coulomb averages in
+their certified boxes, `O1` lies in cert.py&#x27;s enclosure (`Headline` discharges the boxes). -/
+<span class="kw">theorem</span> o1_enclosure_irr (vb oq : V3 → <span class="kw">ℝ</span>) (hvb : VbHyp S3.vbT S3.eg.SV vb)
+    (hoq : VbHyp S3.oqT S3.eg.SV oq) :
+    O1 glI stXI stLI EIrr vb oq ∈
+      Set.Icc ((8880811588953599 : <span class="kw">ℝ</span>) / 2 ^ 59) ((8880812351936001 : <span class="kw">ℝ</span>) / 2 ^ 59) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+<div class='pane' data-p='f90'>
+<div class="loc">BerkeleyGW-4.0/Sigma/shiftenergy.f90:176-196</div><pre>  176  !FHJ: Perform linear interpolation/extrapolation for all finite difference
+  177  !     schemes at once. enew is the interpolated off-shell answer = &quot;eqp1&quot;,
+  178  !     and efsto is the on-shell answer = &quot;eqp0&quot;.
+  179  
+  180          ! ZL: Vxc vs. KIH
+  181          if(.not. sig%use_kihdat) then
+  182            efsto(jj,ispin) = wfnk%elda(sig%diag(jj)-ncore_excl,ispin) - &amp;
+  183              alda(jj,ispin) + asig(jj,ispin)
+  184          else
+  185            efsto(jj,ispin) = akih(jj,ispin) + asig(jj,ispin)
+  186          endif
+  187          dele = efsto(jj,ispin) - wfnk%ek(sig%diag(jj)-ncore_excl,ispin)
+  188  
+  189          if (iwlda1/=iwlda2) then
+  190            enew(jj,ispin) = efsto(jj,ispin) + &amp;
+  191              (asigi(iwlda2)-asigi(iwlda1)) / (delta_omega - asigi(iwlda2) + asigi(iwlda1)) * dele
+  192            zrenorm(jj, ispin) = 1d0 / (1d0 - (asigi(iwlda2) - asigi(iwlda1))/delta_omega)
+  193          else
+  194            enew(jj,ispin) = efsto(jj,ispin)
+  195            zrenorm(jj, ispin) = 1d0
+  196          endif</pre>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/cert.py:427</div><pre>    def eqp1(self, pre, parts):
+        &quot;&quot;&quot;Multiplet-averaged Eqp1 (eV) from summed parts over one multiplet.&quot;&quot;&quot;
+        X, SX0, SX1, CH0, CH1, COR = parts
+        nb = I.exact(float(pre[&quot;n&quot;]))
+        avg = lambda a: a.sum() / nb
+        x, cor = avg(X) * RYD, avg(COR) * RYD
+        s0 = x + avg(SX0) * RYD + avg(CH0) * RYD + cor
+        s1 = x + avg(SX1) * RYD + avg(CH1) * RYD + cor
+        eo = avg(pre[&quot;e_lk&quot;])
+        d = (s1 - s0) / I.exact(DW)
+        eqp0 = eo + s0
+        return eqp0 + d / (I.exact(1.0) - d) * (eqp0 - eo), dict(
+            X=x, SXX=avg(SX0) * RYD, CH=avg(CH0) * RYD + cor, Z=I.exact(1.0) / (I.exact(1.0) - d))
+
+</pre>
+</div>
+</div></section>
+<section class='node' id='roots'><div class='card'><h2 style='margin-top:0'>8 · Full quasiparticle equation <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>f(E) = Emf + Σ(E) − E. Kernel-checked: exactly one zero in each of two brackets (X ≈ 4.1944 eV, Z ≈ 0.858; L ≈ 4.1254 eV, Z ≈ 0.855) and O1_fullQP ∈ [68.9856742, 68.9856744] meV &gt; 0 for those zeros. <b>Only in Python</b>: that these are the PRINCIPAL (largest-Z) roots, and that they are the only two zeros in [−10⁴, 10⁴] eV besides a low-weight pair near 30 eV (qp_unique.py; ~3000 CPU-h in the kernel).</p><p class='small'><b>Why it matters.</b> BerkeleyGW&#x27;s printed Eqp1 is one Newton step; the full equation moves O1 by +54 meV, and picking the satellite solutions instead would flip its sign (−537 meV).</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='roots-0'> the principal (largest-Z) root is the physically intended solution</label>
+<label><input type='checkbox' id='roots-1'> the enumeration window [−10⁴, 10⁴] eV is a stated hypothesis (artificial structure near 1e12 eV)</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/Kernel/RootSpec.lean:75  (fQP)</div><pre>/<span class="cm">-- **The quasiparticle function** `f(E) = Emf + Σ(E) - E` (eV; Vxc = 0), multiplet-averaged. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> fQP (cv : Bool) (E : <span class="kw">ℝ</span>) : <span class="kw">ℝ</span> :=
+  emf gl st + avg st (<span class="kw">fun</span> a =&gt; SigE gl Ep vb oq st cv a E) * RYD - E</pre>
+<div class="loc">GW/Endpoint/Kernel/RootSpec.lean:115  (SrcDefOn)</div><pre>/<span class="cm">-- No point of `[a, b]` is one <span class="kw">where</span> the source divides by zero: for every q-point,</span>
+inner band and kept mode, `wx(E) ≠ wtilde`, and for occupied bands `wx(E) ≠ -wtilde`. -/
+<span class="kw">def</span> SrcDefOn (lo hi : <span class="kw">ℝ</span>) : <span class="kw">Prop</span> :=
+  ∀ E ∈ Icc lo hi, ∀ t &lt; gl.qs.length, ∀ n1 &lt; nbq st t, ∀ i &lt; (gl.qs.getD t default).Gs.length,
+    ∀ j &lt; (gl.qs.getD t default).Gs.length,
+      keepM (Iq gl Ep vb oq t j i) (Oq gl vb t j i) →
+        wxE gl st t n1 E ≠ wtM (Iq gl Ep vb oq t j i) (Oq gl vb t j i) ∧
+        (n1 &lt; gl.nocc → wxE gl st t n1 E ≠ -wtM (Iq gl Ep vb oq t j i) (Oq gl vb t j i))</pre>
+<div class="loc">GW/Endpoint/QPUnique.lean:92  (IsolatingBracket)</div><pre>/<span class="cm">-- The hypotheses the certificate checks on one root bracket `[a, b]`:</span>
+continuity, a derivative of one fixed sign on `(a, b)`, and endpoint values of
+opposite sign. -/
+<span class="kw">structure</span> IsolatingBracket (f f&#x27; : <span class="kw">ℝ</span> → <span class="kw">ℝ</span>) (a b : <span class="kw">ℝ</span>) : <span class="kw">Prop</span> <span class="kw">where</span>
+  le : a ≤ b
+  cont : ContinuousOn f (Icc a b)
+  deriv : (∀ x ∈ Ioo a b, HasDerivAt f (f&#x27; x) x ∧ f&#x27; x &lt; 0) ∨
+    (∀ x ∈ Ioo a b, HasDerivAt f (f&#x27; x) x ∧ 0 &lt; f&#x27; x)
+  sign : f a * f b &lt; 0</pre>
+<div class="loc">GW/Endpoint/QPUnique.lean:121  (qp_roots_enumerated)</div><pre>/<span class="cm">-- The complete root enumeration certified by `qp_unique.py`: finitely many</span>
+ordered, disjoint isolating brackets inside the window, and no zero of `f` in
+the window outside their interiors. Then the zeros of `f` in the window are
+exactly `n` points, one in each bracket, in increasing order. -/
+<span class="kw">theorem</span> qp_roots_enumerated {f f&#x27; : <span class="kw">ℝ</span> → <span class="kw">ℝ</span>} {W₀ W₁ : <span class="kw">ℝ</span>} {n : <span class="kw">ℕ</span>} (a b : Fin n → <span class="kw">ℝ</span>)
+    (hbr : ∀ i, IsolatingBracket f f&#x27; (a i) (b i))
+    (hin : ∀ i, W₀ ≤ a i ∧ b i ≤ W₁)
+    (hord : ∀ i j : Fin n, i &lt; j → b i &lt; a j)
+    (hcov : ∀ E ∈ Icc W₀ W₁, (∀ i, E ∉ Ioo (a i) (b i)) → f E ≠ 0) :
+    ∃ r : Fin n → <span class="kw">ℝ</span>, StrictMono r ∧ (∀ i, r i ∈ Icc (a i) (b i)) ∧
+      {E | E ∈ Icc W₀ W₁ ∧ f E = 0} = range r := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/Kernel/Headline.lean:59</div><pre>/<span class="cm">-- **The full-QP O1 of spec A from the irreducible data, unconditional**: for the unique</span>
+roots in the two brackets (`roots_exist_irr_unconditional`), `EX - EL` lies in
+`[68.9856742, 68.9856744]` meV. That these brackets hold the principal roots (largest
+renormalisation) is a Python certificate, not part of the <span class="kw">theorem</span>. -/
+<span class="kw">theorem</span> o1_fullQP_irr_unconditional (cv : Bool) (EX EL : <span class="kw">ℝ</span>)
+    (hX : EX ∈ Icc ((CaX0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ((CbX0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ∧
+      fQP glI EIrr vbTrue oqTrue stXI cv EX = 0)
+    (hL : EL ∈ Icc ((CaL0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ((CbL0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ∧
+      fQP glI EIrr vbTrue oqTrue stLI cv EL = 0) :
+    EX - EL ∈ Icc ((689856742 : <span class="kw">ℝ</span>) / 10 ^ 10) ((689856744 : <span class="kw">ℝ</span>) / 10 ^ 10) ∧ 0 &lt; EX - EL := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/Kernel/Headline.lean:50</div><pre>/<span class="cm">-- The two full-QP roots exist and are unique in their brackets (irreducible data,</span>
+unconditional, both `cv` conventions). -/
+<span class="kw">theorem</span> roots_exist_irr_unconditional (cv : Bool) :
+    (∃! E, E ∈ Icc ((CaX0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ((CbX0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ∧
+        fQP glI EIrr vbTrue oqTrue stXI cv E = 0) ∧
+    (∃! E, E ∈ Icc ((CaL0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ((CbL0 : <span class="kw">ℝ</span>) / (10 ^ 8 * 2 ^ 92 : <span class="kw">ℝ</span>)) ∧
+        fQP glI EIrr vbTrue oqTrue stLI cv E = 0) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/qp_unique.py:251</div><pre>def cover(qp, lo, hi, min_width=1e-9, max_boxes=2_000_000, split_width=1e-6, roots=None):
+    &quot;&quot;&quot;Cover [lo, hi] by intervals on which f certainly has no zero. Returns
+    (number of boxes, smallest width used, number of branch-split boxes) or
+    raises if it cannot.&quot;&quot;&quot;
+    stack, n, wmin, nsplit = [(lo, hi)], 0, np.inf, 0
+    while stack:
+        a, b = stack.pop()
+        # boxes may contain the finitely many points where the source divides
+        # by zero (wx = -w; IEEE NaN, not a root under any convention): there
+        # the enclosure uses the clamp value 0, the limit from both sides
+        F = f_safe(qp, I(a, b))
+        ok = F is not None and not F.contains_zero()
+        if not ok and b - a &lt; split_width and split_excludes_zero(qp, I(a, b)):
+            ok, nsplit = True, nsplit + 1
+        if ok:
+            n += 1
+            wmin = min(wmin, b - a)
+            if n &gt; max_boxes:
+                raise RuntimeError(&quot;too many boxes&quot;)
+            continue
+        if b - a &lt; min_width:
+            r = isolate_root(qp, 0.5 * (a + b)) if roots is not None else None
+            if r is None:
+                raise RuntimeError(f&quot;cannot exclude a root in [{a!r}, {b!r}]: f = {F}&quot;)
+            roots.append(r)
+            ra, rb = r[&quot;bracket&quot;]
+            # the bracket is certified; cover what is left of [a, b] and of the
+            # pending boxes that overlap it
+            pending = [(x, y) for x, y in stack]
+            stack = []
+            for x, y in pending + [(a, b)]:
+                if x &lt; ra:
+                    stack.append((x, min(y, ra)))
+                if y &gt; rb:
+                    stack.append((max(x, rb), y))
+            continue
+        c = 0.5 * (a + b)
+        stack.append((c, b))
+        stack.append((a, c))
+    return n, wmin, nsplit
+
+</pre>
+<div class="loc">bgw/endpoint/qp_unique.py:211</div><pre>def isolate_root(qp, c, halves=(1e-4, 3e-5, 1e-5, 3e-6, 1e-6, 3e-7, 1e-7), steps=40):
+    &quot;&quot;&quot;Certify exactly one root of f near c. On a bracket B = [c-h, c+h]: every
+    branch condition decided (f continuous), f&#x27;(B) excludes 0 (f strictly
+    monotone), and f(c-h), f(c+h) have certainly opposite signs (IVT). Then
+    bisect the root enclosure. Returns dict or None.&quot;&quot;&quot;
+    for h in halves:
+        a, b = c - h, c + h
+        before = _undecided()
+        undef0 = cert.STATS.get(&quot;source_undefined_possible&quot;, 0)
+        try:
+            qp.f(I(a, b), strict=True)
+            # every branch decided, and no point of B where the source&#x27;s
+            # formula divides by zero (so the claim needs no NaN convention)
+            if _undecided() != before or cert.STATS.get(&quot;source_undefined_possible&quot;, 0) != undef0:
+                continue
+            fp = dsigma(qp, I(a, b)) - I.exact(1.0)
+            fa, fb = qp.f(I.exact(a)), qp.f(I.exact(b))
+        except (Undecided, ZeroDivisionError, NotImplementedError, FloatingPointError):
+            continue
+        if fp.contains_zero():
+            continue
+        sa = 1 if fa.lo &gt; 0 else (-1 if fa.hi &lt; 0 else 0)
+        sb = 1 if fb.lo &gt; 0 else (-1 if fb.hi &lt; 0 else 0)
+        if sa == 0 or sb == 0 or sa == sb:
+            continue
+        lo, hi = a, b
+        for _ in range(steps):
+            m = 0.5 * (lo + hi)
+            fm = qp.f(I.exact(m))
+            if (fm.lo &gt; 0 and sa &gt; 0) or (fm.hi &lt; 0 and sa &lt; 0):
+                lo = m
+            elif (fm.lo &gt; 0 and sb &gt; 0) or (fm.hi &lt; 0 and sb &lt; 0):
+                hi = m
+            else:
+                break
+        return dict(bracket=[a, b], root=[lo, hi], fprime=[float(fp.lo), float(fp.hi)],
+                    sign_left=sa)
+    return None
+
+</pre>
+</div>
+</div></section>
+<section class='node' id='prod'><div class='card'><h2 style='margin-top:0'>9 · Production vs spec A <span class='pill' style='background:#b7791f'>Certified in Python interval arithmetic (not Lean)</span></h2>
+<p>BerkeleyGW prints O1 = +15.400547 meV; spec A's O1 lies within 5.21 µeV of it. The gap is the Monte Carlo Coulomb averaging (seed 5000) that spec A replaces by the exact integral. Individual energies differ more (Eqp1 by ≈ 0.14–0.18 meV, CH by ≈ 0.14–0.30 meV) and largely cancel in O1; with production's own Monte Carlo averages the reproducer encloses the printed Eqp1 of the four O1/O2 states and O1 (test_production_conventions_enclose_production).</p><p class='small'><b>Why it matters.</b> This is the link between the theorems (about spec A) and the program&#x27;s actual output.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='py' class=''>Python reproducer</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='prod-0'> the production value parsed from sigma_hp.log is the right table entry</label>
+<label><input type='checkbox' id='prod-1'> the Python reproducer with production&#x27;s Monte Carlo values reproduces production (E1 tests)</label>
+</div>
+<div class='pane' data-p='py'>
+<div class="loc">bgw/endpoint/observable.py:77</div><pre>def observables(log_text):
+    tables = parse(log_text)
+    kn = {name: tables[k] for name, k in KPOINTS.items() if k in tables}
+    if set(kn) != set(KPOINTS):
+        raise ValueError(f&quot;missing k-points: {set(KPOINTS) - set(kn)}&quot;)
+    for name, rows in kn.items():
+        # a multiplet touching the last computed band could extend beyond the
+        # window, and then its average would not be basis-invariant
+        if any(r[&quot;n&quot;] in (NOCC, NOCC + 1) for r in multiplets(rows)[-1]):
+            raise ValueError(f&quot;band window at {name} ends inside the band-edge multiplet&quot;)
+    c = {name: state(rows, NOCC + 1) for name, rows in kn.items()}
+    v = state(kn[&quot;Gamma&quot;], NOCC)
+    # the multiplets must not straddle the gap
+    for name, s in c.items():
+        if min(s[&quot;bands&quot;]) &lt;= NOCC:
+            raise ValueError(f&quot;conduction multiplet at {name} contains a valence band&quot;)
+    if max(v[&quot;bands&quot;]) &gt; NOCC:
+        raise ValueError(&quot;valence multiplet at Gamma contains a conduction band&quot;)
+    cbm_k = min(c, key=lambda n: c[n][&quot;Eqp1&quot;])
+    return {
+        &quot;O1_Delta_XL&quot;: c[&quot;X&quot;][&quot;Eqp1&quot;] - c[&quot;L&quot;][&quot;Eqp1&quot;],
+        &quot;C1_CBM_at_L&quot;: c[&quot;X&quot;][&quot;Eqp1&quot;] - c[&quot;L&quot;][&quot;Eqp1&quot;] &gt; 0,
+        &quot;O2_gap&quot;: c[cbm_k][&quot;Eqp1&quot;] - v[&quot;Eqp1&quot;],
+        &quot;O2_cbm_k&quot;: cbm_k,
+        &quot;meanfield_Delta_XL&quot;: c[&quot;X&quot;][&quot;Emf&quot;] - c[&quot;L&quot;][&quot;Emf&quot;],
+        &quot;states&quot;: {&quot;v_Gamma&quot;: v, **{f&quot;c_{n}&quot;: s for n, s in c.items()}},
+        &quot;max_multiplet_spread&quot;: max([v[&quot;multiplet_spread&quot;]] +
+                                    [s[&quot;multiplet_spread&quot;] for s in c.values()]),
+    }
+
+</pre>
+</div>
+</div></section>
+<section class='node' id='mb'><div class='card'><h2 style='margin-top:0'>10 · GW vs exact (finite models) <span class='pill' style='background:#1b7f3b'>Kernel-checked in Lean</span></h2>
+<p>For any finite fermion system H0 + λV with real two-body integrals, H0 diagonal in the reference orbitals and a strict Slater-determinant ground state: the true Σ(ω; λ) = λ·HF + λ²(direct + SOX + relax) + O(λ³) (|remainder| ≤ K|λ|³ for some K and small |λ|, ω off the unperturbed excitations), while at ω also off the GW poles (GWOffPoles) G0W0 gives λ·HF + λ²·direct; elsewhere sigmaGW2 is a totalized polynomial. So GW misses SOX and relax at second order (relax = 0 under the Brillouin condition). Hubbard dimer: Σ_exact = U/2 + direct + SOX exactly, for every U.</p><p class='small'><b>Why it matters.</b> The model layer: what GW leaves out, as theorems rather than estimates. It does not bound GW for real silicon.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button><button data-p='lean' class=''>Lean definitions</button><button data-p='thm' class=''>Theorems</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='mb-0'> IsGround (strict ground state of H0 in its sector) is the intended physical hypothesis</label>
+<label><input type='checkbox' id='mb-1'> the GW side beyond second order is a truncated polynomial (sigmaGW2), not the full G0W0 function</label>
+<label><input type='checkbox' id='mb-2'> the index convention v_pqrs = v_qpsr = v_rspq matches the physics being claimed</label>
+</div>
+<div class='pane' data-p='lean'>
+<div class="loc">GW/Endpoint/ManyBody/Decomp.lean:24  (sig1)</div><pre>/<span class="cm">-- Hartree-Fock potential of the occupied set: `Σ1_pq = Σ_{a ∈ O} ⟨pa||qa⟩`. -/</span>
+<span class="kw">def</span> sig1 (p q : Fin n) : <span class="kw">ℝ</span> := ∑ a ∈ O, asym v p a q a</pre>
+<div class="loc">GW/Endpoint/ManyBody/DirectSOX.lean:22  (dir2)</div><pre>/<span class="cm">-- Second-order direct (ring) self-energy. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> dir2 (p q : Fin n) : <span class="kw">ℝ</span> :=
+  (∑ a ∈ O, ∑ r ∈ Oᶜ, ∑ s ∈ Oᶜ, v p a r s * v r s q a / (ω + ε a - ε r - ε s)) +
+    ∑ r ∈ Oᶜ, ∑ a ∈ O, ∑ b ∈ O, v p r a b * v a b q r / (ω + ε r - ε a - ε b)</pre>
+<div class="loc">GW/Endpoint/ManyBody/DirectSOX.lean:27  (sox2)</div><pre>/<span class="cm">-- Second-order exchange (SOX) self-energy. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> sox2 (p q : Fin n) : <span class="kw">ℝ</span> :=
+  -(∑ a ∈ O, ∑ r ∈ Oᶜ, ∑ s ∈ Oᶜ, v p a r s * v r s a q / (ω + ε a - ε r - ε s)) -
+    ∑ r ∈ Oᶜ, ∑ a ∈ O, ∑ b ∈ O, v p r a b * v a b r q / (ω + ε r - ε a - ε b)</pre>
+<div class="loc">GW/Endpoint/ManyBody/Static.lean:24  (relax)</div><pre>/<span class="cm">-- The density-relaxation (static) part of the second-order self-energy. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> relax (p q : Fin n) : <span class="kw">ℝ</span> :=
+  ∑ a ∈ O, ∑ r ∈ Oᶜ, (asym v p a q r + asym v p r q a) * sig1 v O r a / (ε a - ε r)</pre>
+<div class="loc">GW/Endpoint/ManyBody/GroundState.lean:94  (IsGround)</div><pre>/<span class="cm">-- `Φ` is the strict ground state of `H0` in its particle-number sector. -/</span>
+<span class="kw">def</span> IsGround : <span class="kw">Prop</span> := ∀ S : Fock n, S.card = O.card → S ≠ O → energy ε O &lt; energy ε S</pre>
+<div class="loc">GW/Endpoint/ManyBody/Analytic.lean:81  (sigmaR)</div><pre>/<span class="cm">-- **The actual self-energy** `Σ = G0⁻¹ - G⁻¹`. -/</span>
+<span class="kw">noncomputable</span> <span class="kw">def</span> sigmaR (x E : <span class="kw">ℝ</span>) (ψ : Fock n → <span class="kw">ℝ</span>) : Matrix (Fin n) (Fin n) <span class="kw">ℝ</span> :=
+  (green0R ε ω)⁻¹ - (greenR ε v ω x E ψ)⁻¹</pre>
+<div class="loc">GW/Endpoint/ManyBody/Analytic.lean:259  (sigmaGW2)</div><pre>/<span class="cm">-- The polynomial `λ (Σ_H + Σ_x) + λ² dir2` in `λ`, with `dir2` under Lean&#x27;s totalized</span>
+division. It is identified with the G0W0 self-energy through second order (`gw1_eq_HF`,
+`gw2_limit`) when `GWOffPoles ε O ω` holds, which `OffPoles ε O ω` does not imply (module
+docstring).
+No higher order is defined. -/
+<span class="kw">noncomputable</span> <span class="kw">def</span> sigmaGW2 (x : <span class="kw">ℝ</span>) (p q : Fin n) : <span class="kw">ℝ</span> :=
+  x * (sigH v O p q + sigX v O p q) + x ^ 2 * dir2 ε v O ω p q</pre>
+</div>
+<div class='pane' data-p='thm'>
+<div class="loc">GW/Endpoint/ManyBody/Analytic.lean:201</div><pre>/<span class="cm">-- **The analytic statement.** For small real `λ` the true ground state of `H(λ)` in</span>
+the `|O|`-particle sector is nondegenerate, the Green&#x27;s function is well defined
+(`ω` stays off the poles), and for every ground pair
+`|Σ(ω; λ)_pq - (λ Σ1_pq + λ² Σ2_pq(ω))| ≤ K |λ|³`. -/
+<span class="kw">theorem</span> sigma_exact_expansion (hv1 : ∀ p q r s, v p q r s = v q p s r)
+    (hv2 : ∀ p q r s, v p q r s = v r s p q) (hg : IsGround ε O) (hω : OffPoles ε O ω) :
+    ∃ δ &gt; 0, ∃ K : <span class="kw">ℝ</span>, ∀ x : <span class="kw">ℝ</span>, |x| &lt; δ →
+      IsGroundPair ε v O x (ER ε v O x) (psiR ε v O x) ∧
+      (∀ μ φ, IsGroundPair ε v O x μ φ → μ = ER ε v O x ∧ ∃ α : <span class="kw">ℝ</span>, α ≠ 0 ∧ φ = α • psiR ε v O x) ∧
+      (MpR ε v ω x (ER ε v O x)).det ≠ 0 ∧ (MmR ε v ω x (ER ε v O x)).det ≠ 0 ∧
+      (greenR ε v ω x (ER ε v O x) (psiR ε v O x)).det ≠ 0 ∧
+      ∀ μ φ, IsGroundPair ε v O x μ φ → ∀ p q : Fin n,
+        |sigmaR ε v ω x μ φ p q - (x * sig1 v O p q + x ^ 2 * sig2 ε v O ω p q)| ≤
+          K * |x| ^ 3 := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/ManyBody/GWError.lean:31</div><pre>/<span class="cm">-- **`gw_error_second_order`.** `Σ_exact⁽²⁾ - Σ_GW⁽²⁾ → SOX + relax` as `η → 0⁺`. -/</span>
+<span class="kw">theorem</span> gw_error_second_order (hv1 : ∀ p q r s, v p q r s = v q p s r)
+    (hv2 : ∀ p q r s, v p q r s = v r s p q) (hnd : NonDeg ε O) (hω : OffPoles ε O ω)
+    (hωGW : GWOffPoles ε O ω) (p q : Fin n) :
+    Tendsto (<span class="kw">fun</span> η =&gt; ((cf 2 (sigmaT ε v O ω) p q : <span class="kw">ℝ</span>) : ℂ) - ftDamped η (sigGW2t ε v O p q) ω)
+      (𝓝[&gt;] 0) (𝓝 ((sox2 ε v O ω p q + relax ε v O p q : <span class="kw">ℝ</span>) : ℂ)) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/HubbardDimerExactSigma.lean:519</div><pre>/<span class="cm">-- **Main <span class="kw">theorem</span>, bonding orbital.** Off the poles of G (`E0 + t`, `U + t - E0`)</span>
+and off the zero of G (`3t + U/2`, the pole of Σ), the exact self-energy is
+the HF shift plus the closed-shell second-order direct + exchange self-energy
+of `HubbardDimerSecondOrder.lean`, with its HF denominators, EXACTLY (all U):
+`Σ_B(ω) = (epsB - eps0_B) + sig2dir_B(ω) + sig2x_B(ω)`. -/
+<span class="kw">theorem</span> sigEx_B {t U ω : <span class="kw">ℝ</span>} (ht : 0 &lt; t) (ha : ω - (E0 t U + t) ≠ 0)
+    (hb : ω - (U + t - E0 t U) ≠ 0) (hc : ω - (3 * t + U / 2) ≠ 0) :
+    sigEx t U 0 ω = (epsOrb t U 0 - eps0 t 0) + (sig2dir t U 0 ω + sig2x t U 0 ω) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+<div class="loc">GW/Endpoint/HubbardDimerSecondOrder.lean:226</div><pre>/<span class="cm">-- **(iii) The G0W0@HF gap error is minus the SOX contribution, up to O(U³):**</span>
+`|(gapGW - gapExact) - (-gap2x)| &lt;= 3U³/(16t²)` on `[0, t]`, with
+`-gap2x = U²/(8t)`. -/
+<span class="kw">theorem</span> gw_error_is_minus_sox (ht : 0 &lt; t) :
+    (∀ U, 0 ≤ U → U ≤ t → |(gapGW t U - gapExact t U) + gap2x t U| ≤ 3 * U ^ 3 / (16 * t ^ 2)) ∧
+    (∀ U, -gap2x t U = U ^ 2 / (8 * t)) ∧
+    Tendsto (<span class="kw">fun</span> U =&gt; (gapGW t U - gapExact t U) / U ^ 2) (𝓝[&gt;] 0) (𝓝 (1 / (8 * t))) := ⋯  <span class="cm">-- proof checked by the Lean kernel</span></pre><div class='ax'>axioms: [propext, Quot.sound, Classical.choice]</div>
+</div>
+</div></section>
+<section class='node' id='si'><div class='card'><h2 style='margin-top:0'>11 · GW approximation for Si (estimates) <span class='pill' style='background:#5a6472'>Estimate / measurement (no bound)</span></h2>
+<p>Measured, not bounded: the plasmon-pole error −31.6 meV at E = Eo; O1 across the GW hierarchy 15 → 69 → 58–67 → 134–138 meV; second-order exchange ≈ +2 meV (relax not estimated).</p><p class='small'><b>Why it matters.</b> No theorem bounds GW for a real solid; these numbers show the spread across GW variants; no physical conclusion is claimed.</p>
+<div class='tabs'><button data-p='chk' class='on'>Checklist</button></div>
+<div class='pane chk on' data-p='chk'>
+<label><input type='checkbox' id='si-0'> C1 (O1 &gt; 0) holds for every 18-band GW variant in the table below; it is NOT robust to the band count (all 168 computed bands of the finite basis: ≈ −3.8 meV, Python diagnostic)</label>
+</div>
+</div></section>
+<section id='findings'><h2>Findings (checkable without Lean)</h2>
+<div class='card'><b>The production number is not physically meaningful at this setup.</b> With Vxc = 0 (EPM) the QP energies sit ~7 eV from Emf. Linearisation moves O1 by −54 meV; the plasmon-pole error on Σ_c(X) − Σ_c(L) at E = Eo is −32 meV; O1 spans 15–138 meV across the well-defined GW variants at 18 bands (~+154 with sexcut off, not unique). With all 168 computed bands of the finite basis the linearised O1 is ≈ −3.8 meV (Python interval diagnostic, BerkeleyGW cross-checked; docs/BRIDGE.md BRIDGE-COR), so C1 (O1 &gt; 0) is a property of the specified 18-band calculation, not the physical band ordering.</div>
+<div class='card'><b>The QP equation has two solutions per state.</b> Principal roots (Z ≈ 0.86) and low-weight roots near 30 eV (Z ≈ 0.04). C1 depends on choosing the principal one; the other pairing gives −537 meV.</div>
+<div class='card'><b>Production agrees with the transcribed specification on this run.</b> Production O1 matches spec A to 5.21 µeV, and no discrepancy between production and spec A was found. That spec A is BerkeleyGW&#x27;s formula is the transcription trust item (source reading plus this agreement on one run); it is not a proof that BerkeleyGW is correct.</div>
+<div class='card'><b>Bugs found were in the certifier, and fixed.</b> Near-pole sexcut threshold off by 2; value at wx = w̃ disagreeing with the Fortran; rescaling not rounded outward for subnormals; an earlier ‘unique root’ that was a window artefact.</div>
+<div class='card'><b>The planned second-order theorem was false.</b> GW misses SOX and a relaxation term unless the start is self-consistent HF (confirmed by exact diagonalisation, check_sigma2.py --n 4 with its defaults: max mismatch ≈ 13.5 without relax, ≤ 6e-7 with it).</div>
+</section><section id='table'><h2>O1 across treatments (meV)</h2><div class='card'><table><tr><th>treatment</th><th>O1</th><th>evidence</th></tr>
+<tr><td>G0W0-GPP, linearised (spec A; production prints 15.400547 meV, measured)</td><td>+15.4</td><td>Lean (spec A)</td></tr>
+<tr><td>G0W0-GPP, linearised, all 168 computed bands of the finite basis</td><td>≈ −3.8 ([−5.25, −4.71] without the static residual)</td><td>Python intervals (BRIDGE-COR, R28-F3/F4)</td></tr>
+<tr><td>G0W0-GPP, full QP equation, principal roots</td><td>+69.0</td><td>Lean (roots in brackets); principal-root selection Python</td></tr>
+<tr><td>G0W0-GPP, full QP, sexcut off</td><td>~+154, not unique</td><td>float</td></tr>
+<tr><td>G0W0 full-frequency RPA (contour deformation)</td><td>+58 to +67</td><td>production runs</td></tr>
+<tr><td>evGW0-GPP</td><td>+137.9</td><td>production runs</td></tr>
+<tr><td>evGW-GPP</td><td>+134.2 ± 0.03</td><td>production runs</td></tr>
+</table></div></section><section id='trusted'><h2>What is still trusted</h2><div class='card'><table>
+<tr><td><b>Binary file reader</b></td><td>bgwio.py and the exporter&#x27;s float→dyadic transcription (node 0).</td></tr>
+<tr><td><b>Transcription</b></td><td>that the Lean definitions are BerkeleyGW&#x27;s formulas: they mirror the Python reproducer, which with production&#x27;s Monte Carlo averages encloses the printed Eqp1 of the four O1/O2 states and O1; no proof can remove this — it is what this page is for.</td></tr>
+<tr><td><b>Production vs spec A</b></td><td>the 5.21 µeV link (node 9): exact rational arithmetic on the kernel-checked endpoints and the printed production value (1 neV print slack), in a Python test.</td></tr>
+<tr><td><b>Root cover</b></td><td>“exactly two roots” in the window and the principal-root selection (node 8) are Python.</td></tr>
+<tr><td><b>CBM over all k-points</b></td><td>that the conduction minimum over ALL sampled k-points (Γ included) is at L (node 7) is a Python interval result; the Lean theorem compares X and L.</td></tr>
+<tr><td><b>Constants</b></td><td>RYD = 13.60569253 and BerkeleyGW&#x27;s thresholds as their binary64 values.</td></tr>
+<tr><td><b>Physical symmetry</b></td><td>that the 48 operations map the crystal onto itself is taken from the file header.</td></tr>
+<tr><td><b>Rounding hypothesis</b></td><td>the Python interval code assumes IEEE round-to-nearest (only for the parts still in Python).</td></tr>
+</table></div><p class='small'>Everything else on the chain is checked by the Lean kernel; only propext, Classical.choice and Quot.sound are permitted as axioms, and the exhaustive audit enforces it. Details: docs/ENDPOINT.md, docs/CODEMAP.md (canonical and archived modules) and .agent/handoffs/. Scope: README.md and docs/reviews/README.md (REVIEW-28). The theory-to-specification bridge (conditional identities) is in docs/BRIDGE.md; this project does not claim to have formally verified the core physics of BerkeleyGW.</p><p class='small'>The BerkeleyGW source excerpts on this page are copyright The Regents of the University of California, through Lawrence Berkeley National Laboratory, and are reproduced under BerkeleyGW's licence; see THIRD_PARTY_NOTICES.md.</p></section>
+</main></div><script>
+const KEY='bgw-review-v1';
+const st=JSON.parse(localStorage.getItem(KEY)||'{}');
+function save(){localStorage.setItem(KEY,JSON.stringify(st));prog();}
+function prog(){const b=[...document.querySelectorAll('.chk input')];const d=b.filter(x=>x.checked).length;
+ document.querySelector('#bar i').style.width=(100*d/Math.max(1,b.length))+'%';
+ document.getElementById('pc').textContent=d+' / '+b.length+' review items checked';
+ document.querySelectorAll('nav a[data-node]').forEach(a=>{const n=a.dataset.node;const bs=[...document.querySelectorAll('#'+n+' .chk input')];
+   const ok=bs.length&&bs.every(x=>x.checked);a.querySelector('.done').textContent=ok?'✓':'';});}
+document.querySelectorAll('.chk input').forEach(c=>{c.checked=!!st[c.id];c.onchange=()=>{st[c.id]=c.checked;save();};});
+document.querySelectorAll('.tabs').forEach(t=>{t.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  t.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  const card=t.parentElement;card.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p));});});
+function go(id){const e=document.getElementById(id);if(e){e.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));}}
+document.querySelectorAll('[data-go]').forEach(e=>e.onclick=()=>go(e.dataset.go));
+document.getElementById('q').oninput=e=>{const q=e.target.value.toLowerCase();
+  document.querySelectorAll('section.node').forEach(s=>{s.style.display=!q||s.textContent.toLowerCase().includes(q)?'':'none';});};
+document.getElementById('reset').onclick=()=>{if(confirm('Clear all review checks in this browser?')){for(const k in st)delete st[k];document.querySelectorAll('.chk input').forEach(c=>c.checked=false);save();}};
+prog();
+</script></body></html>

@@ -1,0 +1,16 @@
+epsilon_cutoff 7.0
+
+number_bands 18
+
+begin qpoints
+  0.000000000  0.000000000  0.001000000   1.0 1
+  0.000000000  0.000000000  0.500000000   1.0 0
+  0.000000000  0.500000000  0.500000000   1.0 0
+end
+
+frequency_dependence 2
+frequency_dependence_method 2
+number_imaginary_freqs 30
+broadening 0.05
+delta_frequency 0.1
+frequency_low_cutoff 40.0

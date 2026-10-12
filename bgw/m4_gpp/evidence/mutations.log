@@ -1,0 +1,45 @@
+BGW-M4-R1 discriminating certificate mutations
+
+M4GPP.lean sha256: 5b90ef02b9b56768b05ced61800773445a19e425937f6d1a9df1eddc69989680
+mutate.py sha256: 48698b00cba11d04f7943c0db17064e37fd43fed1cd0cfc0ec532e4aecb0199c
+m4r1_dump.dat.gz sha256: 0910b6889637576200fdec4494d764d52ceec00f8896d023c9bafb38790c3e02
+
+Each mutant must fail at exactly the expected declarations; the control must elaborate.
+
+--- control ---
+lean exit code         : 0
+expected failing decls : []
+actual failing decls   : []
+verdict                : OK
+
+--- wrong-source ---
+lean exit code         : 1
+expected failing decls : ['map_bound']
+actual failing decls   : ['map_bound']
+verdict                : OK
+
+--- no-wing ---
+lean exit code         : 1
+expected failing decls : ['map_bound']
+actual failing decls   : ['map_bound']
+verdict                : OK
+
+--- phase ---
+lean exit code         : 1
+expected failing decls : ['PStar_pos', 'formation_bound']
+actual failing decls   : ['PStar_pos', 'formation_bound']
+verdict                : OK
+
+--- primitive ---
+lean exit code         : 1
+expected failing decls : ['omega_bound']
+actual failing decls   : ['omega_bound']
+verdict                : OK
+
+--- division ---
+lean exit code         : 1
+expected failing decls : ['div_bound']
+actual failing decls   : ['div_bound']
+verdict                : OK
+
+ALL OK

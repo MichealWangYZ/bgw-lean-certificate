@@ -1,0 +1,45 @@
+BGW-M5 discriminating certificate mutations
+
+M5Sigma.lean sha256: 5db546795d517dfad0806518780e60914fb5716e81b86c4a45fb5f90ffcef928
+mutate.py sha256: a20de4fb9adbd98da2cad238c28c97c046e7b68ed2e691949688271efc7c03a0
+m5_dump.dat.gz sha256: b9f8da77e1f82073defd2fdac8b291aa5a1e571be244411fceb89b384e3cb376
+
+Each mutant must fail at exactly the expected declarations; the control must elaborate.
+
+--- control ---
+lean exit code         : 0
+expected failing decls : []
+actual failing decls   : []
+verdict                : OK
+
+--- wrong-root ---
+lean exit code         : 1
+expected failing decls : ['sqrt_bound']
+actual failing decls   : ['sqrt_bound']
+verdict                : OK
+
+--- pole ---
+lean exit code         : 1
+expected failing decls : ['sch_local', 'sqrt_checks', 'ssx_local']
+actual failing decls   : ['sch_local', 'sqrt_checks', 'ssx_local']
+verdict                : OK
+
+--- energy ---
+lean exit code         : 1
+expected failing decls : ['x_bound']
+actual failing decls   : ['x_bound']
+verdict                : OK
+
+--- local ---
+lean exit code         : 1
+expected failing decls : ['sch_local']
+actual failing decls   : ['sch_local']
+verdict                : OK
+
+--- clamped ---
+lean exit code         : 1
+expected failing decls : ['ssx_local', 'unclamped']
+actual failing decls   : ['ssx_local', 'unclamped']
+verdict                : OK
+
+ALL OK

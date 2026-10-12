@@ -1,0 +1,52 @@
+{
+  "reviewed_commit": "63363c79ce73598810174f241e6907211b0c23d3",
+  "input_kind": "synthetic reference tables, NOT Lean execution",
+  "git_blobs": {
+    "ll/screening_reference.py": "56a312e2e0d7cfa559b25c030f82e12811bb58a0",
+    "ll/evidence.py": "c4824ae1c1963248d08d1271780d1a08994ad7f0",
+    "tests/test_ll_c2b.py": "efae546564bd53c46538e73b3916b8ecb5e25087",
+    "ll/ring_reference.py": "641d536ad219738af480c7bae159721aef49e5bd",
+    "audits/ll_c2a_review/checker_probe.py": "0cd0532410dbea20cdf66406ae2b4c77558ed5a1"
+  },
+  "original_test_suite_probes": {
+    "synthetic_control": {"tests_run": 27, "failures": 0, "errors": 0, "accepted": true},
+    "ordinary_wrong_W": {"tests_run": 27, "failures": 1, "errors": 0, "accepted": false},
+    "ordinary_wrong_T": {"tests_run": 27, "failures": 1, "errors": 0, "accepted": false},
+    "wrong_duplicate": {"tests_run": 21, "failures": 6, "errors": 2, "accepted": false},
+    "invalid_indices": {"tests_run": 21, "failures": 4, "errors": 2, "accepted": false},
+    "false_dimension": {"tests_run": 21, "failures": 4, "errors": 2, "accepted": false},
+    "self_selected_orders": {"tests_run": 21, "failures": 6, "errors": 2, "accepted": false},
+    "duplicate_order": {"tests_run": 21, "failures": 6, "errors": 2, "accepted": false},
+    "missing_degree": {"tests_run": 21, "failures": 3, "errors": 7, "accepted": false},
+    "extra_degree": {"tests_run": 21, "failures": 3, "errors": 2, "accepted": false},
+    "missing_series": {"tests_run": 21, "failures": 1, "errors": 5, "accepted": false}
+  },
+  "c2a_shared_validator_probes": {
+    "duplicate": "duplicate fixture rows: ['N2-pd']",
+    "index": "N2-pd: i is 999, fixture says 0",
+    "dimension": "N2-pd: N is 999, fixture says 2",
+    "coverage": "declared orders [0, 3] != specification's [0, 1, 2, 3, 4]; the table may not choose its own comparison coverage",
+    "missing_column": "N2-pd: missing value columns ['k4']",
+    "extra_column": "N2-pd: value columns ['k5'] outside the checked coverage ['k0', 'k1', 'k2', 'k3', 'k4']"
+  },
+  "independent_sympy_vs_direct_graph_entry_comparisons": 85,
+  "independent_sympy_vs_W_entry_comparisons": 85,
+  "generic_noncommuting_series_inverse": "both products verified through degree 6",
+  "extra_matrix_cases": "nonsymmetric/nilpotent v, singular symmetric v, zero G; degrees 0..6",
+  "archived_probe_refusal": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Refusing changed historical source tests/test_ll_c2a.py: d7c3514488e73c8ac7edb39adb1afb836bb0ad46\n"
+  },
+  "first_omitted_truncated_product_coefficient": [
+    ["137700", "7208775/32"],
+    ["7208775/32", "1474175/4"]
+  ],
+  "serializer_note": "bool and float numeric entries accepted by Fraction conversion; no wrong-value bypass demonstrated",
+  "not_run": [
+    "Lean/Lake build or axiom audit",
+    "candidate Lean executable",
+    "full repository gate",
+    "BerkeleyGW"
+  ]
+}

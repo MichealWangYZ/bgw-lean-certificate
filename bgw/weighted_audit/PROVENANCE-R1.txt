@@ -1,0 +1,46 @@
+# T-004-R1 provenance (audit repair)
+
+Second revision of the T-004 evidence. PROVENANCE.txt is unchanged and
+remains historically correct for the first submission. No BerkeleyGW
+build or run was performed in this repair; the instrumented tree and all
+raw fixtures are untouched.
+
+## Corrections applied (audit findings 1, 2, 3, 5 and smaller items)
+F1 the primary aggregate no longer sums SIGNED mismatches across
+   unrelated outputs. Each output's magnitude is taken first:
+   1.0559% (was 0.6731%). The cross-output figure is retained as a
+   labelled diagnostic carrying a do-not-quote warning.
+F2 units corrected to intermediate Rydberg, not dimensionless; the
+   missing outer factors are listed per output type, because 1/ndeg
+   applies to diagonal elements only (shiftenergy.f90:69 loops over
+   sig%ndiag) and offdiagonals take ryd at sigma_main.f90:1860-1861.
+F3 signed_over_local was overwritten by the reconstruction residual
+   before emission; call 107 reported 8.08e-16 instead of 2524.16.
+F5 the accumulator's own band/il/spin/icalc/qk are now checked against
+   the identity its records claim; a mismatch is rejected.
+--max-groups no longer changes the global statistics.
+G=G'=0 identification for record 1970 removed: ig/igp are sorted-list
+   indices and the export contains no G-vectors.
+
+## Changed in R1
+eeaea325a15c03dac5c7b3aa94dc4666f37942fc7d3ad6844e8498bad90be464  bgw/weighted_audit/weighted_mismatch.py
+55749acb33e5163baad8f4a3aacaae912f56c875c913682ff7cc05bf80136a9c  bgw/weighted_audit/REVIEW_PACKET.md
+268199ceb502a1be7abf098b36ad7b0fa88f6caf6ee55422ee39dea739424f05  tests/test_weighted_audit.py
+e188525fae4d0a87b869fc3550d2ed4efb4673517e51a39b8776426998a494fa  tests/test_provenance_committed.py
+73c8521de13857c2cf43f0f3802d1ea167dad967aacd0368ee53d5eb8701e54e  THIRD_PARTY_NOTICES.md
+20d31112b3fe5e7f5b5291e6d71512cf1b58ed7839b593a2dfe201e46f047840  artifacts/t004/weighted_mismatch.json
+
+## Unchanged since the first submission (verified)
+d2376897e261b20233264dcbf5ed79eea981a98a32ff90c7c4f9a5a287aa58bf  bgw/weighted_audit/PROVENANCE.txt
+989feeedcc301cf5e7c2e499e3a657877522d6fecf59f574b906ea7d11edc2e5  bgw/weighted_audit/t004_instrument.patch
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/weighted_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/weighted_audit/fixtures/fermi_branch_occ_counts.dat
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/weighted_audit/fixtures/fermi_sigma.inp
+d521c886346b52568d4cfe0ecda66778ec72b24df51f45b21c376cdd89c590b4  bgw/weighted_audit/fixtures/t004_accumulators.dat
+bec90aef5517c5e2805782a3f430eb7eb95ea41dbfa5eda8c7610383f3b00a1d  bgw/weighted_audit/fixtures/t004_nearpole_weighted.dat
+1967aca24b77f07b7569cdc2a20add0bdef85eaf991426242e7124770e1089c9  artifacts/t004/fermi_run.out
+35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9  artifacts/t004/fermi_sigma_hp.log
+
+## Instrumented tree (unchanged)
+535a95f900e3a50b1500c430c061005a71b8cb47e33b0c668af0ff792f0bf4f4  /tmp/bgw/t004-instr/Sigma/mtxel_cor.f90
+cee6178725fafd14196d003a4c4f093fce8cf73f25b63ec5960819f02a01db02  /tmp/bgw/t004-instr/Sigma/sigma.real.x

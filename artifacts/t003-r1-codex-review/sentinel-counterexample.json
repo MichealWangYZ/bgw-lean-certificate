@@ -1,0 +1,15 @@
+{
+  "kind": "exact-rational evaluation of mapped source algebra, not a BerkeleyGW run",
+  "w": "1000000000000",
+  "x": "10",
+  "ieps": "-1/4",
+  "occ": "1",
+  "omega2": "-250000000000000000000000",
+  "ssx": "2500000000000000000000/9999999999999999999999",
+  "ssx_float": 0.25,
+  "half_sch_float": 0.12500000000125,
+  "local_minus_occ_ssx_plus_half_sch_float": -0.12499999999875,
+  "correct_ssx_limit": "-ieps",
+  "correct_half_sch_limit": "-ieps/2",
+  "correct_local_limit": "(occ - 1/2)*ieps"
+}

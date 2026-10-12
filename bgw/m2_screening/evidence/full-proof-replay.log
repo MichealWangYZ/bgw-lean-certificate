@@ -1,0 +1,51 @@
+BGW-M2-R3 full replay of the repaired driver: run_m2.py --full --proof
+
+Files as executed (sha256):
+270f712602ab17c6f577b8690efea017ec7d0bb8558223f0aec3cf488906454e  bgw/m2_screening/run_m2.py
+2b812d61fac750f92b6f9da468b614f40d1909c8b77142d6357f308d9720169c  GW/BGW/M2Screening.lean
+24c426ed122bdca4e22a103c3545a4521e5a7098970f97a1d7ca996cf372dfac  bgw/m2_screening/reference.py
+bd08f79fd9c9cf21caa3f357d4d54bbdf6af830343847dc3d5a407fcd47953d3  bgw/m2_screening/extract.py
+Parent commit: 1eab8fa76830f6c9249dae10c1ec2cc14295db3b
+
+$ python3 bgw/m2_screening/run_m2.py --full --proof \
+      --source /tmp/bgw/BerkeleyGW-4.0 \
+      --inputs <artifacts/t002-codex-final/pristine; WFN+WFNq at the pinned digests>
+
+gfortran warnings from the two native builds are elided; the unfiltered log
+is artifacts/bgw-m2-r3/full-proof-replay.log, which is gitignored. Subprocess
+output is interleaved by buffering, so a few child lines appear out of order.
+
+The source baseline is 2096 files here and was 1980 in R2: dereferencing
+supplied symlinks brought 116 further files under the preservation check.
+
+  Lean literals match this export (chi, vc, Xhat, Estar, Rstar)
+patching file Epsilon/epsinv.f90
+== snapshot verification ==
+  hash OK  m2_dump_q2.txt
+  extracted run m2-20260917-q2-cut15 q=(0.0, 0.0, 0.5) nmtx=8
+  Delta nonzero in 64/64 entries, max |Delta| = 1.505034e-16
+  formation budget holds; b_form = 1.134293e-15
+  inverse shift  R_hat - R_star = -R_hat Delta R_star  holds exactly
+  b_inv=2.571978e-13  b_shift=6.429944e-16  b_total=2.578408e-13
+  ||X_hat - R_star||_inf = 1.815113e-16
+  total budget met
+== full production reproduction ==
+  hash OK  pristine epsinv.f90
+  hash OK  WFN
+  hash OK  WFNq
+  snapshotted 2096 supplied source files and 26 input files for a safety check
+  fresh working directory /tmp/bgw-m2-qm3t2j9l
+  neutralized 102 escaping symlink(s), dropped 1 dangling
+  pristine run complete
+  neutralized 102 escaping symlink(s), dropped 1 dangling
+  instr run complete
+  supplied source (2096 files) and inputs (26 files) unchanged
+  epsmat identical in both builds (4512f63a4a9c28e8...)
+  complete dump validated: 3 block(s), run id as expected
+  reproduced q-block matches the committed snapshot byte for byte
+  artifacts left in /tmp/bgw-m2-qm3t2j9l (not deleted)
+== kernel check ==
+  GW/BGW/M2Screening.lean elaborated (exit 0)
+OK
+
+EXIT=0

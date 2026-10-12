@@ -1,0 +1,91 @@
+# T-004-R5 provenance (final review-surface and signability repair)
+
+THE SINGLE CURRENT CROSS-AUDIT MANIFEST. It vouches for every file changed in
+this pass, whichever audit the file belongs to. Every other manifest is
+historical and deliberately stale, including the superseded weighted
+PROVENANCE-R4.txt and bgw/occupation_audit/PROVENANCE-R4.txt, which is the
+prior OCCUPATION revision rather than a current manifest. Repaired digests are
+recorded as new revisions instead of by rewriting history.
+
+No BerkeleyGW build or run was performed. The instrumented tree, the
+instrumentation patch, all raw fixtures and every numerical value are
+unchanged. Regenerating artifacts/t004/weighted_mismatch.json changed exactly
+two keys, `what` and `local_reconstruction_check`, and both changes are text.
+
+## Owner-controlled files are deliberately NOT vouched for here
+.agent/STATE.md and .agent/handoffs/CODEX-T-003-T-004-ACCEPTANCE.md are edited
+and signed by Codex after validation, so any digest here would be stale by
+design. PROVENANCE-R2.txt hashed them once and that stands as historical. Git
+tracks both; tests/test_provenance_committed.py asserts they are tracked AND
+absent from the current manifest.
+
+The acceptance record was NOT edited and NOT signed in this pass. The gate no
+longer requires it to be unsigned: the former
+test_acceptance_record_is_still_unsigned would have failed the moment Codex
+legitimately signed, and is replaced by a status-neutral structural test.
+
+## Corrections applied in R5
+1 emitted `what` pointed at the deleted fields aggregate_note and
+  cross_output_warning; now per_call_group_l1_note and cross_group_warning.
+  A general detector checks every explanatory string against the object's own
+  key set, in both the fresh run and the saved artifact, with an explicit
+  allowlist for Fortran symbols and source paths.
+2 the source comment above EXPECTED_RECORDS now says two sites in the same
+  inner loop on the same derived predicate, the same instrumented execution of
+  the same binary, and completeness_evidence(). Tested against the source text,
+  not the returned dictionary.
+3 local_reconstruction_check.meaning and packet 4.5a now claim only that the
+  GROUPED SUBTOTAL agrees in two arithmetic implementations; individual weights
+  and local values are not independently validated, because per-term errors can
+  cancel within a subtotal. Residual and threshold unchanged.
+4 packet evidence index now lists every repair handoff through T-004-R5;
+  "previously published" and "published statements" corrected to reported and
+  written; correction row 10 no longer calls the grouped contributions
+  unrelated.
+5 status-neutral acceptance-record structural test, passing before and after a
+  legitimate signature.
+6 correction table extended to 33 rows; attribution two self, one split, thirty
+  supervisor; rows 28-33 recorded as residues of the pass that produced 24-27.
+
+## Changed in R5
+180391879780960decec7c2f527357dc6b28f9c11939426f1d9de3f6878fa384  bgw/weighted_audit/weighted_mismatch.py
+8a09af862b2f0ecec32307274f474e83037e166d26592134214022ad9c4ffd55  bgw/weighted_audit/REVIEW_PACKET.md
+ca0296ec075353793b6ec86f7926aaa631d548a607371db0fb7bf17d4a4a4620  tests/test_weighted_audit.py
+7661cf4e2c22f999566d5ca9a9b6010ccc60209aa5fcb500db7fdc7ce0504263  tests/test_review_packet.py
+d025ce86df9c40921704bab10b6ce56677d141dc9ba31c9b0fe0a6bba024d952  tests/test_provenance_committed.py
+3ba5b3f2f3503d6623f0cd6c1e1680db952d1e64b0151bbfb10657807a68185d  artifacts/t004/weighted_mismatch.json
+79ebc0925b96231561593b342e9f2731ff219f9c7b0563201c1aa55c83534822  .agent/handoffs/T-004-R5.md
+
+## Unchanged (verified)
+d2376897e261b20233264dcbf5ed79eea981a98a32ff90c7c4f9a5a287aa58bf  bgw/weighted_audit/PROVENANCE.txt
+45c60a49a535af14c4849c547f2d0374c5dd650eba60111c3b9a6709f988e709  bgw/weighted_audit/PROVENANCE-R1.txt
+848e0aa3a52e52efb3608a27744d879f4530d1fb8fde6d9d3f06faed7f0d8aec  bgw/weighted_audit/PROVENANCE-R2.txt
+c0a6964ab15a20f68a289ebca5d7d21077c3161928be67a18624ea0983a6b0e1  bgw/weighted_audit/PROVENANCE-R3.txt
+19e87988d4a96be17c0b619aa7e91de988682842ac433c218006d691e0055be7  bgw/weighted_audit/PROVENANCE-R4.txt
+989feeedcc301cf5e7c2e499e3a657877522d6fecf59f574b906ea7d11edc2e5  bgw/weighted_audit/t004_instrument.patch
+40bc130492f5646f22b22f8e7ae55b028f715ae310cc23edf8e69d3736614f0e  bgw/occupation_audit/REPORT.md
+f763e62dbe27997dea66b67e75f1a4efe92ea729a8a56c8c627ff7ad99a36030  bgw/occupation_audit/check_occupation.py
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+8909622bab7e69e3e93616faaaa3d7e993aa2e93ce92e8c81161c628a445129c  bgw/occupation_audit/PROVENANCE-R4.txt
+f4164561c5d628a0a67c4815a9130064faae78bf6d48274c627bb311bb5bd23f  tests/test_occupation_audit.py
+73c8521de13857c2cf43f0f3802d1ea167dad967aacd0368ee53d5eb8701e54e  THIRD_PARTY_NOTICES.md
+8b7f186098b07cf4db07a7e1cde2da71a4af12d39cc0bce2dd1033decc2a8192  .agent/handoffs/T-004-R3.md
+14cc492eb03dc49e182391711cd9c0e9980674d02f0058a944b813106980e5f5  .agent/handoffs/T-004-R4.md
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/weighted_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/weighted_audit/fixtures/fermi_branch_occ_counts.dat
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/weighted_audit/fixtures/fermi_sigma.inp
+d521c886346b52568d4cfe0ecda66778ec72b24df51f45b21c376cdd89c590b4  bgw/weighted_audit/fixtures/t004_accumulators.dat
+bec90aef5517c5e2805782a3f430eb7eb95ea41dbfa5eda8c7610383f3b00a1d  bgw/weighted_audit/fixtures/t004_nearpole_weighted.dat
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/occupation_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/occupation_audit/fixtures/fermi_branch_occ_counts.dat
+9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4  bgw/occupation_audit/fixtures/fermi_run_notices.txt
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/occupation_audit/fixtures/fermi_sigma.inp
+ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570  bgw/occupation_audit/fixtures/smear_rejected.out
+834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064  bgw/occupation_audit/fixtures/smear_sigma.inp
+8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567  bgw/occupation_audit/fixtures/t003_nearpole_occ.dat
+1967aca24b77f07b7569cdc2a20add0bdef85eaf991426242e7124770e1089c9  artifacts/t004/fermi_run.out
+35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9  artifacts/t004/fermi_sigma_hp.log
+
+## Instrumented tree (unchanged)
+535a95f900e3a50b1500c430c061005a71b8cb47e33b0c668af0ff792f0bf4f4  /tmp/bgw/t004-instr/Sigma/mtxel_cor.f90
+cee6178725fafd14196d003a4c4f093fce8cf73f25b63ec5960819f02a01db02  /tmp/bgw/t004-instr/Sigma/sigma.real.x

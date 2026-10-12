@@ -1,0 +1,5 @@
+# rows: branch 1=generic 2=nearpole 3=zero; cols: occ==1, occ/=1
+branch1       11500172         345165
+branch2          76461           3702
+branch3          92920           1968
+sexcut           44937              0

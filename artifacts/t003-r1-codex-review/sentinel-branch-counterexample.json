@@ -1,0 +1,11 @@
+{
+  "kind": "exact-rational branch counterexample, not an executed physical witness",
+  "w": "1000000000000",
+  "x": "1000001000000",
+  "distance": "1000000",
+  "wdiffr": "1000000000000",
+  "delwr": "1000000000000",
+  "limittwo": "1/4",
+  "limitone": "250000",
+  "branch_result": "(2, Fraction(1000000000000, 1), Fraction(1000000000000, 1))"
+}

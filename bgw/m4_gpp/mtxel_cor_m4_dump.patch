@@ -1,0 +1,60 @@
+--- a/Sigma/mtxel_cor.f90	2026-09-20 17:47:02.641500663 -0500
++++ b/Sigma/mtxel_cor.f90	2026-09-20 17:50:08.540681899 -0500
+@@ -140,6 +140,12 @@
+   SCALAR, allocatable :: wpmtx(:),I_eps_array(:,:)
+   real(DP) :: e_lk, e_n1kq, lambda, phi, freq0, wx, occ
+   complex(DPC) :: wtilde, wtilde2_temp, ctemp
++#ifndef CPLX
++  ! BGW-M4 instrumentation only. Read-only; no production arithmetic altered.
++  integer :: m4_i
++  integer(8) :: m4_bits
++  character(len=64) :: m4_runid
++#endif
+   complex(DPC), allocatable :: wtilde_array(:,:)
+   ! ZL: add for EP braket
+   real(DP) :: e_lk_ep_braket
+@@ -770,6 +776,44 @@
+ ! (gsm) equation (30) from [PRB 34, 5390 (1986)]
+ 
+         wtilde2 = Omega2 / I_epsggp
++#ifndef CPLX
++! BGW-M4: export the GPP parameters AND the operands they are built from, at
++! the point of use. `I_epsggp` comes from the inverse dielectric matrix that
++! BGW-M2 certified; `Omega2` comes from wpeff(rho, vcoul). Both are exported
++! before anything downstream consumes them, and `wtilde2` is exported so the
++! quotient can be checked rather than assumed.
++        call get_environment_variable('M4_RUNID', m4_runid)
++        if (len_trim(m4_runid) == 0) m4_runid = 'UNSET'
++        open(unit=791, file='m4_dump.dat', position='append', status='unknown')
++        m4_bits = transfer(dble(epsggp), m4_bits)
++        write(791,'(A,1X,A,4(1X,I0),1X,ES25.17,1X,I0)') 'EPSGGP', trim(m4_runid), &
++          ig, igp, isrtrq(ig), isrtrq(igp), dble(epsggp), m4_bits
++        m4_bits = transfer(dble(I_epsggp), m4_bits)
++        write(791,'(A,1X,A,2(1X,I0),1X,ES25.17,1X,I0)') 'IEPS', trim(m4_runid), &
++          ig, igp, dble(I_epsggp), m4_bits
++        m4_bits = transfer(dble(Omega2), m4_bits)
++        write(791,'(A,1X,A,2(1X,I0),1X,ES25.17,1X,I0)') 'OMEGA2', trim(m4_runid), &
++          ig, igp, dble(Omega2), m4_bits
++        m4_bits = transfer(dble(wtilde2), m4_bits)
++        write(791,'(A,1X,A,2(1X,I0),1X,ES25.17,1X,I0)') 'WTILDE2', trim(m4_runid), &
++          ig, igp, dble(wtilde2), m4_bits
++        m4_bits = transfer(dble(ph(ig)), m4_bits)
++        write(791,'(A,1X,A,2(1X,I0),1X,ES25.17,1X,I0)') 'PHG', trim(m4_runid), &
++          ig, igp, dble(ph(ig)), m4_bits
++        m4_bits = transfer(dble(ph(igp)), m4_bits)
++        write(791,'(A,1X,A,2(1X,I0),1X,ES25.17,1X,I0)') 'PHGP', trim(m4_runid), &
++          ig, igp, dble(ph(igp)), m4_bits
++        m4_bits = transfer(dble(epstemp(ind(ig))), m4_bits)
++        write(791,'(A,1X,A,3(1X,I0),1X,ES25.17,1X,I0)') 'EPSRAW', trim(m4_runid), &
++          ig, igp, ind(ig), dble(epstemp(ind(ig))), m4_bits
++        write(791,'(A,1X,A,2(1X,I0),6(1X,I0))') 'GVEC', trim(m4_runid), &
++          ig, igp, gvec%components(1,isrtrq(ig)), gvec%components(2,isrtrq(ig)), &
++          gvec%components(3,isrtrq(ig)), gvec%components(1,isrtrq(igp)), &
++          gvec%components(2,isrtrq(igp)), gvec%components(3,isrtrq(igp))
++        write(791,'(A,1X,A,2(1X,I0),3(1X,ES25.17))') 'QVEC', trim(m4_runid), &
++          ig, igp, qk(1), qk(2), qk(3)
++        close(791)
++#endif
+ 
+         if (abs(wtilde2) .lt. TOL_Small) cycle
+ 

@@ -1,0 +1,86 @@
+{
+ "roots": {
+  "X": {
+   "root": [
+    4.194390069775581,
+    4.1943900698113445
+   ],
+   "attempts": [
+    {
+     "half": 0.001,
+     "continuity": false,
+     "undecided": {
+      "undecided_sexcut": 6
+     }
+    },
+    {
+     "half": 0.0003,
+     "continuity": true,
+     "certified": true
+    }
+   ],
+   "bracket_used": [
+    4.1941299999999995,
+    4.19473
+   ],
+   "f_on_bracket": [
+    -0.0004224534075261133,
+    0.0003293759333864444
+   ]
+  },
+  "L": {
+   "root": [
+    4.1254043954586965,
+    4.1254043955183
+   ],
+   "attempts": [
+    {
+     "half": 0.001,
+     "continuity": true,
+     "certified": true
+    }
+   ],
+   "bracket_used": [
+    4.12456,
+    4.1265600000000004
+   ],
+   "f_on_bracket": [
+    -0.0014595670345034508,
+    0.0010954461057410827
+   ]
+  }
+ },
+ "O1_full_QP": [
+  0.06898567425728075,
+  0.06898567435264802
+ ],
+ "O1_linearised_specA": [
+  0.015405752349084699,
+  0.015405753672648183
+ ],
+ "Eqp1_linearised_specA": {
+  "X": [
+   4.531541295141321,
+   4.531541295727198
+  ],
+  "L": [
+   4.51613554205455,
+   4.516135542792236
+  ]
+ },
+ "branch_stats": {
+  "undecided_TOL_SMALL_I": 0,
+  "undecided_TOL_SMALL_Om2": 0,
+  "undecided_wt2_sign": 0,
+  "invalid_modes": 33096,
+  "undecided_generic": 0,
+  "wdiff_zero_possible": 0,
+  "undecided_near_zero": 0,
+  "source_undefined_possible": 32,
+  "undecided_sexcut": 6,
+  "sexcut_clamped": 57936,
+  "near_pole_modes": 31784
+ },
+ "seconds": 46.94902682304382,
+ "uniqueness": "not certified; one sign change per state on a 0.1 eV grid over [Emf-12, Emf+2] (qp_full.py)"
+}

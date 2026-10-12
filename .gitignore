@@ -1,0 +1,25 @@
+.lake/
+# match `.tools` whether it is a directory or a symlink: a tracked absolute
+# symlink into one machine's home directory shipped once and broke fresh
+# checkouts, because scripts/bootstrap.sh does `mkdir -p .tools`.
+.tools
+__pycache__/
+.agent/runs/
+artifacts/
+
+
+# agent worktrees: build scaffolding, never source
+.claude/worktrees/
+
+# LaTeX build products (slides and figures)
+docs/talk/*.aux
+docs/talk/*.log
+docs/talk/*.fls
+docs/talk/*.fdb_latexmk
+docs/talk/*.nav
+docs/talk/*.out
+docs/talk/*.snm
+docs/talk/*.toc
+docs/talk/*.vrb
+docs/figures/*.aux
+docs/figures/*.log

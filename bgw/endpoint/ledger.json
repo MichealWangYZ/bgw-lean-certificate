@@ -1,0 +1,155 @@
+{
+  "_doc": "Spec<->production correspondence ledger for the endpoint (docs/ENDPOINT.md). status: proved | certified | measured | gap | unexamined. E1 exits SUCCESS only when no item is unexamined.",
+  "items": [
+    {
+      "id": "run.reproducible",
+      "what": "fresh pristine run reproduces the archived diagonal table",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e0.py::test_fresh_run_reproduces_archive"
+    },
+    {
+      "id": "degeneracy.diag_symmetrization",
+      "what": "diagonal table is invariant under a change of basis inside degenerate multiplets",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e0.py::test_basis_change_invariance (BLAS threads change the basis: raw offdiag moves, diagonal table does not)"
+    },
+    {
+      "id": "degeneracy.band_window_cut",
+      "what": "number_bands does not cut a degenerate multiplet at any k+q entering the sums",
+      "status": "measured",
+      "evidence": "Sigma: test_band_window_does_not_cut_multiplets; Epsilon: bands 18/19 of WFN split by >= 0.023 Ry at both shifted k-points"
+    },
+    {
+      "id": "units.ryd",
+      "what": "Ry->eV conversion RYD = 13.60569253 (Common/nrtype.f90:155)",
+      "status": "measured",
+      "evidence": "all eV outputs reproduced with RYD=13.60569253; tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "units.coulomb",
+      "what": "Coulomb kernel prefactor, cell volume, k/q weights",
+      "status": "measured",
+      "evidence": "fact=1/(N_q celvol), coulfact, wpsq=RYD^2 16 pi N/celvol; tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "wfn.symmetry_unfolding",
+      "what": "WFN_inner/WFN unfolded to the full BZ by rotations with non-symmorphic phases",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_unfolding_little_group (independent space-group formula; control without fractional translations fails) and test_bare_exchange_matches_production"
+    },
+    {
+      "id": "index.kq_folding",
+      "what": "k-q folding and umklapp G-shifts, gmap",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_bare_exchange_matches_production (all 24 states, 8 q, <=4.1e-10 eV)"
+    },
+    {
+      "id": "cutoff.sphere_boundary",
+      "what": "membership of G-vectors lying on a cutoff sphere (float comparison at the boundary)",
+      "status": "certified",
+      "evidence": "bgw/endpoint/sphere_margins.py: exact rational margins >= 0.030 Ry on all 7 sphere families (test_no_G_on_a_cutoff_sphere)"
+    },
+    {
+      "id": "epsilon.chi",
+      "what": "chi0 transition sum from WFN/WFNq",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::E13Epsilon: chi recomputed from WFN/WFNq over the 32-point symmetry closure of the shifted grid (not the nominal 8-point grid; test_kpoint_closure_is_32)"
+    },
+    {
+      "id": "epsilon.inverse",
+      "what": "eps and its inverse on the retained basis",
+      "status": "measured",
+      "evidence": "test_epsinv_matches_files: eps^-1 equals eps0mat (rel 9e-14) and epsmat (rel 7e-16); test_o1_from_recomputed_screening: O1 from WFN-level inputs equals production to 9e-16 eV"
+    },
+    {
+      "id": "epsilon.q0",
+      "what": "q->0 head/wings from the q0=(0,0,0.001) calculation",
+      "status": "certified",
+      "evidence": "production rule reproduced (op 48 of 48, last match); O1 over all 48 direction choices enclosed in [14.3435, 15.4058] meV and the direction-averaged q=0 cell (spec B) in [14.88971, 14.88971] meV; the choice is a spec ambiguity, not an implementation error; bgw/endpoint/cert.py -> data/cert_o1.json; tests/test_endpoint_e1.py::E14Certified"
+    },
+    {
+      "id": "coulomb.q0_average",
+      "what": "q->0 Coulomb and W averaging in Sigma (semiconductor treatment, any Monte Carlo)",
+      "status": "certified",
+      "evidence": "exact mini-BZ averages enclosed by Arb (certcoulomb.py, 1370 values, rel. width <= 1.8e-11, cross-checked by an independent 30-digit mpmath face decomposition); production's Monte Carlo moves O1 by -5.21 micro-eV relative to them; bgw/endpoint/cert.py -> data/cert_o1.json; tests/test_endpoint_e1.py::E14Certified"
+    },
+    {
+      "id": "gpp.modes",
+      "what": "GPP mode construction from eps^-1 and RHO (sum rule)",
+      "status": "measured",
+      "evidence": "per-mode I_eps and wtilde equal the instrumented production values (bgw/endpoint/instrument_e1.py; diagnostic build) to 7e-15 and 2.4e-12 eV over all 52721 modes of k=Gamma; tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "gpp.branches",
+      "what": "GPP branch selection: TOL_Zero, sexcut, near-pole, invalid modes",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV); branch rules transcribed from mtxel_cor.f90:1766-1850"
+    },
+    {
+      "id": "gpp.sqrt",
+      "what": "sqrt of the squared pole",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "gpp.fixwings",
+      "what": "wing normalisation of eps^-1",
+      "status": "measured",
+      "evidence": "production applies the wing factors in the IRREDUCIBLE frame (target row/col G=g0) with vcoul(1) of the sortrx-first element; reproduced exactly; tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "sigma.exchange",
+      "what": "bare exchange sum",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_bare_exchange_matches_production"
+    },
+    {
+      "id": "sigma.sx",
+      "what": "screened-exchange sum",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "sigma.ch",
+      "what": "Coulomb-hole sum",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "sigma.static_remainder",
+      "what": "exact_static_ch static remainder",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "qp.derivative",
+      "what": "forward finite difference dSig/dE with dE = 1 eV",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "qp.dyson",
+      "what": "linearised Dyson equation Eqp1 and Znk",
+      "status": "measured",
+      "evidence": "tests/test_endpoint_e1.py::test_diagonal_table_matches_production (24 states, <= 5.0e-10 eV)"
+    },
+    {
+      "id": "fp.propagation",
+      "what": "floating-point error of the full sums, propagated to O1",
+      "status": "certified",
+      "evidence": "O1_spec enclosed in rigorous interval arithmetic (iv.py, validated against Fractions) to 1.32e-9 eV with no undecided branch; bgw/endpoint/cert.py -> data/cert_o1.json; tests/test_endpoint_e1.py::E14Certified"
+    },
+    {
+      "id": "units.ryd_exchange",
+      "what": "Ry->eV and fact=1/(N_q celvol) on the exchange",
+      "status": "measured",
+      "evidence": "test_bare_exchange_matches_production"
+    },
+    {
+      "id": "e1.detectability",
+      "what": "counterfactual production conventions are distinguishable by the E1 comparison",
+      "status": "measured",
+      "evidence": "bgw/endpoint/data/mutations_e1.log: 15/15 fault classes detected (>= 7.5e-7 eV vs 1e-8 threshold); tests/test_endpoint_e1.py::E15Mutations"
+    }
+  ]
+}

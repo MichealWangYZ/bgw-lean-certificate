@@ -1,0 +1,102 @@
+{
+ "units": "meV unless stated",
+ "per_state": {
+  "X": {
+   "Cor_production_eV": -4.220967572265631,
+   "Cor_exact_eta0.05_eV": -4.220418786620684,
+   "production_minus_exact": -0.5487856449475359,
+   "  of which residue interpolation": -2.1906272351657208e-06,
+   "  of which imaginary quadrature": -0.5487834543211889,
+   "quadrature refinement spread": 2.5419666371817584e-09,
+   "Cor_exact_vs_eta_eV": {
+    "0.1": -4.22021520959846,
+    "0.05": -4.220418786620684,
+    "0.02": -4.220475800038204,
+    "0.01": -4.220483945235676
+   },
+   "ImRes_exact_vs_eta_eV": {
+    "0.1": -4.380262632895249e-09,
+    "0.05": -2.1906554427381253e-09,
+    "0.02": -8.763209250490062e-10,
+    "0.01": -4.3816465962003215e-10
+   },
+   "GPP_Sigma_c_eV": -4.316769430000001
+  },
+  "L": {
+   "Cor_production_eV": -4.365970512467711,
+   "Cor_exact_eta0.05_eV": -4.365412732423819,
+   "production_minus_exact": -0.5577800438913982,
+   "  of which residue interpolation": -0.007202060788635833,
+   "  of which imaginary quadrature": -0.5505779831027624,
+   "quadrature refinement spread": 2.3012702854430245e-09,
+   "Cor_exact_vs_eta_eV": {
+    "0.1": -4.365184357312841,
+    "0.05": -4.365412732423819,
+    "0.02": -4.365476691026773,
+    "0.01": -4.365485828455107
+   },
+   "ImRes_exact_vs_eta_eV": {
+    "0.1": -0.0004293454903727623,
+    "0.05": -0.00021475284011485685,
+    "0.02": -8.591011667137277e-05,
+    "0.01": -4.295569998766787e-05
+   },
+   "GPP_Sigma_c_eV": -4.430183194
+  }
+ },
+ "O1_c": {
+  "production_CD_eta0.05_reproduced": 145.0029402020796,
+  "exact_CD_vs_eta": {
+   "0.1": 144.96914771438085,
+   "0.05": 144.99394580313574,
+   "0.02": 145.00089098856873,
+   "0.01": 145.00188321943062
+  },
+  "production_minus_exact_eta0.05": 0.00899439894385523,
+  "  residue interpolation": 0.007199870161400668,
+  "  imaginary quadrature": 0.00179452878157349,
+  "eta_fit": {
+   "form": "v0 - a eta^2 (eta in eV)",
+   "v0": 145.00221396305125,
+   "a_meV_per_eV2": 3.307436206322715,
+   "residuals": {
+    "0.1": 8.11339282336121e-06,
+    "0.05": 4.306002949761023e-07,
+    "0.02": 0.0,
+    "0.01": 0.0
+   }
+  },
+  "production_variants": {
+   "a2-cd-brd0.1": {
+    "eta": 0.1,
+    "nimag": 30,
+    "step": 0.1,
+    "O1_c_production": 144.97800000000007,
+    "O1_c_reproduced": 144.97813214130684,
+    "minus_exact_same_eta": 0.008852285619212807
+   },
+   "a2-cd-fine": {
+    "eta": 0.02,
+    "nimag": 60,
+    "step": 0.05,
+    "O1_c_production": 145.0079999999998,
+    "O1_c_reproduced": 145.00734178103693,
+    "minus_exact_same_eta": 0.007109011431083445
+   },
+   "a2-cd-nimag15": {
+    "eta": 0.05,
+    "nimag": 15,
+    "step": 0.1,
+    "O1_c_production": 144.7609999999999,
+    "O1_c_reproduced": 144.7609906477547,
+    "minus_exact_same_eta": -0.23294580313583424
+   }
+  },
+  "GPP": 113.4137639999988,
+  "PPM_error_GPP_minus_exactCD_eta0": -31.58844996305244,
+  "PPM_error_per_state": {
+   "X": -96.28548476432464,
+   "L": -64.6973655448928
+  }
+ }
+}

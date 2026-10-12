@@ -1,0 +1,41 @@
+# T-003-R2 provenance (report correction only)
+
+Third revision of the T-003 evidence. PROVENANCE.txt (original) and
+PROVENANCE-R1.txt (first repair) are unchanged and remain historically
+correct for the revisions that produced them. This file records only what
+T-004 item 1 changed: two false claims in REPORT.md and the regression
+tests that pin them. No checker logic, fixture, patch, run, or physical
+datum was touched, and no BerkeleyGW build or run was performed.
+
+## Changed in R2
+2ba048bea69fe045b974c61253054e4ab0746d967417ded57ceb40cc837b49fb  bgw/occupation_audit/REPORT.md
+3dd125830e5fe2888c5b7c58d4ca09eaa1cb6f420c54f728025c9973645ddaff  tests/test_occupation_audit.py
+
+## Unchanged since R1 (verified)
+f763e62dbe27997dea66b67e75f1a4efe92ea729a8a56c8c627ff7ad99a36030  bgw/occupation_audit/check_occupation.py
+7a3bf3de2d10d4b1683833e3a87085df3cb4ee74b8b1e23e9ec304846cf68729  bgw/occupation_audit/PROVENANCE.txt
+31ede880c6e51cf953b6f8e50d08a9331656c9d28291a0d14a9bdf0ae78a45f0  bgw/occupation_audit/PROVENANCE-R1.txt
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/occupation_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/occupation_audit/fixtures/fermi_branch_occ_counts.dat
+9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4  bgw/occupation_audit/fixtures/fermi_run_notices.txt
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/occupation_audit/fixtures/fermi_sigma.inp
+ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570  bgw/occupation_audit/fixtures/smear_rejected.out
+834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064  bgw/occupation_audit/fixtures/smear_sigma.inp
+8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567  bgw/occupation_audit/fixtures/t003_nearpole_occ.dat
+
+## Corrections applied
+REPORT.md section 2, default/case-3 bullet: ssx -> -ieps (was: -> 0);
+  local limit (occ - 1/2)*ieps; COHSEX equality claim removed.
+REPORT.md section 2: near-pole predicate in closed form,
+  d <= max(gamma, |wtilde|/500); d <= 0.5 is sufficient, not necessary.
+REPORT.md section 2.1 case 2: complete predicate and nonsingular domain.
+tests/test_occupation_audit.py: +8 tests in SourceAlgebraTests, driven
+  from artifacts/t003-r1-codex-review/*.json so they cannot drift.
+
+## Review source
+47dbd68f5e818443d6377f528bb30e106e3677681204a8b816fce7244a3b6286  .agent/handoffs/CODEX-T-003-R1-REVIEW.md
+b1a7b839546c766a2c60e76bc63395e695c01dc7365aa9cc8c15cb7551203cf1  artifacts/t003-r1-codex-review/checker-mutation-results.json
+4dc4d5629c57055df02c6ff0c201c8d375241122c95bb610dcc60e15045aee43  artifacts/t003-r1-codex-review/provenance-check.json
+e2a16c8cc59b3db776a4ba8f387daffc8cf92440b71579de881326857c44cd80  artifacts/t003-r1-codex-review/sentinel-branch-counterexample.json
+2d6c9aee36f643df17fe4de42dba4f0221f023f7610c79a1ca85de0f0ddd6b45  artifacts/t003-r1-codex-review/sentinel-counterexample.json

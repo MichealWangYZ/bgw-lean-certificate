@@ -1,0 +1,8 @@
+NearPole.lean discriminating mutations
+NearPole.lean sha256: 869596b87ae77cde9037323f12dfc46d89c7f125c372590e7aa0f29b147e9f37
+
+control        rc=0 failing=[] expected=[] OK
+pole-sign      rc=1 failing=['ssxNear_eq'] expected=['ssxNear_eq'] OK
+factor-4       rc=1 failing=['ssxNear_eq'] expected=['ssxNear_eq'] OK
+overall-sign   rc=1 failing=['ssxNear_eq'] expected=['ssxNear_eq'] OK
+ALL OK

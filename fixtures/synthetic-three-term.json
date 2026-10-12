@@ -1,0 +1,16 @@
+{
+  "id": "synthetic-three-term-v1",
+  "provenance": "Artificial exact-rational fixture from Specification.md S3; not a material or BerkeleyGW export",
+  "energy_unit": "eV",
+  "coefficient_unit": "eV^3",
+  "energy": "1",
+  "sigma_x": "-1/2",
+  "terms": [
+    {"coefficient": "8", "omega": "2", "epsilon": "0", "occupied": true},
+    {"coefficient": "6", "omega": "3", "epsilon": "-1", "occupied": false},
+    {"coefficient": "-4", "omega": "1", "epsilon": "0", "occupied": true}
+  ],
+  "expected_terms": ["2/3", "-1", "-1"],
+  "expected_sigma": "-11/6"
+}
+

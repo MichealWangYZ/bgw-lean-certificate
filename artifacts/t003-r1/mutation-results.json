@@ -1,0 +1,77 @@
+[
+  {
+    "case": "original_saved_witness",
+    "verdict": "pass",
+    "expected": "pass",
+    "ok": true,
+    "reason": null
+  },
+  {
+    "case": "corrupt_sch",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "line 1: branch 2 requires sch == 0 exactly, got 1.0"
+  },
+  {
+    "case": "corrupt_omega2",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "field omega2: residual 3.260e+06 exceeds limit 1e-14 (observed max on archived records: 1.774e-16)"
+  },
+  {
+    "case": "corrupt_ssx_pre",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "field ssx_pre: residual 1.955e+09 exceeds limit 1e-14 (observed max on archived records: 2.743e-16)"
+  },
+  {
+    "case": "corrupt_efermi",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "line 1: occ == 0.5 claims Fermi-level half occupation, but abs(e_n1kq - efermi) = 1.000002e+06 is not below sig%tol = 1.360569e-05 eV"
+  },
+  {
+    "case": "corrupt_den_nearpole",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "line 1: exported den_nearpole is zero"
+  },
+  {
+    "case": "one_record_only",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "full-fixture validation expects exactly 48 records, got 1; pass --subset for explicitly labelled subset analysis"
+  },
+  {
+    "case": "same_record_duplicated_48_times",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "duplicate record ids [1]; a repeated record is not extra coverage"
+  },
+  {
+    "case": "negative_event_count",
+    "verdict": "reject",
+    "expected": "reject",
+    "ok": true,
+    "reason": "probe tally: negative count in 'branch2          76461             -1'; event counts must be nonnegative"
+  },
+  {
+    "case": "one_record_only --subset",
+    "verdict": "pass",
+    "expected": "pass",
+    "ok": true,
+    "reason": null,
+    "coverage": {
+      "mode": "subset",
+      "full_fixture_validated": false,
+      "note": "subset analysis can establish existence only; this is NOT validation of the saved export"
+    }
+  }
+]

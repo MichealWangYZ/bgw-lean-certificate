@@ -1,0 +1,55 @@
+name = "physicsLean"
+version = "0.1.0"
+defaultTargets = ["GW", "gpp_demo", "ll_c1_eval", "ll_c2a_eval", "ll_c2b_eval", "ll_c3_eval", "ll_c4_eval"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.19.0"
+
+[[lean_lib]]
+name = "GW"
+
+[[lean_exe]]
+name = "gpp_demo"
+root = "Main"
+
+[[lean_exe]]
+name = "ll_c1_eval"
+root = "LLMain"
+
+[[lean_exe]]
+name = "ll_c2a_eval"
+root = "LLC2AMain"
+
+
+[[lean_exe]]
+name = "ll_c2b_eval"
+root = "LLC2BMain"
+
+[[lean_exe]]
+name = "ll_c3_eval"
+root = "LLC3Main"
+
+[[lean_exe]]
+name = "ll_c4_eval"
+root = "LLC4Main"
+
+# G2 roots (R*: kernel-checked root brackets X0, L0 of the full GPP QP equation and the
+# principal-root O1, `kernel_export.py --sigma-pkl CAP.pkl --roots X0,L0 --lean`, roots RO1 /
+# RTamper / AuditRoots, one check per module in one serial chain, ~4 CPU-hours more);
+# G2 kernel-checked eps^-1 certificates; unfolding (U*: stage-2/3 inputs computed in Lean
+# from the irreducible WFN/WFNq/WFN_inner data, `kernel_export.py RUNDIR --unfold --lean`,
+# roots US / UTamper / AuditUnfold, ~15 CPU-min more); stage 3 (Sigma / Eqp1 / O1 on the true eps^-1,
+# `kernel_export.py RUNDIR --sigma --sigma-pkl CAP.pkl --lean`, roots S3Check / S3Tamper /
+# AuditSigma, about 1-2 CPU-hours more); stage 2 (E1*: the eps interval itself from
+# the wavefunction coefficients, `python3 bgw/endpoint/kernel_export.py RUNDIR --eps IQ
+# --lean` for IQ = 0, 1, 2) (slow: minutes of kernel reduction and
+# several GB per module; not a default target). Regenerate the modules with
+# `python3 bgw/endpoint/kernel_export.py RUNDIR --npz CAP.npz --lean`, build
+# with `lake build GWKernelData`. G2-coulomb: `python3 bgw/endpoint/coulomb_export.py --lean`
+# writes the Coul* modules (the mini-BZ Coulomb averages, root CoulTab; ~40 min of kernel).
+[[lean_lib]]
+name = "GWKernelData"
+roots = ["GW.Endpoint.Kernel.Tamper", "GW.Endpoint.Kernel.AuditData", "GW.Endpoint.Kernel.Data.Q0Check", "GW.Endpoint.Kernel.Data.Q1Check", "GW.Endpoint.Kernel.Data.Q2Check", "GW.Endpoint.Kernel.Data.E0Check", "GW.Endpoint.Kernel.Data.E1Check", "GW.Endpoint.Kernel.Data.E2Check", "GW.Endpoint.Kernel.Data.E0Tamper", "GW.Endpoint.Kernel.Data.E1Tamper", "GW.Endpoint.Kernel.Data.E2Tamper", "GW.Endpoint.Kernel.AuditEps", "GW.Endpoint.Kernel.Data.S3Check", "GW.Endpoint.Kernel.Data.S3Tamper", "GW.Endpoint.Kernel.AuditSigma", "GW.Endpoint.Kernel.Data.US", "GW.Endpoint.Kernel.Data.UTamper", "GW.Endpoint.Kernel.AuditUnfold", "GW.Endpoint.Kernel.Data.CoulTab", "GW.Endpoint.Kernel.Data.CoulTamper", "GW.Endpoint.Kernel.Data.CoulAudit", "GW.Endpoint.Kernel.Data.RO1", "GW.Endpoint.Kernel.Data.RTamper", "GW.Endpoint.Kernel.Data.RIrr", "GW.Endpoint.Kernel.AuditRoots", "GW.Endpoint.Kernel.Headline"]
+

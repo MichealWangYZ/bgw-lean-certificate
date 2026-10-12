@@ -1,0 +1,128 @@
+[
+  {
+    "path": "<repo>/bgw/occupation_audit/t003_instrument.patch",
+    "expected": "daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd",
+    "actual": "daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/PROVENANCE.txt",
+    "expected": "7a3bf3de2d10d4b1683833e3a87085df3cb4ee74b8b1e23e9ec304846cf68729",
+    "actual": "7a3bf3de2d10d4b1683833e3a87085df3cb4ee74b8b1e23e9ec304846cf68729",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/t003_nearpole_occ.dat",
+    "expected": "8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567",
+    "actual": "8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/fermi_branch_occ_counts.dat",
+    "expected": "5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1",
+    "actual": "5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/control_branch_occ_counts.dat",
+    "expected": "f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b",
+    "actual": "f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/fermi_sigma.inp",
+    "expected": "f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4",
+    "actual": "f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/smear_sigma.inp",
+    "expected": "834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064",
+    "actual": "834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/smear_rejected.out",
+    "expected": "ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570",
+    "actual": "ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/fixtures/fermi_run_notices.txt",
+    "expected": "9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4",
+    "actual": "9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4",
+    "match": true
+  },
+  {
+    "path": "<repo>/artifacts/t003/check_occupation.json",
+    "expected": "055f46c9428b443565b63c7a9e25c36d5c7040732d779ecb3eaca03619c6d4fb",
+    "actual": "055f46c9428b443565b63c7a9e25c36d5c7040732d779ecb3eaca03619c6d4fb",
+    "match": true
+  },
+  {
+    "path": "<repo>/artifacts/t003/fermi_sigma_hp.log",
+    "expected": "35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9",
+    "actual": "35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9",
+    "match": true
+  },
+  {
+    "path": "<repo>/scripts/verify.py",
+    "expected": "b4658849606cb68dd466a9d3f324dbdaa786c16607549a2a4b49ca66d5ade4e0",
+    "actual": "b4658849606cb68dd466a9d3f324dbdaa786c16607549a2a4b49ca66d5ade4e0",
+    "match": true
+  },
+  {
+    "path": "/tmp/bgw/t003-instr/Sigma/mtxel_cor.f90",
+    "expected": "adffe0b2e2419adf0c3781d56147fa6a9f588f16766bf64780ada6b619b1f048",
+    "actual": "adffe0b2e2419adf0c3781d56147fa6a9f588f16766bf64780ada6b619b1f048",
+    "match": true
+  },
+  {
+    "path": "/tmp/bgw/t003-instr/Sigma/sigma.real.x",
+    "expected": "6c40573b6a4a92fd919247e31ef399e4fba23e2b0f022a15a86f8825b0edd933",
+    "actual": "6c40573b6a4a92fd919247e31ef399e4fba23e2b0f022a15a86f8825b0edd933",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/check_occupation.py",
+    "expected": "f763e62dbe27997dea66b67e75f1a4efe92ea729a8a56c8c627ff7ad99a36030",
+    "actual": "f763e62dbe27997dea66b67e75f1a4efe92ea729a8a56c8c627ff7ad99a36030",
+    "match": true
+  },
+  {
+    "path": "<repo>/bgw/occupation_audit/REPORT.md",
+    "expected": "5128b9462c738d26d148c6ccaf91e11742344feaf3da03dd745c52361d94617f",
+    "actual": "5128b9462c738d26d148c6ccaf91e11742344feaf3da03dd745c52361d94617f",
+    "match": true
+  },
+  {
+    "path": "<repo>/tests/test_occupation_audit.py",
+    "expected": "a559dc74f226cf6076b9990c8223165755867339efc2a40f526d7acaf9b3ed15",
+    "actual": "a559dc74f226cf6076b9990c8223165755867339efc2a40f526d7acaf9b3ed15",
+    "match": true
+  },
+  {
+    "path": "<repo>/artifacts/t003-r1/check_occupation.json",
+    "expected": "493820eeee34ec1b92e7fc7d24b4b38713be8d559bfe3f82c74f997b52c697c1",
+    "actual": "493820eeee34ec1b92e7fc7d24b4b38713be8d559bfe3f82c74f997b52c697c1",
+    "match": true
+  },
+  {
+    "path": "<repo>/artifacts/t003-r1/check_occupation_codex_fresh.json",
+    "expected": "493820eeee34ec1b92e7fc7d24b4b38713be8d559bfe3f82c74f997b52c697c1",
+    "actual": "493820eeee34ec1b92e7fc7d24b4b38713be8d559bfe3f82c74f997b52c697c1",
+    "match": true
+  },
+  {
+    "path": "<repo>/artifacts/t003-r1/mutation-results.json",
+    "expected": "884dbd3b0e5026cb38453fef0788319b8a88f5c7d0a8e53d3d51f38861ce515f",
+    "actual": "884dbd3b0e5026cb38453fef0788319b8a88f5c7d0a8e53d3d51f38861ce515f",
+    "match": true
+  },
+  {
+    "path": "<repo>/.agent/handoffs/T-003-R1.md",
+    "expected": "c22cb2d844430999495413a0ae3bd5feeec0aa70743e18fa137a931c8b24e973",
+    "actual": "c22cb2d844430999495413a0ae3bd5feeec0aa70743e18fa137a931c8b24e973",
+    "match": true
+  }
+]

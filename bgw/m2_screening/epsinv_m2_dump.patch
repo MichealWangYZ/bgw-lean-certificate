@@ -1,0 +1,64 @@
+--- a/Epsilon/epsinv.f90	2026-09-16 23:12:42.290895933 -0500
++++ b/Epsilon/epsinv.f90	2026-09-16 23:12:42.293776792 -0500
+@@ -67,6 +67,12 @@
+   real(DP), allocatable :: epsTemplate(:,:)
+   real(DP), allocatable :: epsdiag(:,:,:),epsdiagt(:,:,:), vcoultemp(:)
+   real(DP), allocatable :: vcoul(:)
++#ifndef CPLX
++  ! BGW-M2 instrumentation only: export the operands actually consumed.
++  integer :: m2_i, m2_j
++  integer(8) :: m2_bits
++  character(len=64) :: m2_runid
++#endif
+ #if defined(USESCALAPACK) && defined(CPLX)
+   integer :: info, desc(9), jj_g
+   complex(DPC), allocatable :: vcoul_dist(:), vcoul_inv_dist(:), wcoul_r(:,:)
+@@ -511,7 +517,48 @@
+ ! Serial Version
+ 
+   if (pol%freq_dep==0) then
++#ifndef CPLX
++! BGW-M2 instrumentation: export, at the point of use, the actual operands that
++! form E and the production result of inverting it. Read-only; no production
++! arithmetic is altered. pol%chi is not written anywhere in this routine, so
++! the values exported here are exactly the chitmp the formation loop consumed:
++!     eps(i,j) = delta_ij - vcoul(i)*pol%chi(i,j,1)
++! Every value is written as a 17-digit decimal AND its raw IEEE-754 bits.
++    call get_environment_variable('M2_RUNID', m2_runid)
++    if (len_trim(m2_runid) == 0) m2_runid = 'UNSET'
++    open(unit=781, file='m2_dump.dat', position='append', status='unknown')
++    write(781,'(A,1X,A,1X,I0,3(1X,ES25.17),1X,I0)') 'QSTART', trim(m2_runid), &
++      iq, q0(1), q0(2), q0(3), pol%nmtx
++    do m2_i = 1, pol%nmtx
++      m2_bits = transfer(vcoul(m2_i), m2_bits)
++      write(781,'(A,1X,I0,1X,ES25.17,1X,I0)') 'VCOUL', m2_i, vcoul(m2_i), m2_bits
++      write(781,'(A,1X,I0,3(1X,I0),1X,ES25.17)') 'GVEC', m2_i, &
++        gvec%components(1,pol%isrtx(m2_i)), gvec%components(2,pol%isrtx(m2_i)), &
++        gvec%components(3,pol%isrtx(m2_i)), ekin(pol%isrtx(m2_i))
++    enddo
++    do m2_i = 1, pol%nmtx
++      do m2_j = 1, pol%nmtx
++        m2_bits = transfer(pol%chi(m2_i,m2_j,1), m2_bits)
++        write(781,'(A,1X,I0,1X,I0,1X,ES25.17,1X,I0)') 'CHI', m2_i, m2_j, &
++          pol%chi(m2_i,m2_j,1), m2_bits
++        m2_bits = transfer(eps(m2_i,m2_j), m2_bits)
++        write(781,'(A,1X,I0,1X,I0,1X,ES25.17,1X,I0)') 'EPSPRE', m2_i, m2_j, &
++          eps(m2_i,m2_j), m2_bits
++      enddo
++    enddo
++#endif
+     call X(invert_serial)(pol%nmtx,eps)
++#ifndef CPLX
++    do m2_i = 1, pol%nmtx
++      do m2_j = 1, pol%nmtx
++        m2_bits = transfer(eps(m2_i,m2_j), m2_bits)
++        write(781,'(A,1X,I0,1X,I0,1X,ES25.17,1X,I0)') 'EPSINV', m2_i, m2_j, &
++          eps(m2_i,m2_j), m2_bits
++      enddo
++    enddo
++    write(781,'(A,1X,A,1X,I0)') 'QEND', trim(m2_runid), iq
++    close(781)
++#endif
+   else
+     call progress_init(prog_info, 'inversion of dielectric matrix', 'frequency', pol%nfreq_in_group)
+     do iw = 1, pol%nfreq_in_group

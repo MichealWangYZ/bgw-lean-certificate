@@ -1,0 +1,10 @@
+87: Highest occupied band (unshifted grid) = 4
+88: Valence max    (unshifted grid) = 10.035862 eV
+89: Conduction min (unshifted grid) = 11.361685 eV
+90: Middle energy  (unshifted grid) = 10.698774 eV
+91: Fermi  energy  (unshifted grid) = -2.552134 eV
+100: - Number of fully occupied valence bands: 4
+190: WARNING: Discrepancy between number of electron per unit cell from ifmax and from occupations.
+191:WARNING: RHO has total charge  8.00000     but WFN_inner occupations give charge  7.00000    
+192:WARNING: GPP plasma frequency does not respond to manual adjustment of the Fermi level.
+464:WARNING: |Eqp0 - Eo| > finite_difference_spacing. Linear extrapolation for eqp1

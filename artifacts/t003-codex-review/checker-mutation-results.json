@@ -1,0 +1,236 @@
+[
+  {
+    "case": "original_saved_witness",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_sch",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": false,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_omega2",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_ssx_pre",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": true,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_efermi",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "corrupt_den_nearpole",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "one_record_only",
+    "exit_code": 0,
+    "records": 1,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 8.309315002862471e-20,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "same_record_duplicated_48_times",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 8.309315002862471e-20,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        3702
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  },
+  {
+    "case": "negative_event_count",
+    "exit_code": 0,
+    "records": 48,
+    "all_sch_zero": true,
+    "any_sexcut_clamped": false,
+    "max_fp_residual": 4.2435598287864196e-19,
+    "probe_counts": {
+      "branch1": [
+        11500172,
+        345165
+      ],
+      "branch2": [
+        76461,
+        -1
+      ],
+      "branch3": [
+        92920,
+        1968
+      ],
+      "sexcut": [
+        44937,
+        0
+      ]
+    }
+  }
+]

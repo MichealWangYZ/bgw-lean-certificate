@@ -1,0 +1,388 @@
+{
+ "census": {
+  "delta": "1/18014398509481984",
+  "c": "1688586085716995/4503599627370496",
+  "per_q": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n": 65,
+    "orth": 568,
+    "orth_rho_nonzero": 568
+   },
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.5
+    ],
+    "n": 76,
+    "orth": 0,
+    "orth_rho_nonzero": 0
+   },
+   {
+    "q": [
+     0.0,
+     0.5,
+     0.0
+    ],
+    "n": 76,
+    "orth": 0,
+    "orth_rho_nonzero": 0
+   },
+   {
+    "q": [
+     0.0,
+     0.5,
+     0.5
+    ],
+    "n": 92,
+    "orth": 848,
+    "orth_rho_nonzero": 848
+   },
+   {
+    "q": [
+     0.5,
+     0.0,
+     0.0
+    ],
+    "n": 76,
+    "orth": 0,
+    "orth_rho_nonzero": 0
+   },
+   {
+    "q": [
+     0.5,
+     0.0,
+     0.5
+    ],
+    "n": 92,
+    "orth": 848,
+    "orth_rho_nonzero": 848
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.0
+    ],
+    "n": 92,
+    "orth": 848,
+    "orth_rho_nonzero": 848
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "n": 76,
+    "orth": 0,
+    "orth_rho_nonzero": 0
+   }
+  ],
+  "orth_pairs": 3112,
+  "orth_rho_nonzero": 3112,
+  "orth_rho_zero": 0,
+  "pairs": 52656,
+  "min_nonzero_ideal_over_c": "1/4",
+  "max_bound_over_TS": 2.061958379161543e-08,
+  "max_rounded_residual": 9.992007221626409e-16,
+  "spheres": {
+   "n_spheres": 20,
+   "same": true,
+   "min_margin": 0.030151817842535122
+  }
+ },
+ "d3": {
+  "baseline": {
+   "SigmaX": [
+    -8.524742333800654,
+    -8.52474233376956
+   ],
+   "SigmaL": [
+    -9.349822470032231,
+    -9.349822469996047
+   ],
+   "Eqp1_X": [
+    4.531541295153586,
+    4.531541295714955
+   ],
+   "Eqp1_L": [
+    4.516135542070554,
+    4.516135542776196
+   ],
+   "O1_meV": [
+    15.405752377390055,
+    15.405753644400558
+   ]
+  },
+  "tally_X": {
+   "generic_ok": {
+    "count": 2274772,
+    "absW_eV": 1308.0671154611186
+   },
+   "occ_near_ok": {
+    "count": 7380,
+    "absW_eV": 3.939300108775202
+   },
+   "zero_mode": {
+    "count": 9216,
+    "absW_eV": 75.93168160516237
+   },
+   "drop_I_O0": {
+    "count": 12096,
+    "absW_eV": 13.542683371933572
+   },
+   "drop_I": {
+    "count": 93312,
+    "absW_eV": 59.10270889563343
+   },
+   "drop_O_O0": {
+    "count": 207360,
+    "absW_eV": 154.82325345104385
+   },
+   "drop_O": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "drop_wt2": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "invalid": {
+    "count": 1191456,
+    "absW_eV": 507.5889240317014
+   },
+   "emp_near": {
+    "count": 320,
+    "absW_eV": 0.06378662148384677
+   },
+   "occ_clampG": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "occ_clampN": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "occ_other": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "wing_entries": {
+    "count": 91728,
+    "absW_eV": 409.2845038287107
+   },
+   "tolzero_x": {
+    "count": 12,
+    "modes": 84612
+   },
+   "_singular": {
+    "generic_ok_sing": 0,
+    "occ_near_ok_sing": 0,
+    "drop_I_undec": 88192,
+    "drop_I_nopole_sing": 1296,
+    "drop_I_unbounded_sing": 0,
+    "drop_I_undec_x0": 3392,
+    "emp_near_sing": 0,
+    "emp_near_max_single_mode_abs_dSigma_eV": 3.7771127174920187e-06,
+    "emp_near_min_abs_x_minus_w": 0.19630797178909712
+   },
+   "drop_O_ideal_metric_Omega2_zero": {
+    "count": 0,
+    "count_x0": 0,
+    "count_x0_total": 0
+   },
+   "drop_I_ideal_metric_Omega2_zero": {
+    "count": 0,
+    "count_x0": 0,
+    "count_x0_total": 3488
+   }
+  },
+  "tally_L": {
+   "generic_ok": {
+    "count": 1136564,
+    "absW_eV": 711.0055479468571
+   },
+   "occ_near_ok": {
+    "count": 4064,
+    "absW_eV": 2.864677941928364
+   },
+   "zero_mode": {
+    "count": 4608,
+    "absW_eV": 87.1677105501943
+   },
+   "drop_I_O0": {
+    "count": 6048,
+    "absW_eV": 5.924161635448204
+   },
+   "drop_I": {
+    "count": 46656,
+    "absW_eV": 46.25536234157668
+   },
+   "drop_O_O0": {
+    "count": 103680,
+    "absW_eV": 79.91276195620493
+   },
+   "drop_O": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "drop_wt2": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "invalid": {
+    "count": 595728,
+    "absW_eV": 276.9077625723069
+   },
+   "emp_near": {
+    "count": 608,
+    "absW_eV": 0.09693645045805646
+   },
+   "occ_clampG": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "occ_clampN": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "occ_other": {
+    "count": 0,
+    "absW_eV": 0.0
+   },
+   "wing_entries": {
+    "count": 45864,
+    "absW_eV": 270.3908066585867
+   },
+   "tolzero_x": {
+    "count": 4,
+    "modes": 29617
+   },
+   "_singular": {
+    "generic_ok_sing": 0,
+    "occ_near_ok_sing": 0,
+    "drop_I_undec": 44520,
+    "drop_I_nopole_sing": 648,
+    "drop_I_unbounded_sing": 0,
+    "drop_I_undec_x0": 1272,
+    "emp_near_sing": 0,
+    "emp_near_max_single_mode_abs_dSigma_eV": 0.00018739915510724905,
+    "emp_near_min_abs_x_minus_w": 0.0003621611171413796
+   },
+   "drop_O_ideal_metric_Omega2_zero": {
+    "count": 0,
+    "count_x0": 0,
+    "count_x0_total": 0
+   },
+   "drop_I_ideal_metric_Omega2_zero": {
+    "count": 0,
+    "count_x0": 0,
+    "count_x0_total": 1296
+   }
+  },
+  "rows": {
+   "drop_O_x0": {
+    "dSigmaX_meV": [
+     -3.10951264737014e-08,
+     3.10951264737014e-08
+    ],
+    "dSigmaL_meV": [
+     -3.6184388818583115e-08,
+     3.6184388818583115e-08
+    ],
+    "dO1_meV": [
+     -1.267010499989008e-06,
+     1.267010499989008e-06
+    ],
+    "O1_meV": [
+     15.405752377390055,
+     15.405753644400558
+    ]
+   },
+   "drop_O": {
+    "dSigmaX_meV": [
+     -3.10951264737014e-08,
+     3.10951264737014e-08
+    ],
+    "dSigmaL_meV": [
+     -3.6184388818583115e-08,
+     3.6184388818583115e-08
+    ],
+    "dO1_meV": [
+     -1.267010499989008e-06,
+     1.267010499989008e-06
+    ],
+    "O1_meV": [
+     15.405752377390055,
+     15.405753644400558
+    ]
+   },
+   "drop_I_x0": {
+    "dSigmaX_meV": [
+     -3.1102231901059e-08,
+     3.1102231901059e-08
+    ],
+    "dSigmaL_meV": [
+     1.8233095033792775e-06,
+     1.895683610086963e-06
+    ],
+    "dO1_meV": [
+     -1.3862393014735245e-05,
+     -1.1328183720932247e-05
+    ],
+    "O1_meV": [
+     15.40573978200754,
+     15.405741049206338
+    ]
+   },
+   "drop_I": {
+    "dSigmaX_meV": [
+     -3.1144864465204605e-08,
+     3.1144864465204605e-08
+    ],
+    "dSigmaL_meV": [
+     -4.684608256866342e-07,
+     -3.959197414360459e-07
+    ],
+    "dO1_meV": [
+     1.0127346957572444e-05,
+     1.2666562913127292e-05
+    ],
+    "O1_meV": [
+     15.405763771747512,
+     15.405765043952972
+    ]
+   }
+  },
+  "seconds": 25.58687734603882
+ },
+ "compare": {
+  "O1_ideal_meV": [
+   15.405752377390055,
+   15.405753644400558
+  ],
+  "O1_specA_meV": [
+   15.405752354721965,
+   15.405753667025127
+  ],
+  "overlap": true,
+  "max_abs_difference_meV": 1.2896785932525745e-06,
+  "width_specA_meV": 1.3123031621375958e-06,
+  "width_ideal_meV": 1.267010503624988e-06,
+  "switch_drop_O_x0_ideal_meV": [
+   -1.267010499989008e-06,
+   1.267010499989008e-06
+  ],
+  "switch_drop_O_x0_specA_meV": [
+   28.373613078738188,
+   28.373615702750335
+  ]
+ },
+ "seconds": 27.7138569355011
+}

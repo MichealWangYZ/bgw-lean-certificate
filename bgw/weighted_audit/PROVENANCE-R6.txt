@@ -1,0 +1,110 @@
+# T-006 provenance (external-review recommendations)
+
+THE SINGLE CURRENT CROSS-AUDIT MANIFEST. It vouches for every file changed or
+added in this pass. Every other manifest is historical and deliberately stale,
+including the superseded weighted PROVENANCE-R4.txt and PROVENANCE-R5.txt and
+bgw/occupation_audit/PROVENANCE-R4.txt.
+
+No BerkeleyGW rerun fed any committed number. artifacts/t004/weighted_mismatch.json
+is byte-identical to its R5 content: the module was split into four files and
+the emitted JSON did not change, which was checked after each individual move.
+
+## Deliberately NOT vouched for here
+.agent/STATE.md and .agent/handoffs/CODEX-T-003-T-004-ACCEPTANCE.md are
+owner-controlled; Codex edits and signs them, so any digest would be stale by
+design. Git tracks both.
+
+The /tmp/bgw/t006-* build trees are ALSO deliberately absent. The complex+HDF5
+build links against HDF5 inside an unrelated project's conda env that contains
+a truncated libgfortran.so.5.0.0. Those binaries are disposable scouting
+artifacts and must not be promoted to durable provenance.
+
+## What changed in T-006
+1 accepted residuals 1-5 from the signed acceptance record, repaired with
+  regressions. Residual 5 was a fabricated pair of handoff filenames written by
+  Claude in T-004-R5; they never existed.
+2 gate separation: scripts/gates.py states the criterion, verify.py gained
+  --gate scientific|workflow|all with separate steps and logs, four prose
+  classes moved to tests/test_weighted_contracts.py, and
+  tests/test_gate_partition.py forbids a test module belonging to no gate.
+3 module split: weighted_mismatch.py 662 lines -> contract.py / records.py /
+  analysis.py plus a re-exporting facade. main() 248 -> 23 lines.
+4 GW/GPP/PoleDomain.lean, additive: a two-level pole domain. The single bundled
+  type the reviewer proposed is NOT possible; the analytic limit theorems are
+  statements at x = w and cannot live on a type that excludes it.
+5 symmetry_audit.py: band-index symmetry is NOT TESTABLE on this dataset, and
+  the blocker is a missing BerkeleyGW run, not a missing export field.
+6 cutoff_sweep.py: 49.6% holds across the whole cutoff interval
+  (1.919051e-4, 1.457943e-1], so it is not an artefact of the shipped 1e-3.
+7 capability scout: complex flavor and HDF5 both built and validated; the real
+  blocker is epm2bgw.f90:456, which broadcasts one scalar ifmax to every
+  k-point, making ncrit > 0 structurally unreachable via EPM for any material.
+
+Gate at generation time: 251 Python tests (199 scientific, 52 workflow),
+100 named / 181 exhaustive theorem audits, 27 Lean runtime cases.
+
+## Changed in T-006
+3711e8a70c44bc471f64dd3b552a3d719b3d2642e7027350ec673ca5f713a3a4  THIRD_PARTY_NOTICES.md
+deff33ea70c9786478ad810863a6469bc0c23fa69e3942e2d9ce12217139dac7  bgw/weighted_audit/weighted_mismatch.py
+347318061b68c641da5ffec2e602fdf1a3100895f97d3c5a3245b8544a54e22f  bgw/weighted_audit/REVIEW_PACKET.md
+99d88bf32e3dc70462da7f9b8c2ebbd88e003be2bfaaec150811e9619a8921aa  tests/test_weighted_audit.py
+120ea1f3acefdac895478a470224b761c0d87cc0d84a64751472c07993ee5a39  tests/test_provenance_committed.py
+4e17dd18d44d87fb4ace08563342466e5e7a32fb89b60ab61000a2c10757898a  scripts/verify.py
+2695d3321a958f1440947d8390abb35757a6d61c51e212d8a4dd8051cc82f954  scripts/verify.sh
+4900cc06f39529c5046d76951c82d62190a71a3a86ea07fd98c452680e5198bf  scripts/RuntimeChecks.lean
+36d1fdd22fd0cf4e09b01b4879fa5ac1a13e2ae0fdc5a26cdc6fdc03a992c9ed  GW.lean
+875485c3665610bbd9cb1d236a1e45997a33120a5d494beefd3d9279b475db4c  GW/Audit.lean
+
+## Added in T-006
+3259fdff423b99c7e40f48b2d1c915b72355173c7d9e22749de003ba4bcb380a  artifacts/t005/summary.json
+60d84c8817e3fe75a577547a9b2cce1b72b51cdc26bb6420f81af3ca4ff08e72  .agent/handoffs/T-007.md
+eaa12c26a17c16ca68efd2c5931c77d6991d6ce7a0edd706adc4c8d10907e4b7  audits/checker_soundness/REPORT.md
+392afc2c3bf3e2ebe7747a4d0e00e99d48bf3fdc4ea6b61c971a088b7ee1b827  tests/test_checker_soundness.py
+7894636df8a5e93ff8db380c94062a5086a15ababcb324c8534054c13e08947e  bgw/branch_boundary/analyze.py
+bd8a497b54c9a27d08ceef9d578a60206601588488080542eaa0d84d970614c6  LICENSE
+f92ccde14f3714036a45b6613cdc73dc22a99935e172a34e4e32a2d190c6b210  docs/ROADMAP.md
+1de347b7dab685f341ce970b89772785c553ed79a1b1c38ba810c55522089ba9  tests/test_packet_references.py
+# NOTE: tests/test_review_packet.py and tests/test_weighted_contracts.py were
+# added earlier in T-006 and then DELETED at the owner's direction before the
+# pass closed. They are absent from this manifest because they do not exist;
+# entries are removed by hand, never by scripts/make_manifest.py.
+5a0328cc9ad41a3585b7a0d77d4e13ec53108719b4e3fb5b11a01e71cb613f3a  scripts/make_manifest.py
+4636f6087089733261ffcab58538042f926a84d2c48be260d46d5362ebaa1662  bgw/weighted_audit/contract.py
+4ca7b3b6b0a787f615cde5666e2e55de2383bb17ebb1bc100055f936599183c3  bgw/weighted_audit/records.py
+93430d82b4e30c4e44664b18c18bae391873a7fbf060b5e8f798d20930b79cd6  bgw/weighted_audit/analysis.py
+339e660db8073dfb3d1c40444e42b0467dde52022258797f5deefcbff6b4bd2f  bgw/weighted_audit/symmetry_audit.py
+cb70970bf6ebf930f303d5098a49e8fc716d019a754bff21a25b768b107be016  bgw/weighted_audit/cutoff_sweep.py
+5fde78f0673458a9e62b22dfd9e2e045b0249d2a654d5b51194c4af8eee73863  scripts/gates.py
+20c5cf3fa8f6cd03b748b93c191410962abfb301eac510d6dc7343d27d6ed27b  tests/test_gate_partition.py
+7ffd6c9b85aeacb9f582aa6ce91df11e02901cd726548dee203899fa2dfabacb  tests/test_symmetry_audit.py
+f64103fb6d1a03a8396dc6123841cf88f10286875531ec5a43951d49aaab7f96  tests/test_cutoff_sweep.py
+e15fbf3762f737d80e605aa44f1677e0d495d11b33af0303766166506ba1c4d8  GW/GPP/PoleDomain.lean
+8679f8745324b635581e28ddb9ecfa1a38f6067d16384cee5e5ca6d2d2ba2bd4  .agent/handoffs/T-006.md
+b7b10fdae2c2c426b1bda97b32e89ce315504009afb066beb168c769076df1e6  .agent/handoffs/T-006-CAPABILITY-SCOUT.md
+
+## Unchanged (verified)
+d2376897e261b20233264dcbf5ed79eea981a98a32ff90c7c4f9a5a287aa58bf  bgw/weighted_audit/PROVENANCE.txt
+45c60a49a535af14c4849c547f2d0374c5dd650eba60111c3b9a6709f988e709  bgw/weighted_audit/PROVENANCE-R1.txt
+848e0aa3a52e52efb3608a27744d879f4530d1fb8fde6d9d3f06faed7f0d8aec  bgw/weighted_audit/PROVENANCE-R2.txt
+c0a6964ab15a20f68a289ebca5d7d21077c3161928be67a18624ea0983a6b0e1  bgw/weighted_audit/PROVENANCE-R3.txt
+19e87988d4a96be17c0b619aa7e91de988682842ac433c218006d691e0055be7  bgw/weighted_audit/PROVENANCE-R4.txt
+b773b887d8fc7e9e9b822fc53e227d7f086510434d9cc380a2df2fe5b0ceaf69  bgw/weighted_audit/PROVENANCE-R5.txt
+989feeedcc301cf5e7c2e499e3a657877522d6fecf59f574b906ea7d11edc2e5  bgw/weighted_audit/t004_instrument.patch
+7131ecd51a7f48eb2dbbf8f314f80ec6ddb0ac6e5cc8372d2476542ee2f6d282  bgw/occupation_audit/REPORT.md
+ebd471af29d97faacf86c097bae0f70bb8eb5eea323f806784ebe21a9c06b4ca  bgw/occupation_audit/check_occupation.py
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+8909622bab7e69e3e93616faaaa3d7e993aa2e93ce92e8c81161c628a445129c  bgw/occupation_audit/PROVENANCE-R4.txt
+f4164561c5d628a0a67c4815a9130064faae78bf6d48274c627bb311bb5bd23f  tests/test_occupation_audit.py
+3ba5b3f2f3503d6623f0cd6c1e1680db952d1e64b0151bbfb10657807a68185d  artifacts/t004/weighted_mismatch.json
+14cc492eb03dc49e182391711cd9c0e9980674d02f0058a944b813106980e5f5  .agent/handoffs/T-004-R4.md
+79ebc0925b96231561593b342e9f2731ff219f9c7b0563201c1aa55c83534822  .agent/handoffs/T-004-R5.md
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/weighted_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/weighted_audit/fixtures/fermi_branch_occ_counts.dat
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/weighted_audit/fixtures/fermi_sigma.inp
+d521c886346b52568d4cfe0ecda66778ec72b24df51f45b21c376cdd89c590b4  bgw/weighted_audit/fixtures/t004_accumulators.dat
+bec90aef5517c5e2805782a3f430eb7eb95ea41dbfa5eda8c7610383f3b00a1d  bgw/weighted_audit/fixtures/t004_nearpole_weighted.dat
+8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567  bgw/occupation_audit/fixtures/t003_nearpole_occ.dat
+31a43596bb05464d98a03bae0548bac6407adea75b3bdf5d2cb59470a9d07e43  GW/GPP/PoleCancellation.lean
+4b0dcd7cdbb0c77ead9e857e6b648086d0a7fe93b42718be8c346312debc2076  GW/GPP/FiniteSelfEnergy.lean
+df406b4c75e15da76e23c28b1463d6654adb65929c04c0bf42e790abc9f431b7  GW/GPP/BerkeleyGWMap.lean
+21999bd40e3e98c0fadfa096179c8b557087334d8c0500fad145399d71a28e3c  Specification.md

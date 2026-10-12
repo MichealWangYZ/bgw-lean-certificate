@@ -1,0 +1,80 @@
+# T-004-R4 provenance (residual public-contract repair)
+
+THE SINGLE CURRENT CROSS-AUDIT MANIFEST. It vouches for every file changed in
+this pass, whichever audit the file belongs to. Every other manifest is
+historical and deliberately stale, including
+bgw/occupation_audit/PROVENANCE-R4.txt, which is the prior OCCUPATION revision
+rather than a current manifest. Repaired digests are recorded as new revisions
+instead of by rewriting history.
+
+No BerkeleyGW build or run was performed. The instrumented tree, the
+instrumentation patch, all raw fixtures and every numerical value are
+unchanged; only names, wording and emitted metadata changed.
+
+## Owner-controlled files are deliberately NOT vouched for here
+.agent/STATE.md and .agent/handoffs/CODEX-T-003-T-004-ACCEPTANCE.md are edited
+and signed by Codex after validation, so any digest here would be stale by
+design. PROVENANCE-R2.txt hashed them once and that stands as historical. Git
+tracks both; tests/test_provenance_committed.py asserts they are tracked AND
+absent from the current manifest.
+
+## Corrections applied in R4
+1 packet: (DRAFT) removed from the title; both "not an energy" statements
+  replaced with not-a-final-self-energy / physical-energy-error / observable /
+  eV-result, consistent with intermediate Rydberg units. New
+  tests/test_review_packet.py reads the packet surface directly.
+2 per-call grouping language in the module docstring, the code comment above
+  sum_abs_group_signed, reference_warning and the packet tables. JSON fields
+  renamed: per_call_group_l1_over_accumulators,
+  cross_group_signed_over_accumulators, cross_group_warning,
+  per_call_group_l1_note. No key contains "output". No preferred aggregate.
+3 completeness_evidence is now a function of whether a tally was read; under
+  --no-tally it emits no positive tally-based claim. Coverage failure text
+  names a synthetic contract. Shared-predicate wording corrected to two sites
+  in the same inner loop on the same derived predicate; same-run wording to the
+  same instrumented execution of the same binary.
+4 single current cross-audit manifest model, asserted by both the provenance
+  test and the packet test.
+5 correction table extended to 27 rows, R4 residues attributed to supervisor
+  review, with a note that rows 24-27 are residues of the pass producing 19-23.
+
+## Changed in R4
+cfb8a6b602961b7582d5e467bd6ecfbce6af8260d30d643e5b7a91794e6bb510  bgw/weighted_audit/weighted_mismatch.py
+ac9e32370626e290b45ec78993f39f05ea1b7f004b03ae4007ce281754f54cbc  bgw/weighted_audit/REVIEW_PACKET.md
+3b8db0dde71132c91b23d5ff442e7f3c2e0bd373e082fd5a91af4fee5486ea44  tests/test_weighted_audit.py
+a9c11e54bebb9adb32c630e27a5d9f92a8ace6adbb0eae8af390b86f402fab5c  tests/test_provenance_committed.py
+b27e577d8765f4e1af2a4024cc2f9f3f38950247b563d891529eca6619a91d33  tests/test_review_packet.py
+edd3e350e40d04baf708b0b09ae9f3e934783975a639b85e431f8a15e49b16dc  artifacts/t004/weighted_mismatch.json
+14cc492eb03dc49e182391711cd9c0e9980674d02f0058a944b813106980e5f5  .agent/handoffs/T-004-R4.md
+
+## Unchanged (verified)
+d2376897e261b20233264dcbf5ed79eea981a98a32ff90c7c4f9a5a287aa58bf  bgw/weighted_audit/PROVENANCE.txt
+45c60a49a535af14c4849c547f2d0374c5dd650eba60111c3b9a6709f988e709  bgw/weighted_audit/PROVENANCE-R1.txt
+848e0aa3a52e52efb3608a27744d879f4530d1fb8fde6d9d3f06faed7f0d8aec  bgw/weighted_audit/PROVENANCE-R2.txt
+c0a6964ab15a20f68a289ebca5d7d21077c3161928be67a18624ea0983a6b0e1  bgw/weighted_audit/PROVENANCE-R3.txt
+989feeedcc301cf5e7c2e499e3a657877522d6fecf59f574b906ea7d11edc2e5  bgw/weighted_audit/t004_instrument.patch
+40bc130492f5646f22b22f8e7ae55b028f715ae310cc23edf8e69d3736614f0e  bgw/occupation_audit/REPORT.md
+f763e62dbe27997dea66b67e75f1a4efe92ea729a8a56c8c627ff7ad99a36030  bgw/occupation_audit/check_occupation.py
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+8909622bab7e69e3e93616faaaa3d7e993aa2e93ce92e8c81161c628a445129c  bgw/occupation_audit/PROVENANCE-R4.txt
+f4164561c5d628a0a67c4815a9130064faae78bf6d48274c627bb311bb5bd23f  tests/test_occupation_audit.py
+73c8521de13857c2cf43f0f3802d1ea167dad967aacd0368ee53d5eb8701e54e  THIRD_PARTY_NOTICES.md
+8b7f186098b07cf4db07a7e1cde2da71a4af12d39cc0bce2dd1033decc2a8192  .agent/handoffs/T-004-R3.md
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/weighted_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/weighted_audit/fixtures/fermi_branch_occ_counts.dat
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/weighted_audit/fixtures/fermi_sigma.inp
+d521c886346b52568d4cfe0ecda66778ec72b24df51f45b21c376cdd89c590b4  bgw/weighted_audit/fixtures/t004_accumulators.dat
+bec90aef5517c5e2805782a3f430eb7eb95ea41dbfa5eda8c7610383f3b00a1d  bgw/weighted_audit/fixtures/t004_nearpole_weighted.dat
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/occupation_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/occupation_audit/fixtures/fermi_branch_occ_counts.dat
+9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4  bgw/occupation_audit/fixtures/fermi_run_notices.txt
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/occupation_audit/fixtures/fermi_sigma.inp
+ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570  bgw/occupation_audit/fixtures/smear_rejected.out
+834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064  bgw/occupation_audit/fixtures/smear_sigma.inp
+8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567  bgw/occupation_audit/fixtures/t003_nearpole_occ.dat
+1967aca24b77f07b7569cdc2a20add0bdef85eaf991426242e7124770e1089c9  artifacts/t004/fermi_run.out
+35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9  artifacts/t004/fermi_sigma_hp.log
+
+## Instrumented tree (unchanged)
+535a95f900e3a50b1500c430c061005a71b8cb47e33b0c668af0ff792f0bf4f4  /tmp/bgw/t004-instr/Sigma/mtxel_cor.f90
+cee6178725fafd14196d003a4c4f093fce8cf73f25b63ec5960819f02a01db02  /tmp/bgw/t004-instr/Sigma/sigma.real.x

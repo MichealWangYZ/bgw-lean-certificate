@@ -1,0 +1,21 @@
+E1.5 counterfactual fault classes (bgw/endpoint/mutate_e1.py)
+spec.py sha256 045d887ad4e658342812cf8259c0312ea94dcd310b79a775468c38f9ae495d74
+mutate_e1.py sha256 d3798e7977ddede6c213e3365c581a06a4208189c10fbf6a1abfd2c5ab913479
+production O1 = 15.400547 meV; detection threshold 1e-08 eV
+
+control                      max table dev 5.004e-10 eV at ((np.float64(0.0), np.float64(0.5), np.float64(0.5)), [1, 2], 'Sig')  O1 +15.4005 meV (shift +0.0000)  control-agrees
+op_first_match               max table dev 1.697e-02 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [8], 'Eqp1')  O1 +14.3394 meV (shift -1.0611)  DETECTED
+wing_at_target_G0            max table dev 4.830e-04 eV at ((np.float64(0.0), np.float64(0.5), np.float64(0.5)), [5, 6], 'CH')  O1 +15.4006 meV (shift +0.0000)  DETECTED
+wing_v0_is_G0                max table dev 3.326e-04 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [8], 'CH')  O1 +15.3914 meV (shift -0.0092)  DETECTED
+no_wing_fix_q_nonzero        max table dev 1.432e-02 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [8], 'Eqp1')  O1 +16.0738 meV (shift +0.6733)  DETECTED
+static_remainder_factor_1    max table dev 1.360e+00 eV at ((np.float64(0.0), np.float64(0.5), np.float64(0.5)), [7, 8], 'CH')  O1 +132.0816 meV (shift +116.6810)  DETECTED
+no_static_remainder          max table dev 1.360e+00 eV at ((np.float64(0.0), np.float64(0.5), np.float64(0.5)), [7, 8], 'Sig')  O1 -101.2805 meV (shift -116.6810)  DETECTED
+unocc_nearpole_ch_kept       max table dev 1.496e+00 eV at ((np.float64(0.0), np.float64(0.5), np.float64(0.5)), [7, 8], 'Eqp1')  O1 +34.7591 meV (shift +19.3586)  DETECTED
+invalid_modes_skipped        max table dev 7.220e-02 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.0)), [1], 'SX-X')  O1 -5.2187 meV (shift -20.6193)  DETECTED
+gamma_0.25                   max table dev 1.030e-01 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [8], 'CH')  O1 +15.5475 meV (shift +0.1469)  DETECTED
+sexcut_disabled              max table dev 1.056e+00 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [2], 'Eqp1')  O1 +15.4005 meV (shift +0.0000)  DETECTED
+dw_0.5                       max table dev 9.172e-02 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [1], 'Eqp1')  O1 +18.6097 meV (shift +3.2091)  DETECTED
+q_weight_off_by_one          max table dev 2.461e+00 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.0)), [1], 'X')  O1 +84.8830 meV (shift +69.4824)  DETECTED
+ryd_codata2018               max table dev 7.509e-07 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.0)), [1], 'X')  O1 +15.4005 meV (shift +0.0000)  DETECTED
+tol_small_1e-4               max table dev 1.336e-04 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.0)), [2, 3, 4], 'SX-X')  O1 +15.3982 meV (shift -0.0024)  DETECTED
+no_fractional_translations   max table dev 3.234e+00 eV at ((np.float64(0.0), np.float64(0.0), np.float64(0.5)), [1], 'X')  O1 -583.7208 meV (shift -599.1214)  DETECTED

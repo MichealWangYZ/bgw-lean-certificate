@@ -1,0 +1,46 @@
+{
+  "reviewed_commit": "ce92b809897bbe3fa4268870eaef72e7741755b1",
+  "input_origin": "synthetic Python reference values, not Lean output",
+  "git_blob_hashes": {
+    "tests/test_ll_c2a.py": "21f98a0d84c9f38971eae2077c1c62dceb51a411",
+    "ll/ring_reference.py": "641d536ad219738af480c7bae159721aef49e5bd"
+  },
+  "cases": {
+    "synthetic_valid_control": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "successful": true
+    },
+    "ordinary_wrong_value_control": {
+      "tests": 13,
+      "failures": 1,
+      "errors": 0,
+      "successful": false
+    },
+    "wrong_duplicate_before_correct_row": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "successful": true
+    },
+    "out_of_bounds_external_indices": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "successful": true
+    },
+    "false_dimension": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "successful": true
+    },
+    "candidate_hides_wrong_k4_by_selecting_orders": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "successful": true
+    }
+  }
+}

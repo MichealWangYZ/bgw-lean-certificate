@@ -1,0 +1,16 @@
+{
+  "reviewed_commit": "94393dec0b74bd4927263dbe9513d2aa63ea3737",
+  "reviewed_tree": "7cddc5dbd2f54f93176ced7218f29709721ba20f",
+  "gated_commit_reported": "47a46c994d0c11424754d14a48303cb4eff9c276",
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "script_sha256": "4c5b105eb5ebbe23c754277db35a5161966efcd270dfde0fbaa78ec3e01b2899",
+  "arithmetic_spotchecks": "PASS: 10016 intervals in both conversion directions; 5016 rationals with directed and nearest-neighbor checks",
+  "radius_counterexample": "reproduced: input 2 subnormal units; padded output 27; exact decimal conversion 27.21138506",
+  "script_compile": "PASS",
+  "lean_available": false,
+  "lake_available": false,
+  "full_gate_independently_run": false,
+  "production_independently_run": false,
+  "scope": "copied expression checks, not a checkout or execution of full repository modules"
+}

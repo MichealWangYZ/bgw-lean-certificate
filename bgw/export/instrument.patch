@@ -1,0 +1,60 @@
+--- /tmp/bgw/mtxel_cor.pristine.f90	2026-09-10 22:46:57.895411894 -0500
++++ Sigma/mtxel_cor.f90	2026-09-10 22:53:08.434327038 -0500
+@@ -1683,6 +1683,9 @@
+   end subroutine sigma_gpp
+ 
+   subroutine sigma_gpp_cpu()
++    integer, save :: bgw_dump_count = 0   !BGW-DUMP
++    integer(8), save :: bgw_nb1 = 0, bgw_nb2 = 0, bgw_nb3 = 0, bgw_ncut = 0  !BGW-DUMP
++    integer, save :: bgw_np_count = 0  !BGW-DUMP
+     SCALAR, allocatable :: ssx_array(:), sch_array(:)
+     real(DP) :: delwr, delw2, wdiffr, rden, wxt, ssxcutoff, limitone, limittwo
+     complex(DPC) :: halfinvwtilde, delw, wdiff, cden
+@@ -1844,8 +1847,37 @@
+ 
+ ! JRD: Breaks vectorization. But, I will have to fix later because
+ ! leaving it out breaks GSM example.
++            if (wdiffr.gt.limittwo .and. delwr.lt.limitone) then   !BGW-DUMP
++              bgw_nb1 = bgw_nb1 + 1
++            else if ( delwr .gt. TOL_Zero) then
++              bgw_nb2 = bgw_nb2 + 1
++              if (bgw_np_count .lt. 32) then
++                bgw_np_count = bgw_np_count + 1
++                open(unit=7779, file='gpp_nearpole_dump.dat', position='append', action='write')
++                write(7779,'(5(i7,1x),10(es24.17,1x))') bgw_np_count, n1true, iw, igp, ig, &
++                  occ, vcoul(igp), I_eps_array(ig,my_igp), dble(wtilde), wxt, &
++                  Omega2, ssx, sch, e_lk, e_n1kq
++                close(7779)
++              endif
++            else
++              bgw_nb3 = bgw_nb3 + 1
++            endif
+             ssxcutoff = sig%sexcut*abs(I_eps_array(ig,my_igp))
++            if (abs(ssx) .gt. ssxcutoff .and. wxt .lt. 0.0d0) then   !BGW-DUMP
++              bgw_ncut = bgw_ncut + 1
++            endif
+             if (abs(ssx) .gt. ssxcutoff .and. wxt .lt. 0.0d0) ssx=0.0d0
++!BGW-DUMP-BEGIN (instrumentation added for physics-lean T-002; not upstream)
++            if (bgw_dump_count .lt. 64 .and. iw .eq. 2 .and. my_igp .eq. 1 &
++                .and. ig .le. 4) then
++              bgw_dump_count = bgw_dump_count + 1
++              open(unit=7777, file='gpp_kernel_dump.dat', position='append', action='write')
++              write(7777,'(5(i7,1x),10(es24.17,1x))') bgw_dump_count, n1true, iw, igp, ig, &
++                occ, vcoul(igp), I_eps_array(ig,my_igp), dble(wtilde), wxt, &
++                Omega2, ssx, sch, e_lk, e_n1kq
++              close(7777)
++            endif
++!BGW-DUMP-END
+ 
+             ssxt = ssxt + aqsntemp(ig,n1)*ssx
+             scht = scht + aqsntemp(ig,n1)*sch
+@@ -1926,6 +1958,9 @@
+ !$OMP END PARALLEL
+     call timing%stop(timing%m_cor_sx_ch)
+ 
++    open(unit=7778, file='gpp_branch_counts.dat', status='replace', action='write')  !BGW-DUMP
++    write(7778,'(a,4(1x,i12))') 'generic nearpole zero sexcut', bgw_nb1, bgw_nb2, bgw_nb3, bgw_ncut
++    close(7778)
+     POP_SUB(mtxel_cor.sigma_gpp_cpu)
+ 
+   end subroutine sigma_gpp_cpu

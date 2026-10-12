@@ -1,0 +1,197 @@
+{
+  "source": "Lin-Lindsey Part I arXiv:1809.02900v1, PDF section 4.7.1, Fig. 4.11",
+  "generated_by": "ll/make_comparison.py",
+  "symmetry_factors_checked_against_paper": {
+    "ring0": 1,
+    "ring1": 2,
+    "ring2": 4
+  },
+  "comparisons": [
+    {
+      "fixture": "N1-scalar",
+      "k": 0,
+      "lean": "-6",
+      "python": "-6",
+      "exact_match": true
+    },
+    {
+      "fixture": "N1-scalar",
+      "k": 1,
+      "lean": "36",
+      "python": "36",
+      "exact_match": true
+    },
+    {
+      "fixture": "N1-scalar",
+      "k": 2,
+      "lean": "-216",
+      "python": "-216",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-equal-ext",
+      "k": 0,
+      "lean": "-2",
+      "python": "-2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-equal-ext",
+      "k": 1,
+      "lean": "24",
+      "python": "24",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-equal-ext",
+      "k": 2,
+      "lean": "-495/2",
+      "python": "-495/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-unequal-ext",
+      "k": 0,
+      "lean": "-2",
+      "python": "-2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-unequal-ext",
+      "k": 1,
+      "lean": "39/2",
+      "python": "39/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-pd-unequal-ext",
+      "k": 2,
+      "lean": "-405/2",
+      "python": "-405/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-rational",
+      "k": 0,
+      "lean": "1/21",
+      "python": "1/21",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-rational",
+      "k": 1,
+      "lean": "1247/15876",
+      "python": "1247/15876",
+      "exact_match": true
+    },
+    {
+      "fixture": "N2-rational",
+      "k": 2,
+      "lean": "1033723/8890560",
+      "python": "1033723/8890560",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-unequal-ext",
+      "k": 0,
+      "lean": "-2",
+      "python": "-2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-unequal-ext",
+      "k": 1,
+      "lean": "51/2",
+      "python": "51/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-unequal-ext",
+      "k": 2,
+      "lean": "-1863/2",
+      "python": "-1863/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-equal-ext",
+      "k": 0,
+      "lean": "0",
+      "python": "0",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-equal-ext",
+      "k": 1,
+      "lean": "135/2",
+      "python": "135/2",
+      "exact_match": true
+    },
+    {
+      "fixture": "N3-pd-equal-ext",
+      "k": 2,
+      "lean": "-1296",
+      "python": "-1296",
+      "exact_match": true
+    }
+  ],
+  "mutations": [
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 0,
+      "mutant": "sign_rule_off_by_one",
+      "correct": "-2",
+      "mutated": "2",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 1,
+      "mutant": "sign_rule_off_by_one",
+      "correct": "39/2",
+      "mutated": "-39/2",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 2,
+      "mutant": "sign_rule_off_by_one",
+      "correct": "-405/2",
+      "mutated": "405/2",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 1,
+      "mutant": "symmetry_factor_omitted",
+      "correct": "39/2",
+      "mutated": "39",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 1,
+      "mutant": "chain_attached_to_wrong_bubble_site",
+      "correct": "39/2",
+      "mutated": "20",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 2,
+      "mutant": "symmetry_factor_omitted",
+      "correct": "-405/2",
+      "mutated": "-810",
+      "detected": true
+    },
+    {
+      "witness": "N2-pd-unequal-ext",
+      "k": 2,
+      "mutant": "chain_attached_to_wrong_bubble_site",
+      "correct": "-405/2",
+      "mutated": "-425/2",
+      "detected": true
+    }
+  ],
+  "all_comparisons_exact": true,
+  "all_mutants_detected": true
+}

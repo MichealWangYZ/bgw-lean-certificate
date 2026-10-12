@@ -1,0 +1,8 @@
+PASS: 10016 intervals, both meV conversion directions
+PASS: 5016 rationals, directed conversion and nearest-neighbor checks
+COUNTEREXAMPLE: cor.py padded scalar radius conversion
+input radius / smallest subnormal = 2
+reported radius / smallest subnormal = 27
+exact converted radius / smallest subnormal = 1360569253/50000000
+exact decimal equivalent = 27.21138506
+No claim is made that this subnormal occurs in the pinned run.

@@ -1,0 +1,84 @@
+{
+  "reviewed_commit": "353f9803ec4e51c572dcaa4e3fc785e4a21f49fa",
+  "source_hashes": {
+    "bgw/m1_screening/extract.py": "6074ec0c246ac2556422e898e4ae038bd4542165",
+    "bgw/m1_screening/reference.py": "92f49da565f8d5dfdc5108c948e3cc090d524ff8",
+    "tests/test_bgw_m1.py": "548a7eaad0066b547e93391ac33c8435e73702ef",
+    "GW/BGW/M1Screening.lean": "58c13ea250265394e5be0d7f7707f85cf1d287e3",
+    "bgw/m1_screening/data/m1_eps_dump_q2.txt": "5b422d62f82665420a2850aeb3879ecf1f3b8c76",
+    "bgw/m1_screening/data/m1_gvec_q2.txt": "d51a609c1e9f3e0b003a6b8192b28a1a6d572e51"
+  },
+  "evidence": "Original submitted suite on committed data; corrupted copies only for probes. Not Lean output generated here.",
+  "original_tests": 34,
+  "failures": 0,
+  "errors": 0,
+  "independent_inverse_matches": true,
+  "metrics": {
+    "entrywise_max_abs": 9.627035010723234e-17,
+    "forward_rel_inf": 1.7112154669742808e-16,
+    "normalized_residual": 8.757690843317078e-17,
+    "normalized_residual_inf": 7.008168410280357e-17
+  },
+  "thresholds": {
+    "forward_rel_inf": 3.416065984394502e-13,
+    "normalized_residual": 8.881784197001252e-14
+  },
+  "residual_conventions": {
+    "without_rhs_norm": "89571542264343240494/1278102023532279715978109178659731473",
+    "with_rhs_norm": "89571542264343240494/1610409022478508684204060943729817617",
+    "without_rhs_float": 7.008168410280357e-17,
+    "with_rhs_float": 5.562036787802374e-17
+  },
+  "probes": {
+    "repeated_q": {
+      "rejected": true,
+      "error": "line 139: q 2 appears twice; the dump is appended to, so this is two runs in one file -- select one run explicitly instead of taking the last block"
+    },
+    "nested_q": {
+      "rejected": true,
+      "error": "line 138: QSTART 2 while q 2 is still open; an unterminated block may not be followed by another"
+    },
+    "extra_q": {
+      "rejected": true,
+      "error": "expected exactly q {2}, found [2, 99]"
+    },
+    "duplicate_inside": {
+      "rejected": true,
+      "error": "line 11: duplicate EPSPRE key (1, 1) inside q 2"
+    },
+    "mismatched_end": {
+      "rejected": true,
+      "error": "line 138: QEND 7 closes q 2"
+    },
+    "outside_entry": {
+      "rejected": true,
+      "error": "line 1: EPSPRE outside a q block"
+    },
+    "missing_entry": {
+      "rejected": true,
+      "error": "line 137: q 2 pre has 63 entries, want 64"
+    },
+    "empty": {
+      "rejected": true,
+      "error": "dump contains no complete q block"
+    },
+    "inconsistent_n": {
+      "rejected": true,
+      "error": "line 138: q 2 has 8 vcoul entries, want 9"
+    },
+    "explicit_multi_q_parser": {
+      "accepted": true,
+      "q_ids": [
+        2,
+        99
+      ]
+    }
+  },
+  "not_executed": [
+    "Lean/Lake and axiom audit",
+    "full repository gate",
+    "BerkeleyGW rebuild/run",
+    "pristine/instrumented A/B",
+    "external input/source hash verification"
+  ]
+}

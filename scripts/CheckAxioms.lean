@@ -1,0 +1,194 @@
+-- GENERATED import block: `python3 scripts/registry.py` writes it (GW, Main, then every
+-- GWKernelData root of lakefile.toml, in that order); `--check` fails on drift. The audit
+-- body below the imports is hand-written and kept verbatim.
+import GW
+import Main
+import GW.Endpoint.Kernel.Tamper
+import GW.Endpoint.Kernel.AuditData
+import GW.Endpoint.Kernel.Data.Q0Check
+import GW.Endpoint.Kernel.Data.Q1Check
+import GW.Endpoint.Kernel.Data.Q2Check
+import GW.Endpoint.Kernel.Data.E0Check
+import GW.Endpoint.Kernel.Data.E1Check
+import GW.Endpoint.Kernel.Data.E2Check
+import GW.Endpoint.Kernel.Data.E0Tamper
+import GW.Endpoint.Kernel.Data.E1Tamper
+import GW.Endpoint.Kernel.Data.E2Tamper
+import GW.Endpoint.Kernel.AuditEps
+import GW.Endpoint.Kernel.Data.S3Check
+import GW.Endpoint.Kernel.Data.S3Tamper
+import GW.Endpoint.Kernel.AuditSigma
+import GW.Endpoint.Kernel.Data.US
+import GW.Endpoint.Kernel.Data.UTamper
+import GW.Endpoint.Kernel.AuditUnfold
+import GW.Endpoint.Kernel.Data.CoulTab
+import GW.Endpoint.Kernel.Data.CoulTamper
+import GW.Endpoint.Kernel.Data.CoulAudit
+import GW.Endpoint.Kernel.Data.RO1
+import GW.Endpoint.Kernel.Data.RTamper
+import GW.Endpoint.Kernel.Data.RIrr
+import GW.Endpoint.Kernel.AuditRoots
+import GW.Endpoint.Kernel.Headline
+import Lean.Util.CollectAxioms
+import Std.Data.HashMap
+import Std.Data.HashSet
+
+/-!
+Memoized exhaustive axiom audit (WRAPUP item 3).
+
+`Lean.collectAxioms c` runs a fresh depth-first search from `c` for every theorem, so the
+old loop re-walked the shared Mathlib/project dependency graph once per theorem (~34 000
+times). This computes the same answer for every constant ONCE and shares it.
+
+What is computed. For a constant `d`, `memo[d]` is exactly `collectAxioms d`: the axioms
+reachable from `d`, in the order a fresh `CollectAxioms.collect d` first visits them (the
+order is printed, so it is reproduced, not just the set). `children` lists the constants
+`collect` recurses into, in the same order (type, then value; an inductive's type, then
+its constructors; nothing below an axiom).
+
+Why sharing is exact. Tarjan's algorithm finds the strongly connected components of that
+graph (cycles occur: an inductive lists its constructors, whose types mention the
+inductive) and closes them in reverse topological order. For a member `d` of a closed
+component, a depth-first search from `d` is replayed over the component's own members;
+an edge to a constant `e` in an earlier-closed component appends `memo[e]` minus the
+axioms already collected. That equals what `collect` would find under `e` at that point:
+`e` cannot reach back into the component (so not into the search stack), every constant
+the search visited earlier in `e`'s reach had its whole reach visited too, and the
+visited axioms are exactly the collected ones.
+
+Same allowlist, same AUDITED lines, same failure behaviour and messages as before; the
+equivalence on the full build is recorded in `.agent/handoffs/WRAPUP.md` (old and new
+AUDITED lines diffed).
+-/
+
+open Lean
+
+namespace AxiomAudit
+
+/-- The constants `CollectAxioms.collect` recurses into from `c`, in its order, and
+whether `c` is an axiom. -/
+def children (env : Environment) (c : Name) : Array Name × Bool :=
+  match env.checked.get.find? c with
+  | some (ConstantInfo.axiomInfo _)  => (#[], true)
+  | some (ConstantInfo.defnInfo v)   => (v.type.getUsedConstants ++ v.value.getUsedConstants, false)
+  | some (ConstantInfo.thmInfo v)    => (v.type.getUsedConstants ++ v.value.getUsedConstants, false)
+  | some (ConstantInfo.opaqueInfo v) => (v.type.getUsedConstants ++ v.value.getUsedConstants, false)
+  | some (ConstantInfo.quotInfo _)   => (#[], false)
+  | some (ConstantInfo.ctorInfo v)   => (v.type.getUsedConstants, false)
+  | some (ConstantInfo.recInfo v)    => (v.type.getUsedConstants, false)
+  | some (ConstantInfo.inductInfo v) => (v.type.getUsedConstants ++ v.ctors.toArray, false)
+  | none                             => (#[], false)
+
+structure State where
+  index   : Std.HashMap Name Nat := {}
+  low     : Std.HashMap Name Nat := {}
+  onStack : Std.HashSet Name := {}
+  stack   : Array Name := #[]
+  next    : Nat := 0
+  /-- children of constants in components not yet closed (dropped on closing) -/
+  kids    : Std.HashMap Name (Array Name) := {}
+  axiomSet : Std.HashSet Name := {}
+  /-- `memo[d] = collectAxioms d`, for every constant of a closed component -/
+  memo    : Std.HashMap Name (Array Name) := {}
+
+abbrev M := ReaderT Environment (StateM State)
+
+/-- Local search state: visited members, collected axioms (ordered and as a set). -/
+structure Local where
+  visited : Std.HashSet Name := {}
+  out     : Array Name := #[]
+  outSet  : Std.HashSet Name := {}
+
+/-- Replay `collect`'s depth-first search from `c` inside one closed component. -/
+partial def replay (members : Std.HashSet Name) (c : Name) : StateT Local M Unit := do
+  if (← get).visited.contains c then return
+  modify fun l => { l with visited := l.visited.insert c }
+  if (← getThe State).axiomSet.contains c then
+    modify fun l => if l.outSet.contains c then l
+      else { l with out := l.out.push c, outSet := l.outSet.insert c }
+  for e in (← getThe State).kids.getD c #[] do
+    if members.contains e then
+      replay members e
+    else
+      for a in (← getThe State).memo.getD e #[] do
+        modify fun l => if l.outSet.contains a then l
+          else { l with out := l.out.push a, outSet := l.outSet.insert a }
+
+/-- Close a component: compute `memo` for each member, then drop its children lists. -/
+def close (members : Array Name) : M Unit := do
+  let set : Std.HashSet Name := members.foldl (·.insert ·) {}
+  for d in members do
+    let (_, l) ← (replay set d).run {}
+    modify fun s => { s with memo := s.memo.insert d l.out }
+  modify fun s => { s with kids := members.foldl (·.erase ·) s.kids }
+
+/-- Tarjan's strongly-connected-components search from `v`. -/
+partial def strong (v : Name) : M Unit := do
+  let env ← read
+  let (ks, isAx) := children env v
+  modify fun s => { s with
+    index := s.index.insert v s.next, low := s.low.insert v s.next, next := s.next + 1,
+    stack := s.stack.push v, onStack := s.onStack.insert v, kids := s.kids.insert v ks,
+    axiomSet := if isAx then s.axiomSet.insert v else s.axiomSet }
+  for w in ks do
+    let seen := (← get).index.contains w
+    if !seen then
+      strong w
+      modify fun s => { s with low := s.low.insert v (min (s.low.getD v 0) (s.low.getD w 0)) }
+    else if (← get).onStack.contains w then
+      modify fun s => { s with low := s.low.insert v (min (s.low.getD v 0) (s.index.getD w 0)) }
+  let isRoot := (← get).low.getD v 0 == (← get).index.getD v 0
+  if isRoot then
+    let mut members : Array Name := #[]
+    repeat
+      let some w := (← get).stack.back? | break
+      modify fun s => { s with stack := s.stack.pop, onStack := s.onStack.erase w }
+      members := members.push w
+      if w == v then break
+    close members
+
+/-- `collectAxioms c`, shared across calls through the state. -/
+def axiomsOf (c : Name) : M (Array Name) := do
+  unless (← get).memo.contains c do
+    strong c
+  return (← get).memo.getD c #[]
+
+end AxiomAudit
+
+open Lean Elab Command in
+run_cmd do
+  let env <- getEnv
+  let allowed := #[`propext, `Classical.choice, `Quot.sound]
+  for moduleName in env.header.moduleNames do
+    if moduleName == `GW || (`GW).isPrefixOf moduleName || moduleName == `Main then
+      logInfo m!"AUDIT_MODULE {moduleName}"
+  let mut checked := 0
+  let mut runtimeDeclarations := 0
+  let mut names : Array Name := #[]
+  for (name, info) in env.constants do
+    let some index := env.getModuleIdxFor? name | continue
+    let moduleName := env.header.moduleNames[index.toNat]!
+    if moduleName == `GW || (`GW).isPrefixOf moduleName || moduleName == `Main then
+      match info with
+      | .axiomInfo value =>
+        -- The compiler exports unsafe specialization placeholders as axioms.
+        -- Every theorem still receives the full transitive allowlist check below.
+        if value.isUnsafe then
+          runtimeDeclarations := runtimeDeclarations + 1
+        else
+          throwError "Project-defined proof axiom: {name}"
+      | .thmInfo _ => names := names.push name
+      | _ => pure ()
+  let mut state : AxiomAudit.State := {}
+  for name in names.qsort Name.lt do
+    let (axioms, state') := ((AxiomAudit.axiomsOf name).run env).run state
+    state := state'
+    for axiomName in axioms do
+      unless allowed.contains axiomName do
+        throwError "Forbidden axiom {axiomName} in {name}"
+    logInfo m!"AUDITED {name}: {axioms.toList}"
+    checked := checked + 1
+  if checked == 0 then
+    throwError "No project theorems found; refusing an empty audit"
+  logInfo m!"AXIOM AUDIT PASSED: {checked} theorems (including generated/private declarations)"
+  logInfo m!"Runtime-only unsafe compiler declarations: {runtimeDeclarations} (not proof assumptions)"

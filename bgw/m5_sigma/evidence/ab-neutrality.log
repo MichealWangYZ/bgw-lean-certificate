@@ -1,0 +1,31 @@
+BGW-M5 pristine/instrumented Sigma A/B and run identity
+
+Same pinned archive, toolchain, inputs and epsmat as bgw/m4_gpp/evidence/ab-neutrality.log.
+1a85b03b83b339056f65124bfa96832ca61152236d9bb1cb372e3040fc686a49  bgw40.tar.gz
+
+Instrumented tree: fresh extraction patched only by instrument_m5.py (M4-R1 exports + kernel exports):
+3e7eabf98ab15eee09b2d2081378d33c0d737e73d5f93064f3af895b54aa75e6  bgw/m5_sigma/instrument_m5.py
+bf53c6271bf9ce083c410d67d8539454c29291f8b988ca18e9f149613c0bf702  bgw/m4_gpp/instrument_r1.py
+c2c07c696ca1f27b53ed25c74514f49ec989e0944cb87ba450ef46c26d4f63dc  bgw/m5_sigma/m5_instrument.patch
+production lines removed by the patch: 0
+
+e07c7dd68ec12bdf20224a8ad77dae0b6c064c5fe5f1be0a0591cfec8c419663  pristine/BerkeleyGW-4.0/Sigma/sigma.real.x
+2ae68fb7e92e0ffe586c2a8cc85a54b8fcdcdd39163874fc3a45d369c7c4ce4e  instr5/BerkeleyGW-4.0/Sigma/sigma.real.x
+
+Run: OMP/OPENBLAS/MKL threads = 1, M5_IG=2 M5_IGP=1
+$ cmp pristine-run/<f> m5-run/<f>
+IDENTICAL eqp0.dat
+IDENTICAL eqp1.dat
+IDENTICAL sigma_hp.log
+IDENTICAL ch_converge.dat
+IDENTICAL vxc.dat
+IDENTICAL x.dat
+
+$ grep -v '^SG[PQ] ' m5-run/m4r1_dump.dat | cmp - m4r1-run/m4r1_dump.dat
+M4-R1 RECORDS IDENTICAL
+kernel records (SGP): 1824
+
+158236bad4fcb6662d342a8f87ec863edd2fd3f2e9fede9e9de55f18915baa0c  m4r1_dump.dat
+b9f8da77e1f82073defd2fdac8b291aa5a1e571be244411fceb89b384e3cb376  bgw/m5_sigma/data/m5_dump.dat.gz
+
+Instrumentation neutrality is empirical FOR THIS INPUT AND THESE SETTINGS.

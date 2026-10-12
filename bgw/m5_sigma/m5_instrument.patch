@@ -1,0 +1,202 @@
+diff -ru '--exclude=*.o' '--exclude=*.mod' '--exclude=*.x' '--exclude=*.a' '--exclude=*.p.f' '--exclude=*.d' ../pristine/BerkeleyGW-4.0/Sigma/mtxel_cor.f90 BerkeleyGW-4.0/Sigma/mtxel_cor.f90
+--- ../pristine/BerkeleyGW-4.0/Sigma/mtxel_cor.f90	2024-03-19 12:10:41.000000000 -0500
++++ BerkeleyGW-4.0/Sigma/mtxel_cor.f90	2026-09-22 14:41:54.835560812 -0500
+@@ -139,6 +139,11 @@
+   SCALAR, allocatable :: asxtemp(:),achtemp(:)
+   SCALAR, allocatable :: wpmtx(:),I_eps_array(:,:)
+   real(DP) :: e_lk, e_n1kq, lambda, phi, freq0, wx, occ
++#ifndef CPLX
++  integer :: m4_i
++  integer(8) :: m4_b
++  integer(8), save :: m4_occ = 0
++#endif
+   complex(DPC) :: wtilde, wtilde2_temp, ctemp
+   complex(DPC), allocatable :: wtilde_array(:,:)
+   ! ZL: add for EP braket
+@@ -578,6 +583,13 @@
+ 
+ !!------------- Initialize eps^-1 for this G` ---------------------------------
+ 
++#ifndef CPLX
++    ! BGW-M4-R1: which stored eps column this G' reads.
++    open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++    write(791,'(A,6(1X,I0),1X,I0,3(1X,I0))') 'COL', in, il, ispin, my_igp, indigp, igp, &
++      transfer(dble(coulfact), m4_b), (transfer(dble(qk(m4_i)), m4_b), m4_i=1,3)
++    close(791)
++#endif
+     select case(sig%freq_dep)
+     case(0,1)
+       epstemp(:)=eps(:,my_igp)
+@@ -793,6 +805,17 @@
+           wtilde = CMPLX(sqrt(dble(wtilde2)), 0d0)
+         endif
+         wtilde_array(ig,my_igp) = wtilde
++#ifndef CPLX
++        ! BGW-M4-R1: reached only by modes that passed every `cycle` above.
++        m4_occ = m4_occ + 1
++        open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++        write(791,'(A,1X,I0,6(1X,I0),8(1X,I0))') 'GPP', m4_occ, ig, igp, my_igp, indigp, &
++          ind(ig), merge(1, 0, dble(wtilde2) > 0d0), &
++          transfer(dble(ph(ig)), m4_b), transfer(dble(ph(igp)), m4_b), transfer(dble(epstemp(ind(ig))), m4_b), &
++          transfer(dble(epsggp), m4_b), transfer(dble(I_epsggp), m4_b), transfer(dble(Omega2), m4_b), &
++          transfer(dble(wtilde2), m4_b), transfer(dble(dble(wtilde)), m4_b)
++        close(791)
++#endif
+ 
+       enddo ! G Loop for GPP Setup
+ 
+@@ -1688,6 +1711,12 @@
+     complex(DPC) :: halfinvwtilde, delw, wdiff, cden
+     integer :: igbeg, igend, igblk
+     SCALAR :: ssx, sch, ssxt, scht, schtt
++#ifndef CPLX
++    SCALAR :: m5_ssx0
++    integer :: m5_ig, m5_igp, m5_st
++    integer(8) :: m5_b
++    character(len=16) :: m5_env
++#endif
+ 
+     PUSH_SUB(mtxel_cor.sigma_gpp_cpu)
+ 
+@@ -1844,8 +1873,36 @@
+ 
+ ! JRD: Breaks vectorization. But, I will have to fix later because
+ ! leaving it out breaks GSM example.
++#ifndef CPLX
++            m5_ssx0 = ssx
++#endif
+             ssxcutoff = sig%sexcut*abs(I_eps_array(ig,my_igp))
+             if (abs(ssx) .gt. ssxcutoff .and. wxt .lt. 0.0d0) ssx=0.0d0
++#ifndef CPLX
++            ! BGW-M5: one consumer mode's SX/CH operands and values, occupied bands.
++            call get_environment_variable('M5_IG', m5_env, status=m5_st)
++            m5_ig = -1
++            if (m5_st == 0) read(m5_env, *) m5_ig
++            call get_environment_variable('M5_IGP', m5_env, status=m5_st)
++            m5_igp = -1
++            if (m5_st == 0) read(m5_env, *) m5_igp
++            if (ig == m5_ig .and. igp == m5_igp) then
++              open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++              write(791,'(A,8(1X,I0),12(1X,I0))') 'SGP', in, il, n1, n1true, iw, &
++                my_igp, indigp, ig, &
++                transfer(dble(wxt), m4_b), transfer(dble(e_lk), m4_b), transfer(dble(e_n1kq), m4_b), &
++                transfer(dble(dble(wtilde)), m4_b), transfer(dble(aimag(wtilde)), m4_b), &
++                transfer(dble(wtilde2), m4_b), transfer(dble(Omega2), m4_b), &
++                transfer(dble(I_eps_array(ig,my_igp)), m4_b), transfer(dble(dble(wdiff)), m4_b), &
++                transfer(dble(dble(delw)), m4_b), transfer(dble(delwr), m4_b), transfer(dble(wdiffr), m4_b)
++              write(791,'(A,2(1X,I0),11(1X,I0))') 'SGQ', n1, iw, &
++                transfer(dble(sch), m4_b), transfer(dble(m5_ssx0), m4_b), transfer(dble(ssx), m4_b), &
++                transfer(dble(ssxcutoff), m4_b), transfer(dble(aqsntemp(ig,n1)), m4_b), &
++                transfer(dble(aqsmtemp(igp,n1)), m4_b), transfer(dble(vcoul(igp)), m4_b), transfer(dble(occ), m4_b), &
++                transfer(dble(sig%sexcut), m4_b), transfer(dble(limittwo), m4_b), transfer(dble(limitone), m4_b)
++              close(791)
++            endif
++#endif
+ 
+             ssxt = ssxt + aqsntemp(ig,n1)*ssx
+             scht = scht + aqsntemp(ig,n1)*sch
+diff -ru '--exclude=*.o' '--exclude=*.mod' '--exclude=*.x' '--exclude=*.a' '--exclude=*.p.f' '--exclude=*.d' ../pristine/BerkeleyGW-4.0/Sigma/sigma_main.f90 BerkeleyGW-4.0/Sigma/sigma_main.f90
+--- ../pristine/BerkeleyGW-4.0/Sigma/sigma_main.f90	2024-03-19 12:10:41.000000000 -0500
++++ BerkeleyGW-4.0/Sigma/sigma_main.f90	2026-09-22 14:41:54.826711228 -0500
+@@ -166,6 +166,10 @@
+   integer :: iwlda,irq,irq_,irq_min,n1,ierr
+   integer :: s2,iunit_c,iunit_k,iunit_eps,ndv_ikn,iunit
+   integer, allocatable :: ind(:), indinv(:)
++#ifndef CPLX
++  integer :: m4_ig, m4_i
++  integer(8) :: m4_b
++#endif
+   real(DP) :: fact,coulfact,weight,tempval,occ
+   real(DP) :: qshift(3),oneoverq,qlen,q0len,vq(3),qk(3)
+   real(DP) :: tsec(2),diffmin,diff,e_lk,avgcut,subcut,freq0
+@@ -1289,6 +1293,17 @@
+           endif
+ 
+         enddo ! igp
++#ifndef CPLX
++        ! BGW-M4-R1: operands of the wing normalization just applied to `eps`.
++        open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++        write(791,'(A,1X,I0,5(1X,I0),1X,I0,1X,I0,7(1X,I0))') 'WING', irq, nm, iout, &
++          sig%icutv, sig%iscreen, merge(1, 0, sig%averagew), &
++          merge(1, 0, nm .eq. 1), merge(1, 0, qlen**2 .lt. sig%avgcut), &
++          transfer(dble(vcoul(1)), m4_b), transfer(dble(qlen), m4_b), transfer(dble(q0len), m4_b), &
++          transfer(dble(oneoverq), m4_b), transfer(dble(fact), m4_b), transfer(dble(sig%avgcut), m4_b), &
++          transfer(dble(PI_D), m4_b)
++        close(791)
++#endif
+ 
+           if (sig%do_sigma_subspace) then
+             ! calculte corrections
+@@ -1400,6 +1415,27 @@
+         enddo
+       endif
+       call timing%stop(timing%gmap)
++#ifndef CPLX
++      ! BGW-M4-R1: the rq -> stored-block map actually used for this irq.
++      open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++      write(791,'(A,9(1X,I0),6(1X,I0))') 'RQ', irq, nm, itran, kg(1), kg(2), kg(3), &
++        ncouls, nmtx, nrq, (transfer(dble(rq(m4_i,irq)), m4_b), m4_i=1,3), &
++        (transfer(dble(qk(m4_i)), m4_b), m4_i=1,3)
++      write(791,'(A,1X,I0,9(1X,I0),3(1X,I0))') 'SYM', irq, &
++        ((syms%mtrx(m4_i,m4_ig,itran), m4_ig=1,3), m4_i=1,3), &
++        (transfer(dble(syms%tnp(m4_i,itran)), m4_b), m4_i=1,3)
++      do m4_ig = 1, ncouls
++        if (ind(m4_ig) .gt. 0) then
++          write(791,'(A,3(1X,I0),6(1X,I0),1X,I0)') 'MAP', irq, m4_ig, ind(m4_ig), &
++            gvec%components(:,isrtrq(m4_ig)), gvec%components(:,isrtq(ind(m4_ig))), &
++            transfer(dble(ph(m4_ig)), m4_b)
++        else
++          write(791,'(A,3(1X,I0),3(1X,I0))') 'MAPNONE', irq, m4_ig, ind(m4_ig), &
++            gvec%components(:,isrtrq(m4_ig))
++        endif
++      enddo
++      close(791)
++#endif
+       
+ 
+ !!!------- Done reading inverse dielectric matrix for q-point rq(:,irq) --------
+diff -ru '--exclude=*.o' '--exclude=*.mod' '--exclude=*.x' '--exclude=*.a' '--exclude=*.p.f' '--exclude=*.d' ../pristine/BerkeleyGW-4.0/Sigma/wpeff.f90 BerkeleyGW-4.0/Sigma/wpeff.f90
+--- ../pristine/BerkeleyGW-4.0/Sigma/wpeff.f90	2024-03-19 12:10:41.000000000 -0500
++++ BerkeleyGW-4.0/Sigma/wpeff.f90	2026-09-22 14:41:54.831836709 -0500
+@@ -52,6 +52,10 @@
+ 
+   SCALAR :: rho_g_minus_gp
+   integer :: ig, igadd, igpadd, kadd, gg(3)
++#ifndef CPLX
++  integer :: m4_i, m4_j
++  integer(8) :: m4_b
++#endif
+   real(DP) :: qg(3), qgp(3), qgp_temp(3)
+   logical, save :: warned=.false.
+ 
+@@ -187,6 +191,30 @@
+     endif
+ 
+   enddo !! g loop
++#ifndef CPLX
++  ! BGW-M4-R1: every primitive operand of wpmtx for this G', then its value.
++  open(unit=791, file='m4r1_dump.dat', position='append', status='unknown')
++  write(791,'(A,1X,I0,2(1X,I0),9(1X,I0),1X,I0)') 'WPG', igp, ncouls, nspin, &
++    ((transfer(dble(crys%bdot(m4_i,m4_j)), m4_b), m4_j=1,3), m4_i=1,3), transfer(dble(coulfact), m4_b)
++  write(791,'(A,5(1X,I0),3(1X,I0))') 'WPF', igp, transfer(dble(wpg%wpsq(1)), m4_b), &
++    transfer(dble(wpg%nelec(1)), m4_b), transfer(dble(fact), m4_b), merge(1, 0, q_is_not_zero), &
++    (transfer(dble(qk(m4_i)), m4_b), m4_i=1,3)
++  do ig = 1, ncouls
++    igadd = isrtrq(ig)
++    igpadd = isrtrq(igp)
++    gg(:) = gvec%components(:, igadd) - gvec%components(:, igpadd)
++    call findvector(kadd, gg, gvec)
++    if (kadd .eq. 0) then
++      write(791,'(A,3(1X,I0))') 'WPNONE', igp, ig, transfer(dble(wpmtx(ig)), m4_b)
++    else
++      write(791,'(A,2(1X,I0),6(1X,I0),3(1X,I0))') 'WP', igp, ig, &
++        gvec%components(:, igadd), gvec%components(:, igpadd), &
++        transfer(dble(vcoul(ig)), m4_b), transfer(dble(sum(wpg%rho(kadd,1:nspin))), m4_b), &
++        transfer(dble(wpmtx(ig)), m4_b)
++    endif
++  enddo
++  close(791)
++#endif
+ 
+   SAFE_DEALLOCATE(precalc)
+ 

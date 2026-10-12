@@ -1,0 +1,48 @@
+# T-003 provenance
+
+## Archive and pristine source
+1a85b03b83b339056f65124bfa96832ca61152236d9bb1cb372e3040fc686a49  /tmp/bgw/bgw40.tar.gz
+8914dc00ac8d80d99e78f9b76a6d398491240bf147fa8714a65fed4ce5daf1dd  /tmp/bgw/BerkeleyGW-4.0-reviewed-pristine/Sigma/mtxel_cor.f90
+
+## Instrumented tree (disposable copy of the reviewed pristine tree)
+tree: /tmp/bgw/t003-instr  (copied from /tmp/bgw/BerkeleyGW-4.0-reviewed-pristine)
+adffe0b2e2419adf0c3781d56147fa6a9f588f16766bf64780ada6b619b1f048  /tmp/bgw/t003-instr/Sigma/mtxel_cor.f90
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+binary contains the new dump filenames: 2
+6c40573b6a4a92fd919247e31ef399e4fba23e2b0f022a15a86f8825b0edd933  /tmp/bgw/t003-instr/Sigma/sigma.real.x
+
+## Reused upstream inputs (archived, NOT regenerated)
+9e39ab9aefd7018fdefa3c2d430a92be361fe44c97f9cef06d6164e77b633a9f  /tmp/bgw/t003run-fermi/WFN_inner
+e7ecfd1079ebca40dd440f8cb3ea6b54c338f63b27f05266ce7d9b21ff2503ae  /tmp/bgw/t003run-fermi/eps0mat
+8bb0bafaa8d0b7d545623a65e0cba4e9dce5e3aaf1bdfd5de48814835895c971  /tmp/bgw/t003run-fermi/epsmat
+17283cb239b83f65d2ca63e4c999cdcd89a2c0fdc03efbc8141573512c21a643  /tmp/bgw/t003run-fermi/RHO
+6d9f945d2a96eb60c78db9b96856b397f53d94de95e6c99d0f6fc43ff6b7e38d  /tmp/bgw/t003run-fermi/VXC
+aa4fbc8766ee02734de73ef6865b4d36fe6c95cf82f4f7f60aa34788565c1926  /tmp/bgw/t003run-fermi/vxc.dat
+
+## Threading (inherited, not forced)
+OPENBLAS_NUM_THREADS=unset
+OMP_NUM_THREADS=unset
+nproc=16
+
+## Toolchain
+GNU Fortran (conda-forge gcc 16.2.0-4) 16.2.0
+
+## Runs
+control : /tmp/bgw/t003run-control  sigma.inp = bgw/export/sig_GPP.inp verbatim
+smearing: /tmp/bgw/t003run-smear    sigma.inp = + 'occ_broadening 5.0'  -> die()
+fermi   : /tmp/bgw/t003run-fermi    sigma.inp = + fermi_level_absolute / fermi_level
+
+## Evidence files
+f554a6cd2dc30a6f1d4e2b26f552465decec921ef8057448be73e72f4df1938b  bgw/occupation_audit/fixtures/control_branch_occ_counts.dat
+5bcc97472fa80f806121506937aaf0f603a2578cbaee5dae53ea72ef870c43b1  bgw/occupation_audit/fixtures/fermi_branch_occ_counts.dat
+9b642a54784793897e2e3f038984b33767304dae921ffb12e1ec349c312902e4  bgw/occupation_audit/fixtures/fermi_run_notices.txt
+f0ccfd7fc64febddb73c812fd9dcb3d2e8e6a9557870a651285bccdab565a5e4  bgw/occupation_audit/fixtures/fermi_sigma.inp
+ce29e7ef6130decccc008122d82656c7a12a610332ca6018f661e281cf299570  bgw/occupation_audit/fixtures/smear_rejected.out
+834419181e114d841aa16dba7c8a21aaa3ba74e4f0e4e8b6e9e8f3cdad280064  bgw/occupation_audit/fixtures/smear_sigma.inp
+8dcfb31d92e24e037153ab9adc5551190db8fc21a803264508fc849b4ab11567  bgw/occupation_audit/fixtures/t003_nearpole_occ.dat
+def4ff5338f712351ee3467054b3290c7cfa0c1d904e0ee5c9948d15c63cb3a8  bgw/occupation_audit/REPORT.md
+5b6a01345b8011357cf4370c0e5e6eda2ec1b6114c4da0b90f380d7aa85dc1f0  bgw/occupation_audit/check_occupation.py
+daf12a73b80c9a9b628df644364110e3da9c6994fb05dae5da32163b471f40dd  bgw/occupation_audit/t003_instrument.patch
+92ffae2d4396113ba248dca79e2a775316c8e39c8abee1614dacf820a0b7ad46  tests/test_occupation_audit.py
+055f46c9428b443565b63c7a9e25c36d5c7040732d779ecb3eaca03619c6d4fb  artifacts/t003/check_occupation.json
+35e9107708baa1b7e35e792b43cf219d9176eb204d7acfbb7f0aa9ea2e07c5d9  artifacts/t003/fermi_sigma_hp.log

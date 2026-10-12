@@ -1,0 +1,143 @@
+--- a/Epsilon/mtxel.f90	2026-09-19 22:40:06.608988330 -0500
++++ b/Epsilon/mtxel.f90	2026-09-19 22:40:38.258996020 -0500
+@@ -834,6 +834,10 @@
+ 
+   logical :: keep_transition
+   integer :: ia
++#ifndef CPLX
++  integer(8) :: m3_bits
++  character(len=64) :: m3_runid
++#endif
+ 
+   keep_transition = .true.
+ 
+@@ -851,6 +855,29 @@
+ 
+   if (kp%nspinor.eq.1 .or. jsp.eq.2) then
+     if (pol%freq_dep .eq. 0) then
++#ifndef CPLX
++! BGW-M3 instrumentation: export the matrix element BEFORE the sqrt(-eden)
++! weighting. This is the whole point of the stage: the code lumps sqrt(eden)
++! into gme here (see the comment in get_eden), so an export taken after this
++! loop is an already-weighted product, not a physical operand.
++      call get_environment_variable('M3_RUNID', m3_runid)
++      if (len_trim(m3_runid) == 0) m3_runid = 'UNSET'
++      open(unit=783, file='m3_dump.dat', position='append', status='unknown')
++      m3_bits = transfer(eden, m3_bits)
++      write(783,'(A,4(1X,I0),1X,ES25.17,1X,I0)') 'EDEN', irk, ispin, iv, ic, &
++        eden, m3_bits
++      m3_bits = transfer(kfact, m3_bits)
++      write(783,'(A,4(1X,I0),1X,ES25.17,1X,I0)') 'KFACT', irk, ispin, iv, ic, &
++        kfact, m3_bits
++      write(783,'(A,4(1X,I0),1X,I0,1X,I0)') 'SLOT', irk, ispin, iv, ic, &
++        ic_loc, pol%iv_block_actual
++      do ia = 1, pol%nmtx
++        m3_bits = transfer(pol%gme(ia, ic_loc, pol%iv_block_actual, ispin, irk, 1), m3_bits)
++        write(783,'(A,5(1X,I0),1X,ES25.17,1X,I0)') 'GMERAW', irk, ispin, iv, ic, ia, &
++          pol%gme(ia, ic_loc, pol%iv_block_actual, ispin, irk, 1), m3_bits
++      end do
++      close(783)
++#endif
+ !$OMP PARALLEL DO
+       do ia = 1, pol%nmtx
+         pol%gme(ia, ic_loc, pol%iv_block_actual, ispin, irk, 1) = &
+@@ -886,6 +913,9 @@
+   integer :: ig
+   type(cvpair_info) :: lin_edenTemp
+   real(DP) :: eval, econd, occ_v, occ_c, occ_diff
++#ifndef CPLX
++  integer(8) :: m3e_bits
++#endif
+   real(DP) :: vk(2), vkq(2)
+ 
+ 
+@@ -942,6 +972,18 @@
+ 
+   endif !pol%freq_dep
+ 
++#ifndef CPLX
++! BGW-M3: the four physical operands the denominator is built from, separately.
++  if (pol%freq_dep == 0) then
++    open(unit=784, file='m3_dump.dat', position='append', status='unknown')
++    write(784,'(A,4(1X,I0),4(1X,ES25.17),4(1X,I0))') 'TRANS', irk, ispin, iv, ic, &
++      eval, econd, occ_v, occ_c, &
++      transfer(eval, m3e_bits), transfer(econd, m3e_bits), &
++      transfer(occ_v, m3e_bits), transfer(occ_c, m3e_bits)
++    close(784)
++  endif
++#endif
++
+   call timing%stop(timing%mtxel_denom)
+ 
+   POP_SUB(mtxel.get_eden)
+--- a/Epsilon/epsilon_main.f90	2026-09-19 22:40:06.614989082 -0500
++++ b/Epsilon/epsilon_main.f90	2026-09-19 23:10:03.316476764 -0500
+@@ -84,6 +84,11 @@
+   logical :: is_q0, use_WFNq, qpt_done
+   integer :: npcmax,nprmax,ivin,neqmax
+   integer, allocatable :: ind(:),indt(:,:,:)
++#ifndef CPLX
++  integer :: m3_i
++  integer(8) :: m3_bits
++  character(len=64) :: m3_runid
++#endif
+   integer, allocatable :: nprdtemp(:),npcdtemp(:)
+   real(DP) :: qq(3) !< The current q-pt under consideration
+   real(DP) :: omega_plasma, kfact
+@@ -658,6 +663,22 @@
+     else
+       fact=4.0d0/(dble(gr%nf)*crys%celvol*kp%nspin*kp%nspinor)
+     endif
++#ifndef CPLX
++! BGW-M3 instrumentation: declare the prefactor and the run geometry at the
++! point they are computed. Read-only; no production arithmetic is altered.
++    call get_environment_variable('M3_RUNID', m3_runid)
++    if (len_trim(m3_runid) == 0) m3_runid = 'UNSET'
++    open(unit=782, file='m3_dump.dat', position='append', status='unknown')
++    m3_bits = transfer(fact, m3_bits)
++    write(782,'(A,1X,A,1X,I0)') 'TSTART', trim(m3_runid), iq
++    write(782,'(A,1X,ES25.17,1X,I0)') 'FACT', fact, m3_bits
++    m3_bits = transfer(crys%celvol, m3_bits)
++    write(782,'(A,1X,ES25.17,1X,I0)') 'CELVOL', crys%celvol, m3_bits
++    write(782,'(A,4(1X,I0))') 'GEOM', pol%nmtx, nrk, kp%nspin, kp%nspinor
++    write(782,'(A,4(1X,I0))') 'GRID', kp%kgrid(1), kp%kgrid(2), kp%kgrid(3), gr%nf
++    write(782,'(A,1X,L1)') 'PATCHED', pol%patched_sampling
++    close(782)
++#endif
+ 
+     if (pol%freq_dep .eq. 0) then
+       SAFE_ALLOCATE(pol%chi, (scal%npr,scal%npc,kp%nspin))
+@@ -949,6 +970,16 @@
+           call gmap(gvec,syms,pol%nmtx,itran,kgq,pol%isrtx,pol%isrtxi,ind,ph,.true.)
+           pht(:,it,irk) = ph(:)
+           indt(:,it,irk) = ind(:)
++#ifndef CPLX
++! BGW-M3: the symmetry map actually used by the summation, per star element.
++          open(unit=782, file='m3_dump.dat', position='append', status='unknown')
++          do m3_i = 1, pol%nmtx
++            m3_bits = transfer(ph(m3_i), m3_bits)
++            write(782,'(A,3(1X,I0),1X,I0,1X,ES25.17,1X,I0)') 'MAP', irk, it, &
++              m3_i, ind(m3_i), ph(m3_i), m3_bits
++          enddo
++          close(782)
++#endif
+ 
+ ! debug Statement here
+         enddo
+@@ -1499,6 +1530,16 @@
+ #endif
+ 
+ 
++#ifndef CPLX
++! BGW-M3: close the q block. Every transition record between TSTART and TEND
++! belongs to this iq; the parser refuses a record outside a bracket, a repeated
++! bracket, or an unterminated one.
++    call get_environment_variable('M3_RUNID', m3_runid)
++    if (len_trim(m3_runid) == 0) m3_runid = 'UNSET'
++    open(unit=782, file='m3_dump.dat', position='append', status='unknown')
++    write(782,'(A,1X,A,1X,I0)') 'TEND', trim(m3_runid), iq
++    close(782)
++#endif
+   enddo ! iq (loop over q points)
+ 
+   SAFE_DEALLOCATE_P(scal%nprd)

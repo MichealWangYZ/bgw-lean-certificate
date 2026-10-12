@@ -1,0 +1,84 @@
+{
+  "reviewed_commit": "cf498531d1e0776daa69a22c891a853b2275cfff",
+  "python": "3.13.5",
+  "source_hashes": {
+    "ll/ring_reference.py": {
+      "git_blob_sha1": "641d536ad219738af480c7bae159721aef49e5bd",
+      "sha256": "5ca89b7c665090781cb8dc14e126cc7138b06958cbe40cf55ebefb5dd85a54c0"
+    },
+    "tests/test_ll_c1.py": {
+      "git_blob_sha1": "d3f83857170fd514086167495d69f0e81349a760",
+      "sha256": "a158661c50a03e38505af668517d6711cffb676537cc13a106b9dae0203c3841"
+    },
+    "scripts/bootstrap.sh": {
+      "git_blob_sha1": "4a9f8a51cc05344fd22771d98e932449e1aab230",
+      "sha256": "db39a4f13326071c70f2846fb09e0e81abb60c78a62087a3bd44afb22852d4ab"
+    },
+    "scripts/env.sh": {
+      "git_blob_sha1": "23c5ee1b65e2064b99e8db1718ca6f39cd65a93b",
+      "sha256": "221031b58704a1d38def6f4190d4629bcdc2faa206bf3a846f67ad020ec943d3"
+    }
+  },
+  "reproducer_sha256": "886b574f2c2643ddb42456f6550b32660b4f0594f6dca38ba2554aef7a6a709d",
+  "scope": "Independent Python review, not Lean/full-gate execution",
+  "rings": [
+    {"k": 0, "halfedge_count": 1, "compressed_count": 1, "projection_is_bijection": true, "one_particle_irreducible": true, "raw_interaction_relabeling_space": 8},
+    {"k": 1, "halfedge_count": 2, "compressed_count": 2, "projection_is_bijection": true, "one_particle_irreducible": true, "raw_interaction_relabeling_space": 128},
+    {"k": 2, "halfedge_count": 4, "compressed_count": 4, "projection_is_bijection": true, "one_particle_irreducible": true, "raw_interaction_relabeling_space": 3072}
+  ],
+  "outside_ring_counterexample": {
+    "interactions": [["i", "a"], ["b", "j"], ["c", "d"]],
+    "propagators": [["i", "j"], ["a", "b"], ["a", "c"], ["c", "b"], ["d", "d"]],
+    "external_labels": ["i", "j"],
+    "one_particle_irreducible": true,
+    "halfedge_count": 2,
+    "compressed_count": 1,
+    "projection_fiber_sizes": [2],
+    "cause": "The two incidences of the propagator self-loop d-d may be swapped while its edge ID and site remain fixed.",
+    "scope": "Refutes an unrestricted model-correspondence claim, NOT the C1 ring counts."
+  },
+  "recomputed_reference_values_NOT_Lean_execution": [
+    {"fixture": "N1-scalar", "k": 0, "value": "-6", "normalization_from_halfedges": 1},
+    {"fixture": "N1-scalar", "k": 1, "value": "36", "normalization_from_halfedges": 2},
+    {"fixture": "N1-scalar", "k": 2, "value": "-216", "normalization_from_halfedges": 4},
+    {"fixture": "N2-pd-equal-ext", "k": 0, "value": "-2", "normalization_from_halfedges": 1},
+    {"fixture": "N2-pd-equal-ext", "k": 1, "value": "24", "normalization_from_halfedges": 2},
+    {"fixture": "N2-pd-equal-ext", "k": 2, "value": "-495/2", "normalization_from_halfedges": 4},
+    {"fixture": "N2-pd-unequal-ext", "k": 0, "value": "-2", "normalization_from_halfedges": 1},
+    {"fixture": "N2-pd-unequal-ext", "k": 1, "value": "39/2", "normalization_from_halfedges": 2},
+    {"fixture": "N2-pd-unequal-ext", "k": 2, "value": "-405/2", "normalization_from_halfedges": 4},
+    {"fixture": "N2-rational", "k": 0, "value": "1/21", "normalization_from_halfedges": 1},
+    {"fixture": "N2-rational", "k": 1, "value": "1247/15876", "normalization_from_halfedges": 2},
+    {"fixture": "N2-rational", "k": 2, "value": "1033723/8890560", "normalization_from_halfedges": 4},
+    {"fixture": "N3-pd-unequal-ext", "k": 0, "value": "-2", "normalization_from_halfedges": 1},
+    {"fixture": "N3-pd-unequal-ext", "k": 1, "value": "51/2", "normalization_from_halfedges": 2},
+    {"fixture": "N3-pd-unequal-ext", "k": 2, "value": "-1863/2", "normalization_from_halfedges": 4},
+    {"fixture": "N3-pd-equal-ext", "k": 0, "value": "0", "normalization_from_halfedges": 1},
+    {"fixture": "N3-pd-equal-ext", "k": 1, "value": "135/2", "normalization_from_halfedges": 2},
+    {"fixture": "N3-pd-equal-ext", "k": 2, "value": "-1296", "normalization_from_halfedges": 4}
+  ],
+  "checker_probes": {
+    "no_output_file": {"run": 5, "failures": 0, "errors": 1, "ok": false, "input_kind": "synthetic reviewer input; NOT original Lean output", "rows": null},
+    "synthetic_valid_control": {"run": 13, "failures": 0, "errors": 0, "ok": true, "input_kind": "synthetic reviewer input; NOT original Lean output", "rows": 6},
+    "ordinary_wrong_value_control": {"run": 13, "failures": 1, "errors": 0, "ok": false, "input_kind": "synthetic reviewer input; NOT original Lean output", "rows": 6},
+    "wrong_duplicate_before_correct_row": {"run": 13, "failures": 0, "errors": 0, "ok": true, "input_kind": "synthetic reviewer input; NOT original Lean output", "rows": 7},
+    "out_of_bounds_external_indices": {"run": 13, "failures": 0, "errors": 0, "ok": true, "input_kind": "synthetic reviewer input; NOT original Lean output", "rows": 6}
+  },
+  "bootstrap_reproduction": {
+    "status": "reproduced",
+    "kind": "minimal reconstructed checkout; actual scripts, not full build",
+    "tracked_symlink_target": "<repo>/.tools",
+    "exit_code": 1,
+    "stderr": "mkdir: cannot create directory \u2018.tools\u2019: File exists\n",
+    "failed_before_network_or_Lean": true
+  },
+  "smaller_loop_counterexample": {
+    "interactions": [["i", "j"], ["a", "b"]],
+    "propagators": [["i", "a"], ["a", "j"], ["b", "b"]],
+    "external_labels": ["i", "j"],
+    "one_particle_irreducible": true,
+    "halfedge_count": 2,
+    "compressed_count": 1,
+    "projection_fiber_sizes": [2]
+  }
+}

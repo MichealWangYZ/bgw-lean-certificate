@@ -1,0 +1,62 @@
+--- a/Epsilon/epsinv.f90	2026-09-16 14:58:57.280474754 -0500
++++ b/Epsilon/epsinv.f90	2026-09-16 14:58:57.283453181 -0500
+@@ -67,6 +67,11 @@
+   real(DP), allocatable :: epsTemplate(:,:)
+   real(DP), allocatable :: epsdiag(:,:,:),epsdiagt(:,:,:), vcoultemp(:)
+   real(DP), allocatable :: vcoul(:)
++#ifndef CPLX
++  ! BGW-M1 instrumentation only: export the represented screening stage.
++  integer :: m1_i, m1_j
++  integer(8) :: m1_bits
++#endif
+ #if defined(USESCALAPACK) && defined(CPLX)
+   integer :: info, desc(9), jj_g
+   complex(DPC), allocatable :: vcoul_dist(:), vcoul_inv_dist(:), wcoul_r(:,:)
+@@ -511,7 +516,47 @@
+ ! Serial Version
+ 
+   if (pol%freq_dep==0) then
++#ifndef CPLX
++! BGW-M1 instrumentation: dump the pre-inversion dielectric matrix, the Coulomb
++! diagonal, and the post-inversion production result, with exact IEEE-754 bit
++! patterns as well as 17-digit decimals. Read-only export; no arithmetic of the
++! production path is altered.
++    open(unit=771, file='m1_eps_dump.dat', position='append', status='unknown')
++    write(771,'(A,1X,I0,3(1X,ES25.17),1X,I0)') 'QSTART', iq, q0(1), q0(2), q0(3), pol%nmtx
++    do m1_i = 1, pol%nmtx
++      m1_bits = transfer(vcoul(m1_i), m1_bits)
++      write(771,'(A,1X,I0,1X,ES25.17,1X,I0)') 'VCOUL', m1_i, vcoul(m1_i), m1_bits
++    enddo
++    do m1_i = 1, pol%nmtx
++      do m1_j = 1, pol%nmtx
++        m1_bits = transfer(eps(m1_i,m1_j), m1_bits)
++        write(771,'(A,1X,I0,1X,I0,1X,ES25.17,1X,I0)') 'EPSPRE', m1_i, m1_j, eps(m1_i,m1_j), m1_bits
++      enddo
++    enddo
++#endif
+     call X(invert_serial)(pol%nmtx,eps)
++#ifndef CPLX
++    do m1_i = 1, pol%nmtx
++      do m1_j = 1, pol%nmtx
++        m1_bits = transfer(eps(m1_i,m1_j), m1_bits)
++        write(771,'(A,1X,I0,1X,I0,1X,ES25.17,1X,I0)') 'EPSINV', m1_i, m1_j, eps(m1_i,m1_j), m1_bits
++      enddo
++    enddo
++    write(771,'(A,1X,I0)') 'QEND', iq
++    close(771)
++! BGW-M1-R1: the ordered retained basis, to a SEPARATE file so the epsilon dump
++! stays byte-identical to the reviewed snapshot. pol%isrtx holds the sort
++! indices for |q0+gvec%components|^2 (see the comment at line ~142).
++    open(unit=772, file='m1_gvec_dump.dat', position='append', status='unknown')
++    write(772,'(A,1X,I0,3(1X,ES25.17),1X,I0)') 'QSTART', iq, q0(1), q0(2), q0(3), pol%nmtx
++    do m1_i = 1, pol%nmtx
++      write(772,'(A,1X,I0,3(1X,I0),1X,ES25.17)') 'GVEC', m1_i, &
++        gvec%components(1,pol%isrtx(m1_i)), gvec%components(2,pol%isrtx(m1_i)), &
++        gvec%components(3,pol%isrtx(m1_i)), ekin(pol%isrtx(m1_i))
++    enddo
++    write(772,'(A,1X,I0)') 'QEND', iq
++    close(772)
++#endif
+   else
+     call progress_init(prog_info, 'inversion of dielectric matrix', 'frequency', pol%nfreq_in_group)
+     do iw = 1, pol%nfreq_in_group

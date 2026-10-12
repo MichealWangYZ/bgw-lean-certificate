@@ -1,0 +1,22 @@
+A3(b) Hubbard dimer: discriminating Lean mutations
+GW/Endpoint/HubbardDimerFock.lean sha256: e4ba8ff63386f35a49e31732fc3739f7746928f947866fd61d51abcae37baf06
+GW/Endpoint/HubbardDimerExact.lean sha256: 1b7f7928323a354b4f8d22595533570c80ddc52e17fa8ce564ec03e873427816
+GW/Endpoint/HubbardDimer.lean sha256: f0ed2f50f257692dcabb770d1716974480028b013a2518043f3200a17cbba2dc
+
+control-gw             file=gw    rc=0 failing=[] expected>=[] OK
+control-exact          file=exact rc=0 failing=[] expected>=[] OK
+W-sign                 file=gw    rc=1 failing=['Wc_single_pole', 'rpa_solves'] expected>=['Wc_single_pole', 'rpa_solves'] OK
+pole-factor-2          file=gw    rc=1 failing=['gapGW_zero', 'hRPA_sq'] expected>=['hRPA_sq'] OK
+residue-factor-2       file=gw    rc=1 failing=['Wc_single_pole', 'sigmaC_orbital'] expected>=['Wc_single_pole', 'sigmaC_orbital'] OK
+sigma-pole-factor-2    file=gw    rc=1 failing=['qp_removal', 'sigmaC_orbital'] expected>=['qp_removal', 'sigmaC_orbital'] OK
+no-spin-factor         file=gw    rc=1 failing=['chi0_eq'] expected>=['chi0_eq'] OK
+no-exchange            file=gw    rc=1 failing=['fock_eq'] expected>=['fock_eq'] OK
+linearised-QP          file=gw    rc=1 failing=['Erem_side', 'gw_gap_of_qp', 'qp_removal'] expected>=['qp_removal'] OK
+bound-power-3          file=gw    rc=1 failing=['gw_error_abs', 'gw_gap_error_main'] expected>=['gw_error_abs'] OK
+bound-coeff-1/16       file=gw    rc=1 failing=['gw_beats_hf', 'gw_error_abs', 'gw_error_bounds', 'gw_error_leading'] expected>=['gw_error_bounds'] OK
+leading-coeff-HF-sign  file=gw    rc=1 failing=['hf_error_leading'] expected>=['hf_error_leading'] OK
+E0-2-wrong-root        file=exact rc=1 failing=['exact_gap', 'ground_two', 'sector_grounds'] expected>=['ground_two'] OK
+E0-3-excited-state     file=exact rc=1 failing=['exact_gap', 'ground_three', 'sector_grounds'] expected>=['ground_three'] OK
+hopping-sign           file=fock  rc=1 failing=['H_mulVec'] expected>=['H_mulVec'] OK
+no-jordan-wigner       file=fock  rc=1 failing=['car_ann', 'car_anti', 'hopZ_eq'] expected>=['car_anti', 'hopZ_eq'] OK
+ALL OK

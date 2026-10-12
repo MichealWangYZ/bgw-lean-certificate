@@ -1,0 +1,12 @@
+{
+  "source": "Lin-Lindsey Part I arXiv:1809.02900v1, PDF section 4.7.1, Fig. 4.11",
+  "symmetry_factors": {"ring0": 1, "ring1": 2, "ring2": 4},
+  "values": [
+  {"name": "N1-scalar", "N": 1, "i": 0, "j": 0, "ring0": "-6/1", "ring1": "36/1", "ring2": "-216/1"},
+  {"name": "N2-pd-equal-ext", "N": 2, "i": 0, "j": 0, "ring0": "-2/1", "ring1": "24/1", "ring2": "-495/2"},
+  {"name": "N2-pd-unequal-ext", "N": 2, "i": 0, "j": 1, "ring0": "-2/1", "ring1": "39/2", "ring2": "-405/2"},
+  {"name": "N2-rational", "N": 2, "i": 1, "j": 0, "ring0": "1/21", "ring1": "1247/15876", "ring2": "1033723/8890560"},
+  {"name": "N3-pd-unequal-ext", "N": 3, "i": 0, "j": 1, "ring0": "-2/1", "ring1": "51/2", "ring2": "-1863/2"},
+  {"name": "N3-pd-equal-ext", "N": 3, "i": 1, "j": 1, "ring0": "0/1", "ring1": "135/2", "ring2": "-1296/1"}
+  ]
+}

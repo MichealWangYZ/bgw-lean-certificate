@@ -1,0 +1,37 @@
+{
+  "numerical_bound": {
+    "spec_lo_eV_exact": "8880811588953599/576460752303423488",
+    "spec_hi_eV_exact": "8880812351936001/576460752303423488",
+    "spec_lo_meV": 15.405752349084699,
+    "spec_hi_meV": 15.405753672648183,
+    "max_error_microeV_including_print_allowance": 5.2076726481831415,
+    "less_than_5_21_microeV": true,
+    "production_value_provenance": "Recorded value; not independently rerun"
+  },
+  "CompleteK_rank_witness": {
+    "computed_row": [
+      "1",
+      "0"
+    ],
+    "physical_missing_rows": 1,
+    "kappa": "1099511627777/1099511627776",
+    "defect": [
+      [
+        "1/1099511627776",
+        "0"
+      ],
+      [
+        "0",
+        "1099511627777/1099511627776"
+      ]
+    ],
+    "determinant": "1099511627777/1208925819614629174706176",
+    "defect_rank": 2,
+    "requires_at_least_two_completion_rows": true
+  },
+  "COR_witnesses": {
+    "scaled_closure_nonzero_COR": "1/4398046511104",
+    "complete_finite_WFN_sphere_nonzero_COR": "-1/8"
+  },
+  "scope": "Mathematical witnesses reconstructed from reviewed definitions. Not a repository or Lean replay."
+}

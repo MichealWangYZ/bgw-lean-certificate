@@ -1,0 +1,98 @@
+{
+  "reviewed_commit": "374459f33088f1700ce57adf690da81b2461b382",
+  "production_analyzer_git_blob": "1e16806f2746b5997de9c64286af6c6264bb463c",
+  "test_run": {
+    "total": 8,
+    "passed": 3,
+    "failed": 5,
+    "scope": "synthetic occupation-subtable unit probes; not the full repository gate"
+  },
+  "nonfinite": {
+    "input_records": 16,
+    "input_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_max_relative_spread": 0.0,
+    "reported_max_relative_closed_form_error": 0.0,
+    "ratio_at_half_is_finite": false
+  },
+  "counterfeit_oracle": {
+    "input_records": 16,
+    "input_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_max_relative_spread": 0.0,
+    "reported_max_relative_closed_form_error": 0.0,
+    "ratio_at_half_is_finite": true,
+    "independent_relative_equation_error": 1.0
+  },
+  "orphan_point": {
+    "input_records": 16,
+    "input_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_points": [
+      "P1",
+      "P3",
+      "P4"
+    ]
+  },
+  "duplicate_occupation": {
+    "input_records": 17,
+    "input_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_max_relative_spread": 0.0,
+    "reported_max_relative_closed_form_error": 0.0,
+    "ratio_at_half_is_finite": true
+  },
+  "moving_inputs": {
+    "input_records": 16,
+    "input_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_points": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "reported_max_relative_spread": 0.0,
+    "reported_max_relative_closed_form_error": 0.0,
+    "ratio_at_half_is_finite": true,
+    "independent_relative_equation_error": 0.5
+  }
+}

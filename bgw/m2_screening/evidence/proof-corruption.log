@@ -1,0 +1,17 @@
+BGW-M2 proof-only corruption: total_error_bound's tactic replaced by
+`norm_num [rowAbsSum]`; EVERY literal in the module left unchanged.
+
+$ python3 bgw/m2_screening/check_lean_literals.py
+  Lean literals match this export (chi, vc, Xhat, Estar, Rstar)
+EXIT=0
+
+$ python3 bgw/m2_screening/run_m2.py --proof   (tail)
+  inverse shift  R_hat - R_star = -R_hat Delta R_star  holds exactly
+  b_inv=2.571978e-13  b_shift=6.429944e-16  b_total=2.578408e-13
+  ||X_hat - R_star||_inf = 1.815113e-16
+  total budget met
+== kernel check ==
+GW/BGW/M2Screening.lean did not elaborate
+EXIT=1
+
+Literal checking passes; the completion path fails closed.

@@ -83,7 +83,7 @@ direction. The project went through adversarial and independent AI reviews (Code
 in [`docs/reviews/`](docs/reviews/README.md). No human maintainer has audited it. The
 development record (tasks, handoffs, corrections) is kept in [`.agent/`](.agent/).
 
-This repository is a snapshot of private development commit `333407e` (2026-10-12). The
+This repository is a snapshot of private development commit `0eeae74` (2026-10-13). The
 development history is not included. Local paths, scratch directories, host names and
 agent-session links are replaced by placeholders (`<repo>`, `<scratch>`, `~/`, `<node>`,
 `<agent-session>`). A few historical audit scripts that hard-coded a local path, such as

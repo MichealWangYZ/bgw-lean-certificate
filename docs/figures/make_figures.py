@@ -205,7 +205,113 @@ def fig_convergence():
     save(fig, "fig3_convergence")
 
 
+# ---------------------------------------------------------------- figure 0: the levels
+def production_levels():
+    """{k-label: [(n, Emf, Eqp1)]} from bgw/export/sigma_hp.log (eV)."""
+    lab = {(0.0, 0.0, 0.0): "Γ", (0.0, 0.0, 0.5): "L", (0.0, 0.5, 0.5): "X"}
+    out, cur = {}, None
+    for line in (ROOT / "bgw/export/sigma_hp.log").read_text().splitlines():
+        m = re.match(r"\s+k =\s+(\S+)\s+(\S+)\s+(\S+)\s+ik", line)
+        if m:
+            cur = lab.get(tuple(float(t) for t in m.groups()))
+            if cur in out:
+                cur = None          # only the first (diagonal) table of each k
+            elif cur:
+                out[cur] = []
+            continue
+        f = line.split()
+        if cur and len(f) == 15 and f[0].isdigit():
+            out[cur].append((int(f[0]), float(f[1]), float(f[9])))
+        elif cur and out[cur] and not line.strip():
+            cur = None
+    return out
+
+
+def fig_levels():
+    lv = production_levels()
+    order = ["L", "Γ", "X"]
+    fig, axs = plt.subplots(1, 2, figsize=(7.4, 3.5), sharey=True)
+    for ax, idx, title in [(axs[0], 1, "mean field (EPM)"), (axs[1], 2, "G$_0$W$_0$-GPP (production)")]:
+        vbm = max(r[idx] for r in lv["Γ"] if r[0] <= 4)
+        for i, k in enumerate(order):
+            for n, *e in lv[k]:
+                y = e[idx - 1] - vbm
+                col = "0.25" if n <= 4 else ("#0072B2" if (k, n) in {("X", 5), ("L", 5)} else "0.6")
+                ax.plot([i - 0.32, i + 0.32], [y, y], color=col, lw=2.2 if col != "0.6" else 1.4)
+        xc = lv["X"][4][idx] - vbm
+        lc = lv["L"][4][idx] - vbm
+        ax.annotate("", xy=(2.45, xc), xytext=(2.45, lc) if abs(xc - lc) > 0.05 else (2.45, xc),
+                    arrowprops=dict(arrowstyle="-", lw=0))
+        ax.set_xticks(range(3), order)
+        ax.set_xlim(-0.6, 2.9)
+        ax.axhline(0, color="0.8", lw=0.6, ls=":")
+        ax.set_title(title, loc="left")
+        d = (xc - lc) * 1000
+        txt = (f"$X$ below $L$ by {-d / 1000:.3f} eV" if d < 0 else f"$L$ below $X$ by {d:.1f} meV")
+        ax.text(0.5, 0.97, txt, transform=ax.transAxes, ha="center", va="top", fontsize=9.5, color="#0072B2",
+                bbox=dict(fc="white", ec="#0072B2", lw=0.6, boxstyle="round,pad=0.25"))
+    axs[0].set_ylabel("energy relative to the valence top at Γ (eV)")
+    axs[0].set_ylim(-14, 8.5)
+    fig.subplots_adjust(wspace=0.08)
+    save(fig, "fig0_levels")
+
+
+# ---------------------------------------------------------------- slide versions (larger type)
+def fig_conventions_slide():
+    rows = []
+    for line in (DATA / "mutations_e1.log").read_text().splitlines():
+        m = re.match(r"(\S+)\s+max table dev ([0-9.e+-]+) eV.*O1 ([+-][0-9.]+) meV.*\s(DETECTED|control-agrees)$", line)
+        if m and m.group(4) == "DETECTED":
+            rows.append((m.group(1), float(m.group(3))))
+    prod = production_o1_meV()
+    rows = sorted([r for r in rows if abs(r[1] - prod) > 0.5], key=lambda r: r[1])
+    with plt.rc_context({"font.size": 12, "ytick.labelsize": 11, "xtick.labelsize": 11}):
+        fig, ax = plt.subplots(figsize=(7.2, 4.0))
+        for i, (k, o1) in enumerate(rows):
+            ax.barh(i, o1 - prod, left=prod, color="#D55E00" if o1 < 0 else "#56B4E9", height=0.64)
+            ax.annotate(f"{o1:+.1f}", xy=(o1, i), xytext=(5 if o1 > prod else -5, 0),
+                        textcoords="offset points", va="center",
+                        ha="left" if o1 > prod else "right", fontsize=10)
+        ax.set_yticks(range(len(rows)), [NAMES[r[0]].replace("\n", " ") for r in rows])
+        ax.axvline(prod, color="k", lw=1.2)
+        ax.text(prod, len(rows) - 0.3, f"  production {prod:.1f}", fontsize=10)
+        ax.set_xlim(-3000, 400)
+        ax.set_xscale("symlog", linthresh=20)
+        ax.set_xlabel("$O_1$ with one convention changed (meV)")
+        save(fig, "fig2_conventions_slide")
+
+
+def fig_convergence_slide():
+    rows = [json.loads(l) for l in (DATA / "e2_results.jsonl").read_text().splitlines() if l.strip()]
+    sel = [r for r in rows if r["N"] == 2 and r["ecutwfc"] == 11.0]
+    cuts = [3.0, 5.0, 7.0, 11.0, 25.0]
+    cmap = plt.get_cmap("viridis")
+    with plt.rc_context({"font.size": 12, "xtick.labelsize": 11, "ytick.labelsize": 11}):
+        fig, ax = plt.subplots(figsize=(6.4, 4.0))
+        for i, ec in enumerate(cuts):
+            pts = sorted({(r["nb_used"], r["O1"] * 1e3) for r in sel if r["ecuts"] == ec})
+            ax.plot([p[0] for p in pts], [p[1] for p in pts], "-o", ms=4, lw=1.8,
+                    color=cmap(i / (len(cuts) - 1)), label=f"{ec:g} Ry")
+        ax.plot([18], [15.4], marker="*", ms=17, color="#D55E00", zorder=5)
+        ax.annotate("production", xy=(18, 15.4), xytext=(26, 33), fontsize=11,
+                    arrowprops=dict(arrowstyle="->", lw=0.8))
+        ax.axhline(0, color="k", lw=0.7)
+        ax.set_xscale("log")
+        ax.set_xticks([18, 40, 60, 100, 150], ["18", "40", "60", "100", "150"])
+        ax.minorticks_off()
+        ax.set_ylim(-95, 45)
+        ax.set_xlabel("bands in Σ and ε")
+        ax.set_ylabel("$O_1$ (meV)")
+        ax.legend(title="screened\ncutoff", frameon=False, ncol=1, loc="center left",
+                  bbox_to_anchor=(1.01, 0.5), fontsize=10,
+                  title_fontsize=10)
+        save(fig, "fig3_convergence_slide")
+
+
 if __name__ == "__main__":
+    fig_levels()
+    fig_conventions_slide()
+    fig_convergence_slide()
     fig_scales()
     fig_conventions()
     fig_convergence()

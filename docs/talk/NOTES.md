@@ -9,6 +9,15 @@ corresponds to one or two slides. Every number has a label for the kind of evide
 
 ---
 
+## 0. The question
+
+![mean-field and G0W0 levels at L, Γ, X](../figures/fig0_levels.png)
+
+In BerkeleyGW's own `testsuite/Si-EPM`, G₀W₀ reverses the conduction-band ordering of X and L
+(measured, from `sigma_hp.log`). In mean field, X lies 0.628 eV below L. After G₀W₀, L lies
+15.4 meV below X. That is a 15 meV effect on self-energies of about 9 eV. Is 15.4 meV exactly
+what the code's equations give for this input?
+
 ## 1. The result in one figure
 
 ![O1 at three scales](../figures/fig1_three_scales.png)

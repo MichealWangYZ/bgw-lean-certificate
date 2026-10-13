@@ -15,408 +15,302 @@
 \setbeamercolor{progress bar}{fg=kern}
 \setbeamercolor{frametitle}{bg=black!85}
 \graphicspath{{../figures/}}
-\lstset{basicstyle=\ttfamily\scriptsize, columns=fullflexible, keepspaces=true,
+\lstset{basicstyle=\ttfamily\small, columns=fullflexible, keepspaces=true,
         keywordstyle=\color{kern}\bfseries, commentstyle=\color{black!55}, frame=none,
-        literate={≤}{{$\le$}}1 {∈}{{$\in$}}1 {ℝ}{{$\mathbb{R}$}}1 {∧}{{$\wedge$}}1 {²}{{$^2$}}1 {Σ}{{$\Sigma$}}1}
-\lstdefinelanguage{lean}{morekeywords={theorem,def,noncomputable,if,then,else,let,match,with,Icc},
+        literate={≤}{{$\le$}}1 {∈}{{$\in$}}1 {ℝ}{{$\mathbb{R}$}}1 {∧}{{$\wedge$}}1 {²}{{$^2$}}1}
+\lstdefinelanguage{lean}{morekeywords={theorem,def,noncomputable,if,then,else,let,Icc},
   sensitive=true, morecomment=[l]{--}}
 \lstdefinelanguage{f90}{morekeywords={if,then,else,endif},sensitive=false,morecomment=[l]{!}}
 \newcommand{\ev}[1]{\textcolor{#1}{\rule{5pt}{5pt}}}
+\newcommand{\take}[1]{\vfill\begin{center}\large #1\end{center}\vfill}
 
-\title{A kernel-checked numerical certificate for a BerkeleyGW G$_0$W$_0$--GPP calculation}
-\subtitle{Si-EPM: what a proof assistant can and cannot say about a production GW number}
+\title{Proving what a BerkeleyGW calculation computes}
+\subtitle{A kernel-checked certificate for a G$_0$W$_0$--GPP run on Si-EPM, matched to 5\,$\mu$eV}
 \author{Yizhou Wang \and Jinyuan Wu}
-\institute{Formalization, certificates and analysis code written by Claude (Anthropic) under the authors' direction;\\
-reviewed by a separate AI reviewer (Codex). Not a human-maintainer audit.}
+\institute{\footnotesize Formalization, certificates and analysis code written by Claude (Anthropic) under the authors' direction.\\
+Reviewed by a separate AI reviewer (Codex); not a human-maintainer audit.}
 \date{October 2026}
 
 \begin{document}
 \maketitle
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{In one slide}
-\centering
-\includegraphics[width=0.93\textwidth]{fig1_three_scales.pdf}
-
-\begin{columns}[T]
-\begin{column}{0.5\textwidth}
-\small
-\begin{itemize}
-\item One production BerkeleyGW~4.0 run: \texttt{testsuite/Si-EPM}, GPP, 18 bands, 7\,Ry.
-\item $O_1 = E^{\rm QP}_X - E^{\rm QP}_L$: 15\,meV out of $\Sigma$'s of $\sim$9\,eV.
-\end{itemize}
+\begin{frame}{The question}
+\begin{columns}[c]
+\begin{column}{0.6\textwidth}
+\includegraphics[width=\textwidth]{fig0_levels.pdf}
 \end{column}
-\begin{column}{0.48\textwidth}
-\small
-\begin{itemize}
-\item \alert{Lean theorem, no hypotheses:} the specified calculation on the run's own data
-      lies in a 1.32\,neV interval.
-\item \textbf{Production is within 5.21\,$\mu$eV.}
-\end{itemize}
+\begin{column}{0.38\textwidth}
+BerkeleyGW's own \texttt{testsuite/Si-EPM}: G$_0$W$_0$ reverses the $X$/$L$ conduction ordering.
+
+\vspace{4mm}
+The flip is 15\,meV, out of self-energies of $\sim$9\,eV.
+
+\vspace{4mm}
+\alert{Is 15.4\,meV exactly what the code's equations give for this input?}
 \end{column}
 \end{columns}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{What ``verified'' can mean for a GW number}
+\begin{frame}{Three different questions}
 \centering
-\small
 \begin{tabular}{@{}lll@{}}
 \toprule
-Layer & Question & Here \\
+ & question & here \\
 \midrule
-1 \; implementation & does the program evaluate the specified finite calculation? & \alert{certified} \\
-2 \; convergence    & is that finite calculation stable as controls grow? & measured only \\
-3 \; model          & is G$_0$W$_0$/GPP the right physics? & \textbf{not claimed} \\
+1 implementation & does the code compute its specified calculation? & \alert{\textbf{proved}} \\
+2 convergence & is that calculation converged? & measured only \\
+3 model & is G$_0$W$_0$/GPP the right physics? & not claimed \\
 \bottomrule
 \end{tabular}
-
-\vspace{5mm}
-\begin{minipage}{0.86\textwidth}
-\small
-A small layer-1 error says nothing about layers 2 and 3. We keep the three apart and never add them
-into one number. The headline is a \emph{layer-1} statement about one input deck.
-\end{minipage}
+\take{This talk is about layer 1, for one input deck.}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{The test case: a deliberately fragile observable}
-\begin{columns}[T]
-\begin{column}{0.52\textwidth}
-\small
-\begin{itemize}
-\item BerkeleyGW 4.0, \texttt{testsuite/Si-EPM}, shipped inputs, pristine binaries (archive sha256-pinned),
-      real flavour, serial.
-\item EPM mean field, $V_{xc}=0$: $E^{\rm QP} = E^{\rm EPM} + \Sigma$. Model silicon, not real silicon.
-\item $O_1$: conduction-band ordering $X$ vs.\ $L$ (each a multiplet average).
-\item In mean field $X$ is 0.628\,eV \emph{below} $L$; G$_0$W$_0$ reverses it to $+15.4$\,meV.
-\item $O_1$ is a 2--6\,\% residual of $X{-}L$ differences in exchange ($+0.71$\,eV), SX$-$X ($-0.43$\,eV)
-      and CH ($+0.5$--$0.6$\,eV).
-\end{itemize}
-\end{column}
-\begin{column}{0.44\textwidth}
-\small
-\begin{block}{Why this one}
-A quantity that looks stable while its parts are not. At the 1.5\,Ry cutoff used in an early
-milestone, the same run gives $O_1=-75.4$\,meV: the sign flips with a single control.
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ------------------------------------------------------------------------------------------
-\begin{frame}{The proof chain and its trust boundaries}
+\begin{frame}{Result}
 \centering
-\includegraphics[width=0.97\textwidth]{pipeline.pdf}
+\includegraphics[width=\textwidth]{fig1_three_scales.pdf}
+\vfill
+\begin{tabular}{@{}rl@{}}
+\ev{kern}\ Lean theorem, no hypotheses: & $O_1 \in [15.405752349,\ 15.405753673]$\,meV \\
+\ev{meas}\ BerkeleyGW 4.0 prints: & $15.400547$\,meV \quad(5.21\,$\mu$eV away)
+\end{tabular}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}[fragile]{The statement}
+\begin{frame}{What is proved, what is trusted}
+\centering
+\includegraphics[width=\textwidth]{pipeline.pdf}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------
+\begin{frame}[fragile]{The theorem}
 \begin{lstlisting}[language=lean]
 theorem o1_enclosure_irr_unconditional :
     O1 glI stXI stLI EIrr vbTrue oqTrue ∈
       Icc ((8880811588953599 : ℝ) / 2 ^ 59) ((8880812351936001 : ℝ) / 2 ^ 59)
 \end{lstlisting}
-\small
+\vspace{3mm}
 \begin{itemize}
-\item \texttt{O1} is a real number defined by the Lean specification: $\chi^0$ from pair densities with
-      exact energy denominators, $\varepsilon = 1 - v\chi^0$ with $v = 8\pi/|q{+}G|^2$ and real $\pi$,
-      the true $\varepsilon^{-1}$, GPP modes, X/SX/CH, the static remainder, the linearised QP equation.
-\item Inputs are the \emph{irreducible} WFN/WFNq/WFN\_inner coefficients; the unfolding to the full grid
-      (k-closure, sphere order, $\varepsilon$ index maps) is proved, not assumed.
-\item \texttt{vbTrue}, \texttt{oqTrue}: the exact mini-BZ averages $\frac{1}{|\Omega_q|}\int 8\pi/|q{+}G{+}p|^2\,dp$,
-      Lebesgue integrals over the cell; 1363 + 7 boxes proved.
-\item Checked by the Lean kernel with \texttt{decide +kernel}; the audit admits only
-      \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. No \texttt{sorry}, no \texttt{native\_decide}.
+\item \texttt{O1} is a real number: exact $\chi^0$, the true $\varepsilon^{-1}$, GPP $\Sigma$, linearised QP.
+\item Inputs: the \emph{irreducible} wavefunctions; unfolding and Coulomb integrals are proved.
+\item Kernel-checked (\texttt{decide +kernel}); only the three standard axioms.
 \end{itemize}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}[fragile]{The specification reads like the Fortran}
-\begin{columns}[T]
-\begin{column}{0.47\textwidth}
-\scriptsize\textbf{BerkeleyGW 4.0} \texttt{mtxel\_cor.f90}, occupied GPP branch
-\begin{lstlisting}[language=f90,basicstyle=\ttfamily\tiny]
-wdiff = wxt - wtilde
-delw  = wtilde * CONJG(cden) * rden ! = wtilde/wdiff
-...
+\begin{frame}[fragile]{The specification reads like \texttt{mtxel\_cor.f90}}
+\textbf{BerkeleyGW 4.0}, occupied GPP branch
+\begin{lstlisting}[language=f90,basicstyle=\ttfamily\normalsize]
 if (wdiffr.gt.limittwo .and. delwr.lt.limitone) then
   sch = delw * I_eps_array(ig,my_igp)
-  ...
-else if ( delwr .gt. TOL_Zero) then
-  sch = 0.0d0   ! near pole
-  ...
 \end{lstlisting}
-\end{column}
-\begin{column}{0.51\textwidth}
-\scriptsize\textbf{Lean} \texttt{SigmaSpec.lean}
-\begin{lstlisting}[language=lean,basicstyle=\ttfamily\tiny]
-noncomputable def schM (I O x : ℝ) : ℝ :=
-  if keepM I O then
-    (let w := wtM I O
-     if (x - w) ^ 2 > GAM2 ∧ w ^ 2 < (x - w) ^ 2 * LIM1
-     then w * IeU I / (x - w) else 0)
-  else 0
+\vspace{2mm}
+\textbf{Lean}, \texttt{SigmaSpec.schM}
+\begin{lstlisting}[language=lean,basicstyle=\ttfamily\normalsize]
+if (x - w) ^ 2 > GAM2 ∧ w ^ 2 < (x - w) ^ 2 * LIM1
+then w * IeU I / (x - w) else 0
 \end{lstlisting}
-\end{column}
-\end{columns}
-\vspace{2mm}
-\small
-\begin{itemize}
-\item Division-free tests, proved equivalent to the source's branch and clamp rule wherever the source's
-      formula is defined (\texttt{certSsx\_eq\_srcSsx}).
-\item A generated guide (\texttt{docs/review/index.html}) puts every Lean definition next to the Fortran
-      lines it transcribes. \textcolor{trust}{That correspondence is source reading plus numerical
-      agreement, not a proof.}
-\end{itemize}
+\vfill
+\small Division-free form, proved equal to the source's rule where that is defined. Every definition
+sits next to its Fortran in \texttt{docs/review/index.html}. \textcolor{trust}{That correspondence is
+read, not proved.}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{What the 5.21\,$\mu$eV is}
-\small
+\begin{frame}{Where the 5.21\,$\mu$eV comes from}
 \begin{itemize}
-\item Production evaluates $\bar v(q{+}G)$ by Monte Carlo (MT19937, seed 5000). The averages differ
-      from the integrals by up to $1.7\times10^{-3}$ (relative) and break star symmetry.
-\item Individual $E^{\rm QP}$ differ from the specification by $\approx 0.14$--$0.18$\,meV
-      (CH by $\approx 0.14$--$0.30$\,meV). In $O_1$ these cancel to 5.21\,$\mu$eV.
-\item With production's \emph{own} Monte Carlo averages, the interval evaluator (Python, outward
-      binary64) encloses the printed $E^{\rm QP}$ of all four states and $O_1$.
-\item The 5.21\,$\mu$eV is an exact-rational comparison of the printed value with the kernel-checked
-      endpoints (1\,neV print-rounding allowance).
+\item BerkeleyGW averages $8\pi/|q{+}G|^2$ over the mini-BZ by Monte Carlo; the proof uses the exact
+      integrals. The averages differ by up to $1.7\times10^{-3}$.
+\item Each $E^{\rm QP}$ moves by 0.14--0.18\,meV; in $O_1$ this cancels to 5.21\,$\mu$eV.
+\item With BerkeleyGW's own Monte Carlo averages, an outward-rounded evaluator encloses every
+      printed $E^{\rm QP}$.
 \end{itemize}
-\vspace{2mm}
-\begin{alertblock}{Reading}
-On this deck, BerkeleyGW 4.0 computes exactly what its source says, to within its Monte Carlo
-quadrature. No implementation discrepancy was found on any active code path.
-\end{alertblock}
+\take{No implementation discrepancy on any active code path of this deck.}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{Which conventions decide the answer}
-\begin{columns}[T]
-\begin{column}{0.64\textwidth}
-\includegraphics[width=\textwidth]{fig2_conventions.pdf}
-\end{column}
-\begin{column}{0.34\textwidth}
-\footnotesize
-\begin{itemize}
-\item Each bar: re-evaluate with one convention changed. Every change is \emph{detected} in the
-      $\Sigma$ table at $10^{-8}$\,eV (the specification is that tight).
-\item These are \textbf{not} bugs. They show which documented choices carry the sign of $O_1$:
-      the static remainder ($-101$\,meV without it), invalid-mode handling ($-5.2$\,meV).
-\item Usable as a regression oracle for convention changes.
-\end{itemize}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ------------------------------------------------------------------------------------------
-\begin{frame}{The $q\to0$ cell: one direction of an anisotropic $\varepsilon^{-1}$}
-\small
-\begin{itemize}
-\item $\Sigma$ carries $\varepsilon^{-1}$ to the full $q$-grid by the space-group formula and, for each $q$,
-      uses the \emph{last} matching (iq, op) pair. For $q=0$ that is op 48 of 48.
-\item The head and wings at $q_0=(0,0,0.001)$ are direction-dependent, so this choice selects one
-      direction:
-      \begin{itemize}
-      \item over all directions BerkeleyGW could have picked, $O_1 \in [14.34, 15.41]$\,meV;
-      \item the direction average (cubic crystal) gives 14.89\,meV;
-      \item exactly degenerate states split: the $\Gamma$ valence SX$-$X spreads by 36\,meV
-            before the multiplet average hides it.
-      \end{itemize}
-\item Other facts that surfaced: the $\varepsilon$ $k$-sum runs over the 32-point symmetry closure of the
-      shifted $2{\times}2{\times}2$ grid, not the nominal 8; wings at $q\neq0$ are rescaled through the
-      \emph{irreducible} $G=0$ and the sortrx-first $v$.
-\end{itemize}
-\vspace{1mm}
-\scriptsize\textcolor{pyiv}{These numbers are outward-interval (Python) results, not kernel-checked.}
-\end{frame}
-
-% ------------------------------------------------------------------------------------------
-\begin{frame}{Layer 2: the sign comes from cancelling truncations}
+\begin{frame}{Documented conventions decide the sign}
 \centering
-\includegraphics[width=0.74\textwidth]{fig3_convergence.pdf}
+\includegraphics[width=0.9\textwidth]{fig2_conventions_slide.pdf}
 
-\footnotesize
-\begin{itemize}
-\item At 7\,Ry, adding bands drives $O_1$ from $+15.4$ to $-3.8$\,meV; raising the cutoff at 18 bands
-      looks converged. The static remainder carries the sign. 125 production runs.
-      \textcolor{meas}{Measured; no convergence claim is made.}
-\end{itemize}
+\small Each bar changes one convention; all 15 changes are detected at $10^{-8}$\,eV in the $\Sigma$ table.
+None is a bug.
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{Layer 3: how far the GW hierarchy moves $O_1$}
-\begin{columns}[T]
+\begin{frame}{The $q\to0$ cell picks one direction}
+\begin{itemize}
+\item $\Sigma$ uses the \emph{last} matching symmetry operation for each $q$; at $q=0$ that fixes
+      one direction of the anisotropic head and wings.
+\item Over all directions: $O_1\in[14.34, 15.41]$\,meV. Direction average: 14.89\,meV.
+\item Exactly degenerate states split; the $\Gamma$ valence SX$-$X spreads by 36\,meV before the
+      multiplet average hides it.
+\end{itemize}
+\vfill
+\scriptsize\textcolor{pyiv}{Outward-interval (Python) results, not kernel-checked.}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------
+\begin{frame}{Convergence: the sign comes from cancelling truncations}
+\begin{columns}[c]
+\begin{column}{0.6\textwidth}
+\includegraphics[width=\textwidth]{fig3_convergence_slide.pdf}
+\end{column}
+\begin{column}{0.38\textwidth}
+At 7\,Ry, adding bands takes $O_1$ from $+15.4$ to $-3.8$\,meV.
+
+\vspace{3mm}
+At 18 bands, raising the cutoff looks converged.
+
+\vspace{3mm}
+\textcolor{meas}{125 production runs. Measured; no convergence claim.}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------
+\begin{frame}{The GW hierarchy moves $O_1$ by tens of meV}
+\begin{columns}[c]
 \begin{column}{0.5\textwidth}
-\small
 \begin{tabular}{@{}lr@{}}
 \toprule
 treatment & $O_1$ (meV) \\
 \midrule
 \ev{kern} G$_0$W$_0$-GPP, linearised & $+15.4$ \\
-\ev{kern} G$_0$W$_0$-GPP, full QP equation & $+69.0$ \\
-\ev{meas} G$_0$W$_0$ full frequency (CD) & $+58$ to $+67$ \\
+\ev{kern} G$_0$W$_0$-GPP, full QP & $+69.0$ \\
+\ev{meas} full frequency (CD) & $+58$ to $+67$ \\
 \ev{meas} evGW$_0$-GPP & $+137.9$ \\
 \ev{meas} evGW-GPP & $+134.2$ \\
-\ev{meas} SOX (leading vertex), estimate & $+2.0$ shift \\
 \bottomrule
 \end{tabular}
 \end{column}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.46\textwidth}
 \small
 \begin{itemize}
-\item $V_{xc}=0$ puts $E^{\rm QP}$ $\sim$7\,eV from $E^{\rm EPM}$, deep in $\Sigma$'s pole structure:
-      one Newton step moves $O_1$ by $-53.6$\,meV.
-\item Proved: in $[-10^4,10^4]$\,eV each state's full GPP QP equation has \emph{exactly two} roots
-      ($Z=0.86$ and $0.04$). Uniqueness of the principal root depends on the \texttt{sexcut} clamp;
-      without it, 11 sign changes for $X$.
-\item Plasmon-pole error on $\Sigma_c(X)-\Sigma_c(L)$ at $E=E_o$: $-31.6$\,meV vs.\ CD.
+\item $V_{xc}=0$: QP energies sit $\sim$7\,eV from mean field, deep in $\Sigma$'s poles.
+\item Proved: exactly two QP roots per state in $[-10^4,10^4]$\,eV; the principal one is unique only
+      because of the \texttt{sexcut} clamp.
+\item Plasmon-pole error at $E_o$: $-31.6$\,meV.
 \end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{From theory to the specification: conditional identities}
-\footnotesize
+\begin{frame}{From theory to the specification}
 \begin{itemize}
-\item Proved in Lean, under named hypotheses: the pole signs of $\Sigma$ from the damped Fourier transform
-      of time-ordered $G_0$; the HL-GPP kernel algebra and SX/CH split; the static $\chi^0$/RPA
-      structure (the factor 4 = spin $\times$ two time orderings).
-\item Every place where the code departs from the theory is named in a departure table: wings at $q=0$,
-      Coulomb averaging, mode-drop thresholds, \dots, each ``proved equal'' or ``named approximation''.
-\item What formalization exposed:
+\item Proved under named hypotheses: the pole signs of $\Sigma$ from time-ordered $G_0$, the HL-GPP
+      algebra and SX/CH split, the static RPA structure.
+\item Every departure of code from theory is listed: \emph{proved equal} or \emph{named approximation}.
+\item Formalization made three edge cases explicit:
   \begin{itemize}
-  \item at $q=0$, $i\omega=0$ the argument $x$ is exactly $0$ for the state itself; the code substitutes
-        \texttt{TOL\_Zero}, so the identity covers $\Sigma(E_o+dE)$ but not $\Sigma(E_o)$;
-  \item the GPP kernel is discontinuous at $(x,\Omega^2)=(0,0)$: modes dropped because rounding
-        makes $|\Omega^2|$ tiny are exactly right only in the ideal metric;
-  \item the one-system theorem cannot be instantiated at $X$ or $L$ (time-reversal-invariant
-        points; a formal obstruction, \texttt{hyps\_unsat\_of\_selfpaired}).
+  \item $x = 0$ exactly at $q = 0$ (\texttt{TOL\_Zero} substitution);
+  \item the GPP kernel is discontinuous at $(x,\Omega^2)=(0,0)$;
+  \item the one-system theorem cannot be applied at $X$ or $L$.
   \end{itemize}
 \end{itemize}
-\vspace{1mm}
-\scriptsize These identities are \emph{not} instantiated on the certified run. They are not a derivation
-of the GPP f-sum prescription.
+\vfill
+\scriptsize Conditional identities; not instantiated on the certified run.
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
 \begin{frame}{What is not claimed}
 \begin{columns}[T]
-\begin{column}{0.5\textwidth}
+\begin{column}{0.48\textwidth}
 \begin{block}{Trusted, not proved}
-\small
 \begin{itemize}
-\item decoding and export of the run files into Lean literals;
-\item that the Fortran evaluates the specification (source reading on every active path);
-\item the production execution itself.
+\item export of the run files into Lean
+\item that the Fortran evaluates the specification
+\item the production execution
 \end{itemize}
 \end{block}
 \end{column}
-\begin{column}{0.46\textwidth}
+\begin{column}{0.48\textwidth}
 \begin{alertblock}{Not claimed}
-\small
 \begin{itemize}
-\item that BerkeleyGW is correct on any other input;
-\item that 18 bands are converged;
-\item that GW/GPP or the EPM describe silicon;
-\item formal verification of BerkeleyGW's physics.
+\item correctness on other inputs
+\item convergence of 18 bands
+\item that GW/GPP or the EPM describe Si
+\item verification of BerkeleyGW's physics
 \end{itemize}
 \end{alertblock}
 \end{column}
 \end{columns}
-\vspace{3mm}
-\small Trusted computing base: the Lean 4.19 kernel (with GMP \texttt{Nat}), Mathlib, the elan installer.
-No external re-checker (lean4checker) has been run yet.
+\vfill
+\small Trusted computing base: Lean 4.19 kernel, Mathlib, elan. No external re-checker run yet.
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}{Why this might be useful to BerkeleyGW}
-\small
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\begin{block}{Now}
-\begin{itemize}
-\item An executable, line-referenced specification of the real-flavour GPP $\Sigma$ path.
-\item A reference value with a proof-backed enclosure for a testsuite deck.
-\item A convention oracle: 15 counterfactuals, each detected at $10^{-8}$\,eV.
-\end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{Next, with your input}
-\begin{itemize}
-\item Does the specification match your reading of the code? (Most valuable feedback.)
-\item Which target next: LDA $V_{xc}$, complex flavour, full frequency, a 2D material with truncation?
-\item Would certified reference values be useful in the testsuite?
-\end{itemize}
-\end{block}
-\end{column}
-\end{columns}
+\begin{frame}{What we would like from you}
+\begin{enumerate}
+\item \textbf{Does the specification match your reading of the code?}\\
+      \small Every Lean definition is next to its Fortran lines in \texttt{docs/review/index.html}.
+\item \textbf{What should come next?}\\
+      \small LDA $V_{xc}$, complex flavour, full frequency, a 2D material with truncation.
+\item \textbf{Would certified reference values help the testsuite?}\\
+      \small The convention study already detects changes at $10^{-8}$\,eV.
+\end{enumerate}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
-\begin{frame}[fragile]{Scale and reproduction}
-\small
-\begin{columns}[T]
-\begin{column}{0.44\textwidth}
-\begin{tabular}{@{}lr@{}}
-\toprule
-theorems in the axiom audit & 34\,553 \\
-certificate-data modules & 1\,376 (63\,MB) \\
-Lean outside data & $\sim$37\,k lines \\
-Coulomb boxes proved & 1\,363 + 7 \\
-production runs (layer 2) & 125 \\
-full gate, cold build & $\sim$5\,h \\
-\bottomrule
-\end{tabular}
-\end{column}
-\begin{column}{0.52\textwidth}
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile]{Reproduce}
+\begin{columns}[c]
+\begin{column}{0.5\textwidth}
+\begin{lstlisting}
 bash scripts/bootstrap.sh
 bash scripts/verify.sh
 \end{lstlisting}
-\footnotesize
-\texttt{bootstrap.sh}: user-space Lean 4.19 and Mathlib.\\
-\texttt{verify.sh}: build, exhaustive axiom audit, 699 scientific and 16 workflow tests.\\[2mm]
-Reviewer's guide: \texttt{docs/review/index.html}.\\
-Every caveat: \texttt{docs/DETAILS.md}, \texttt{docs/ENDPOINT.md}, \texttt{docs/BRIDGE.md}.
+\small Build, exhaustive axiom audit,\\ 699 scientific and 16 workflow tests;\\ about 5\,h from a cold build.
+\end{column}
+\begin{column}{0.46\textwidth}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+theorems audited & 34\,553 \\
+certificate modules & 1\,376 \\
+Coulomb boxes proved & 1\,363 + 7 \\
+production runs & 125 \\
+\bottomrule
+\end{tabular}
 \end{column}
 \end{columns}
+\vfill
+\centering\small \texttt{github.com/MichealWangYZ/bgw-lean-certificate}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------
 \begin{frame}[standout]
-A production GW number, checked to 5\,$\mu$eV against a proved enclosure.\\[3mm]
-\normalsize Everything else (convergence, the plasmon pole, the vertex) remains physics.
+The code computes what its source says,\\ to 5\,$\mu$eV, on this deck.\\[4mm]
+\normalsize Convergence, the plasmon pole and the vertex remain physics.
 \end{frame}
 
 \appendix
 \begin{frame}{References}
 \small
 \begin{itemize}
-\item M.~S.~Hybertsen and S.~G.~Louie, Phys.\ Rev.\ B \textbf{34}, 5390 (1986). GPP model.
-\item J.~Deslippe \emph{et al.}, Comput.\ Phys.\ Commun.\ \textbf{183}, 1269 (2012). BerkeleyGW.
-\item B.-C.~Shih \emph{et al.}, Phys.\ Rev.\ Lett.\ \textbf{105}, 146401 (2010). Coupled convergence in bands and cutoff.
+\item M.~S.~Hybertsen and S.~G.~Louie, Phys.\ Rev.\ B \textbf{34}, 5390 (1986).
+\item J.~Deslippe \emph{et al.}, Comput.\ Phys.\ Commun.\ \textbf{183}, 1269 (2012).
+\item B.-C.~Shih \emph{et al.}, Phys.\ Rev.\ Lett.\ \textbf{105}, 146401 (2010).
 \item The Lean 4 theorem prover and Mathlib.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Backup: evidence for each number in this talk}
+\begin{frame}{Backup: evidence for each number}
 \tiny
-\begin{tabular}{@{}p{0.33\textwidth}p{0.24\textwidth}p{0.38\textwidth}@{}}
+\begin{tabular}{@{}p{0.36\textwidth}p{0.22\textwidth}p{0.36\textwidth}@{}}
 \toprule
 number & evidence & where \\
 \midrule
-$O_1\in[15.405752349, 15.405753673]$ meV & \ev{kern} Lean, no hypotheses & \texttt{Headline.o1\_enclosure\_irr\_unconditional} \\
+$O_1\in[15.405752349, 15.405753673]$ meV & \ev{kern} Lean & \texttt{Headline.o1\_enclosure\_irr\_unconditional} \\
 $O_1 > 0$ & \ev{kern} Lean & \texttt{Headline.o1\_pos\_irr\_unconditional} \\
 full-QP $O_1\in[68.9856742, 68.9856744]$ meV & \ev{kern} Lean & \texttt{Headline.o1\_fullQP\_irr\_unconditional} \\
-5.21\,$\mu$eV & exact rationals vs.\ Lean endpoints & \texttt{tests/test\_endpoint\_e1.py} \\
-$q\to0$ range, spec B, CBM at $L$ & \ev{pyiv} outward interval & \texttt{bgw/endpoint/cert.py} \\
-all-band $O_1\in[-4.05,-3.51]$ meV & \ev{pyiv} outward interval & \texttt{bgw/r28\_f3} \\
-convention study & \ev{meas} reproducer vs.\ production & \texttt{data/mutations\_e1.log} \\
-convergence, FF, evGW, SOX & \ev{meas} production runs & \texttt{docs/ENDPOINT.md} \\
+5.21\,$\mu$eV & exact rationals & \texttt{tests/test\_endpoint\_e1.py} \\
+$q\to0$ range, direction average & \ev{pyiv} interval & \texttt{bgw/endpoint/cert.py} \\
+all-band $O_1\in[-4.05,-3.51]$ meV & \ev{pyiv} interval & \texttt{bgw/r28\_f3} \\
+convention study & \ev{meas} reproducer & \texttt{data/mutations\_e1.log} \\
+convergence, FF, evGW & \ev{meas} production & \texttt{docs/ENDPOINT.md} \\
 \bottomrule
 \end{tabular}
 \end{frame}
